@@ -1,0 +1,25 @@
+{
+  "type": "panel",
+  "name": "Worldmap Panel",
+  "id": "grafana-worldmap-panel",
+
+  "info": {
+    "description": "Worldmap panel for grafana",
+    "author": {
+      "name": "Raintank Inc.",
+      "url": "http://raintank.io"
+    },
+    "keywords": ["worldmap", "panel"],
+    "links": [
+      {"name": "Project site", "url": "https://github.com/grafana/worldmap-panel"},
+      {"name": "MIT License", "url": "https://github.com/grafana/worldmap-panel/blob/master/LICENSE"}
+    ],
+    "version": "0.0.1",
+    "updated": "2015-04-01"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "3.x.x",
+    "plugins": [ ]
+  }
+}

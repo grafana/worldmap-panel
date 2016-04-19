@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/module.js"],"names":[],"mappings":";;;;;;AAAQ;;;2BAGN","file":"module.js","sourcesContent":["import {WorldmapCtrl} from './worldmap_ctrl';\n\nexport {\n  WorldmapCtrl as PanelCtrl\n};\n"]}
