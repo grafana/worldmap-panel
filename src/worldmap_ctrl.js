@@ -116,6 +116,10 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.map.panTo([this.panel.mapCenterLatitude, this.panel.mapCenterLongitude]);
   }
 
+  setZoom() {
+    this.map.setZoom(this.panel.initialZoom);
+  }
+
   render() {
     if (!this.data || !this.map || !this.circles) {
       return;

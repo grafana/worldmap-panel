@@ -197,6 +197,11 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             this.map.panTo([this.panel.mapCenterLatitude, this.panel.mapCenterLongitude]);
           }
         }, {
+          key: 'setZoom',
+          value: function setZoom() {
+            this.map.setZoom(this.panel.initialZoom);
+          }
+        }, {
           key: 'render',
           value: function render() {
             if (!this.data || !this.map || !this.circles) {
