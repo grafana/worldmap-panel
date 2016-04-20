@@ -15,7 +15,7 @@
       {"name": "MIT License", "url": "https://github.com/grafana/worldmap-panel/blob/master/LICENSE"}
     ],
     "version": "0.0.1",
-    "updated": "2015-04-01"
+    "updated": "2015-04-20"
   },
 
   "dependencies": {

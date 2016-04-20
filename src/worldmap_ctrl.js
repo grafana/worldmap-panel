@@ -76,11 +76,13 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   createMap() {
-    this.map = window.L.map('mapid').setView([this.panel.mapCenterLatitude, this.panel.mapCenterLongitude], this.panel.initialZoom);
+    this.map = window.L.map('mapid', {worldCopyJump: true, center: [this.panel.mapCenterLatitude, this.panel.mapCenterLongitude], zoom: this.panel.initialZoom});
 
     window.L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       subdomains: 'abc',
+      reuseTiles: true,
+      detectRetina: true,
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
     }).addTo(this.map);
 
