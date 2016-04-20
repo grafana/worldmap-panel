@@ -186,11 +186,28 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             this.circles = window.L.layerGroup(circles).addTo(this.map);
           }
         }, {
+          key: 'setNewMapCenter',
+          value: function setNewMapCenter() {
+            this.mapCenterMoved = true;
+            this.panToMapCenter();
+          }
+        }, {
+          key: 'panToMapCenter',
+          value: function panToMapCenter() {
+            this.map.panTo([this.panel.mapCenterLatitude, this.panel.mapCenterLongitude]);
+          }
+        }, {
           key: 'render',
           value: function render() {
             if (!this.data || !this.map || !this.circles) {
               return;
             }
+
+            if (this.mapCenterMoved) {
+              this.panToMapCenter();
+              this.mapCenterMoved = false;
+            }
+
             if (this.circles.getLayers().length > 0) {
               this.circles.clearLayers();
             }

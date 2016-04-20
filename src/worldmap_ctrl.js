@@ -107,10 +107,25 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.circles = window.L.layerGroup(circles).addTo(this.map);
   }
 
+  setNewMapCenter() {
+    this.mapCenterMoved = true;
+    this.panToMapCenter();
+  }
+
+  panToMapCenter() {
+    this.map.panTo([this.panel.mapCenterLatitude, this.panel.mapCenterLongitude]);
+  }
+
   render() {
     if (!this.data || !this.map || !this.circles) {
       return;
     }
+
+    if (this.mapCenterMoved) {
+      this.panToMapCenter();
+      this.mapCenterMoved = false;
+    }
+
     if (this.circles.getLayers().length > 0) {
       this.circles.clearLayers();
     }
