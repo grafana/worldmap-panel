@@ -1,6 +1,6 @@
 <div class="editor-row">
 	<div class="section gf-form-group">
-		<h5 class="section-heading">Clock options</h5>
+		<h5 class="section-heading">Worldmap Options</h5>
 		<div class="gf-form">
 			<label class="gf-form-label width-9">Center</label>
 			<input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.mapCenterLatitude" ng-change="ctrl.setNewMapCenter()" ng-model-onblur />
@@ -9,6 +9,12 @@
 		<div class="gf-form">
 			<label class="gf-form-label width-9">Initial Zoom</label>
 			<input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.initialZoom" ng-change="ctrl.setZoom()" ng-model-onblur />
+		</div>
+    <div class="gf-form">
+			<label class="gf-form-label width-9">Map Provider</label>
+			<div class="gf-form-select-wrapper max-width-9">
+				<select class="input-small gf-form-input" ng-model="ctrl.panel.tileServer" ng-options="t for t in ['OpenStreetMap', 'Mapquest', 'CartoDB Dark']" ng-change="ctrl.render()"></select>
+			</div>
 		</div>
   </div>
 </div>
