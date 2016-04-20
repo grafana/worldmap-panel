@@ -152,7 +152,7 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
         }, {
           key: 'createMap',
           value: function createMap() {
-            this.map = window.L.map('mapid', { worldCopyJump: true, center: [this.panel.mapCenterLatitude, this.panel.mapCenterLongitude], zoom: this.panel.initialZoom });
+            this.map = window.L.map('mapid_' + this.panel.id, { worldCopyJump: true, center: [this.panel.mapCenterLatitude, this.panel.mapCenterLongitude] }).fitWorld().zoomIn(this.panel.initialZoom);
 
             window.L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
               maxZoom: 18,
@@ -191,7 +191,9 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             if (!this.data || !this.map || !this.circles) {
               return;
             }
-            this.circles.clearLayers();
+            if (this.circles.getLayers().length > 0) {
+              this.circles.clearLayers();
+            }
             this.drawCircles();
           }
         }]);
