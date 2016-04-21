@@ -76,7 +76,8 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             subdomains: '1234' },
           'CartoDB Dark': { url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, &copy;<a href="http://cartodb.com/attributions#basemaps">CartoDB</a>, CartoDB <a href="http://cartodb.com/attributions" target="_blank">attribution</a>', subdomains: '1234' }
         },
-        tileServer: 'Mapquest'
+        tileServer: 'Mapquest',
+        locationData: 'countries'
       };
 
       _export('WorldmapCtrl', WorldmapCtrl = function (_MetricsPanelCtrl) {
@@ -110,8 +111,8 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             this.data = data;
 
             if (!this.map) {
-              window.$.getJSON('public/plugins/grafana-worldmap-panel/countries.json').then(function (res) {
-                _this2.countries = res;
+              window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(function (res) {
+                _this2.locations = res;
                 _this2.createMap();
               });
             }
@@ -129,10 +130,10 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
                 var lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
 
                 if (_.isString(lastValue)) {
-                  data.push({ countryCode: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
+                  data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
                 } else {
                   var dataValue = {
-                    countryCode: serie.alias,
+                    key: serie.alias,
                     value: serie.stats[_this3.panel.valueName],
                     flotpairs: serie.flotpairs,
                     valueFormatted: lastValue,
@@ -179,19 +180,21 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
 
             var circles = [];
             this.data.forEach(function (dataPoint) {
-              var country = _.find(_this4.countries, function (cou) {
-                return cou.country === dataPoint.countryCode;
+              var location = _.find(_this4.locations, function (loc) {
+                return loc.key === dataPoint.key;
               });
 
-              if (!country) return;
+              if (!location) return;
 
-              var circle = window.L.circle([country.latitude, country.longitude], dataPoint.value * _this4.panel.circleSize, {
+              var circle = window.L.circleMarker([location.latitude, location.longitude], {
+                radius: Math.min(10, Math.max(1, (dataPoint.value || 0) * _this4.panel.circleSize)),
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.5
               });
 
-              circle.bindPopup(country.name + ': ' + dataPoint.valueRounded);
+              circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
+              console.log(circle.getRadius());
               circles.push(circle);
             }, this);
             this.circles = window.L.layerGroup(circles).addTo(this.map);
@@ -225,9 +228,19 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             this.render();
           }
         }, {
+          key: 'changeLocationData',
+          value: function changeLocationData() {
+            var _this5 = this;
+
+            window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(function (res) {
+              _this5.locations = res;
+              _this5.render();
+            });
+          }
+        }, {
           key: 'render',
           value: function render() {
-            var _this5 = this;
+            var _this6 = this;
 
             if (!this.data || !this.map || !this.circles) {
               return;
@@ -241,7 +254,7 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             }
 
             this.circles.eachLayer(function (layer) {
-              if (layer._container) _this5.circles.removeLayer(layer);
+              if (layer._container) _this6.circles.removeLayer(layer);
             });
 
             this.drawCircles();

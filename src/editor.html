@@ -11,10 +11,27 @@
 			<input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.initialZoom" ng-change="ctrl.setZoom()" ng-model-onblur />
 		</div>
     <div class="gf-form">
+			<label class="gf-form-label width-9">Circle Size Factor</label>
+			<input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.circleSize" ng-change="ctrl.render()" ng-model-onblur />
+		</div>
+    <div class="gf-form">
 			<label class="gf-form-label width-9">Map Provider</label>
 			<div class="gf-form-select-wrapper max-width-9">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.tileServer" ng-options="t for t in ['OpenStreetMap', 'Mapquest', 'CartoDB Dark']" ng-change="ctrl.changeTileServer()"></select>
 			</div>
 		</div>
+    <div class="gf-form">
+			<label class="gf-form-label width-9">Location Data</label>
+			<div class="gf-form-select-wrapper max-width-9">
+				<select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'probes']" ng-change="ctrl.changeLocationData()"></select>
+			</div>
+		</div>
+    <div class="gf-form">
+			<label class="gf-form-label width-9">Aggregation</label>
+			<div class="gf-form-select-wrapper max-width-9">
+				<select class="input-small gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ['min','max','avg', 'current', 'total']" ng-change="ctrl.render()"></select>
+			</div>
+		</div>
+    
   </div>
 </div>

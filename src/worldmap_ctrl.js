@@ -17,7 +17,8 @@ const panelDefaults = {
               subdomains: '1234'},
     'CartoDB Dark': {url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, &copy;<a href="http://cartodb.com/attributions#basemaps">CartoDB</a>, CartoDB <a href="http://cartodb.com/attributions" target="_blank">attribution</a>', subdomains: '1234'}
   },
-  tileServer: 'Mapquest'
+  tileServer: 'Mapquest',
+  locationData: 'countries'
 };
 
 export class WorldmapCtrl extends MetricsPanelCtrl {
@@ -40,8 +41,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.data = data;
 
     if (!this.map) {
-      window.$.getJSON('public/plugins/grafana-worldmap-panel/countries.json').then(res => {
-        this.countries = res;
+      window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(res => {
+        this.locations = res;
         this.createMap();
       });
     }
@@ -56,10 +57,10 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
 
         if (_.isString(lastValue)) {
-          data.push({countryCode: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0});
+          data.push({key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0});
         } else {
           const dataValue = {
-            countryCode: serie.alias,
+            key: serie.alias,
             value: serie.stats[this.panel.valueName],
             flotpairs: serie.flotpairs,
             valueFormatted: lastValue,
@@ -103,17 +104,18 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   drawCircles() {
     const circles = [];
     this.data.forEach(dataPoint => {
-      const country = _.find(this.countries, (cou) => { return cou.country === dataPoint.countryCode; });
+      const location = _.find(this.locations, (loc) => { return loc.key === dataPoint.key; });
 
-      if (!country) return;
+      if (!location) return;
 
-      const circle = window.L.circle([country.latitude, country.longitude], dataPoint.value * this.panel.circleSize, {
+      const circle = window.L.circleMarker([location.latitude, location.longitude], {
+        radius: Math.min(10, Math.max(1, (dataPoint.value || 0) * this.panel.circleSize)),
         color: 'red',
         fillColor: '#f03',
         fillOpacity: 0.5
       });
 
-      circle.bindPopup(country.name + ': ' + dataPoint.valueRounded);
+      circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
       circles.push(circle);
     }, this);
     this.circles = window.L.layerGroup(circles).addTo(this.map);
@@ -140,6 +142,13 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.map.remove();
     this.createMap();
     this.render();
+  }
+
+  changeLocationData() {
+    window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(res => {
+      this.locations = res;
+      this.render();
+    });
   }
 
   render() {
