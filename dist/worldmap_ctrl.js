@@ -92,10 +92,16 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
 
           _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
           _this.events.on('data-received', _this.onDataReceived.bind(_this));
+          _this.events.on('panel-teardown', _this.onPanelTeardown.bind(_this));
           return _this;
         }
 
         _createClass(WorldmapCtrl, [{
+          key: 'onPanelTeardown',
+          value: function onPanelTeardown() {
+            if (this.map) this.map.remove();
+          }
+        }, {
           key: 'onInitEditMode',
           value: function onInitEditMode() {
             this.addEditorTab('Worldmap', 'public/plugins/grafana-worldmap-panel/editor.html', 2);

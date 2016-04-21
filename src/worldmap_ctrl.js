@@ -28,6 +28,11 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
+    this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
+  }
+
+  onPanelTeardown() {
+    if (this.map) this.map.remove();
   }
 
   onInitEditMode() {
