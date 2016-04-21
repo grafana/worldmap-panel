@@ -3,6 +3,7 @@ import _ from 'lodash';
 import L from './leaflet';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
+import mapRenderer from './map_renderer';
 
 const panelDefaults = {
   mapCenterLatitude: 0,
@@ -29,6 +30,13 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
     this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
+
+    if (!this.map) {
+      window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(res => {
+        this.locations = res;
+        this.render();
+      });
+    }
   }
 
   onPanelTeardown() {
@@ -44,13 +52,6 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     const data = [];
     this.setValues(data);
     this.data = data;
-
-    if (!this.map) {
-      window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(res => {
-        this.locations = res;
-        this.createMap();
-      });
-    }
 
     this.render();
   }
@@ -89,43 +90,6 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     return series;
   }
 
-  createMap() {
-    this.map = window.L.map('mapid_' + this.panel.id, {worldCopyJump: true, center: [this.panel.mapCenterLatitude, this.panel.mapCenterLongitude]})
-      .fitWorld()
-      .zoomIn(this.panel.initialZoom);
-
-    const selectedTileServer = this.panel.tileServers[this.panel.tileServer];
-    window.L.tileLayer(selectedTileServer.url, {
-      maxZoom: 18,
-      subdomains: selectedTileServer.subdomains,
-      reuseTiles: true,
-      detectRetina: true,
-      attribution: selectedTileServer.attribution
-    }).addTo(this.map);
-
-    this.drawCircles();
-  }
-
-  drawCircles() {
-    const circles = [];
-    this.data.forEach(dataPoint => {
-      const location = _.find(this.locations, (loc) => { return loc.key === dataPoint.key; });
-
-      if (!location) return;
-
-      const circle = window.L.circleMarker([location.latitude, location.longitude], {
-        radius: Math.min(10, Math.max(1, (dataPoint.value || 0) * this.panel.circleSize)),
-        color: 'red',
-        fillColor: '#f03',
-        fillOpacity: 0.5
-      });
-
-      circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
-      circles.push(circle);
-    }, this);
-    this.circles = window.L.layerGroup(circles).addTo(this.map);
-  }
-
   setNewMapCenter() {
     this.mapCenterMoved = true;
     this.panToMapCenter();
@@ -139,13 +103,9 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.map.setZoom(this.panel.initialZoom);
   }
 
-  resize() {
-    if (this.map) this.map.invalidateSize();
-  }
-
   changeTileServer() {
     this.map.remove();
-    this.createMap();
+    this.map = null;
     this.render();
   }
 
@@ -156,23 +116,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     });
   }
 
-  render() {
-    if (!this.data || !this.map || !this.circles) {
-      return;
-    }
-
-    this.resize();
-
-    if (this.mapCenterMoved) {
-      this.panToMapCenter();
-      this.mapCenterMoved = false;
-    }
-
-    this.circles.eachLayer(layer => {
-      if (layer._container) this.circles.removeLayer(layer);
-    });
-    this.circles = [];
-    this.drawCircles();
+  link(scope, elem, attrs, ctrl) {
+    mapRenderer(scope, elem, attrs, ctrl);
   }
 }
 

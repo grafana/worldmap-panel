@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series2', 'app/core/utils/kbn'], function (_export, _context) {
-  var MetricsPanelCtrl, _, L, TimeSeries, kbn, _createClass, panelDefaults, WorldmapCtrl;
+System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer'], function (_export, _context) {
+  var MetricsPanelCtrl, _, L, TimeSeries, kbn, mapRenderer, _createClass, panelDefaults, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -44,6 +44,8 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
       TimeSeries = _appCoreTime_series.default;
     }, function (_appCoreUtilsKbn) {
       kbn = _appCoreUtilsKbn.default;
+    }, function (_map_renderer) {
+      mapRenderer = _map_renderer.default;
     }],
     execute: function () {
       _createClass = function () {
@@ -93,6 +95,13 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
           _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
           _this.events.on('data-received', _this.onDataReceived.bind(_this));
           _this.events.on('panel-teardown', _this.onPanelTeardown.bind(_this));
+
+          if (!_this.map) {
+            window.$.getJSON('public/plugins/grafana-worldmap-panel/' + _this.panel.locationData + '.json').then(function (res) {
+              _this.locations = res;
+              _this.render();
+            });
+          }
           return _this;
         }
 
@@ -109,26 +118,17 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
         }, {
           key: 'onDataReceived',
           value: function onDataReceived(dataList) {
-            var _this2 = this;
-
             this.series = dataList.map(this.seriesHandler.bind(this));
             var data = [];
             this.setValues(data);
             this.data = data;
-
-            if (!this.map) {
-              window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(function (res) {
-                _this2.locations = res;
-                _this2.createMap();
-              });
-            }
 
             this.render();
           }
         }, {
           key: 'setValues',
           value: function setValues(data) {
-            var _this3 = this;
+            var _this2 = this;
 
             if (this.series && this.series.length > 0) {
               this.series.forEach(function (serie) {
@@ -140,7 +140,7 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
                 } else {
                   var dataValue = {
                     key: serie.alias,
-                    value: serie.stats[_this3.panel.valueName],
+                    value: serie.stats[_this2.panel.valueName],
                     flotpairs: serie.flotpairs,
                     valueFormatted: lastValue,
                     valueRounded: 0
@@ -164,47 +164,6 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             return series;
           }
         }, {
-          key: 'createMap',
-          value: function createMap() {
-            this.map = window.L.map('mapid_' + this.panel.id, { worldCopyJump: true, center: [this.panel.mapCenterLatitude, this.panel.mapCenterLongitude] }).fitWorld().zoomIn(this.panel.initialZoom);
-
-            var selectedTileServer = this.panel.tileServers[this.panel.tileServer];
-            window.L.tileLayer(selectedTileServer.url, {
-              maxZoom: 18,
-              subdomains: selectedTileServer.subdomains,
-              reuseTiles: true,
-              detectRetina: true,
-              attribution: selectedTileServer.attribution
-            }).addTo(this.map);
-
-            this.drawCircles();
-          }
-        }, {
-          key: 'drawCircles',
-          value: function drawCircles() {
-            var _this4 = this;
-
-            var circles = [];
-            this.data.forEach(function (dataPoint) {
-              var location = _.find(_this4.locations, function (loc) {
-                return loc.key === dataPoint.key;
-              });
-
-              if (!location) return;
-
-              var circle = window.L.circleMarker([location.latitude, location.longitude], {
-                radius: Math.min(10, Math.max(1, (dataPoint.value || 0) * _this4.panel.circleSize)),
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5
-              });
-
-              circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
-              circles.push(circle);
-            }, this);
-            this.circles = window.L.layerGroup(circles).addTo(this.map);
-          }
-        }, {
           key: 'setNewMapCenter',
           value: function setNewMapCenter() {
             this.mapCenterMoved = true;
@@ -221,48 +180,26 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             this.map.setZoom(this.panel.initialZoom);
           }
         }, {
-          key: 'resize',
-          value: function resize() {
-            if (this.map) this.map.invalidateSize();
-          }
-        }, {
           key: 'changeTileServer',
           value: function changeTileServer() {
             this.map.remove();
-            this.createMap();
+            this.map = null;
             this.render();
           }
         }, {
           key: 'changeLocationData',
           value: function changeLocationData() {
-            var _this5 = this;
+            var _this3 = this;
 
             window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(function (res) {
-              _this5.locations = res;
-              _this5.render();
+              _this3.locations = res;
+              _this3.render();
             });
           }
         }, {
-          key: 'render',
-          value: function render() {
-            var _this6 = this;
-
-            if (!this.data || !this.map || !this.circles) {
-              return;
-            }
-
-            this.resize();
-
-            if (this.mapCenterMoved) {
-              this.panToMapCenter();
-              this.mapCenterMoved = false;
-            }
-
-            this.circles.eachLayer(function (layer) {
-              if (layer._container) _this6.circles.removeLayer(layer);
-            });
-            this.circles = [];
-            this.drawCircles();
+          key: 'link',
+          value: function link(scope, elem, attrs, ctrl) {
+            mapRenderer(scope, elem, attrs, ctrl);
           }
         }]);
 
