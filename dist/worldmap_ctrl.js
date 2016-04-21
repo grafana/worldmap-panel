@@ -194,7 +194,6 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
               });
 
               circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
-              console.log(circle.getRadius());
               circles.push(circle);
             }, this);
             this.circles = window.L.layerGroup(circles).addTo(this.map);
@@ -256,7 +255,7 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             this.circles.eachLayer(function (layer) {
               if (layer._container) _this6.circles.removeLayer(layer);
             });
-
+            this.circles = [];
             this.drawCircles();
           }
         }]);

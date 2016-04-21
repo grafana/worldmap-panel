@@ -166,7 +166,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.circles.eachLayer(layer => {
       if (layer._container) this.circles.removeLayer(layer);
     });
-
+    this.circles = [];
     this.drawCircles();
   }
 }
