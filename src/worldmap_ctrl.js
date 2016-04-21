@@ -136,6 +136,12 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     if (this.map) this.map.invalidateSize();
   }
 
+  changeTileServer() {
+    this.map.remove();
+    this.createMap();
+    this.render();
+  }
+
   render() {
     if (!this.data || !this.map || !this.circles) {
       return;

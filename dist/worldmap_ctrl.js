@@ -218,6 +218,13 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             if (this.map) this.map.invalidateSize();
           }
         }, {
+          key: 'changeTileServer',
+          value: function changeTileServer() {
+            this.map.remove();
+            this.createMap();
+            this.render();
+          }
+        }, {
           key: 'render',
           value: function render() {
             var _this5 = this;
