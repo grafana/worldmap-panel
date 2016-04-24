@@ -1,9 +1,9 @@
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import _ from 'lodash';
-import L from './leaflet';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
 import mapRenderer from './map_renderer';
+import './css/worldmap-panel.css!';
 
 const panelDefaults = {
   mapCenterLatitude: 0,
@@ -19,7 +19,9 @@ const panelDefaults = {
     'CartoDB Dark': {url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, &copy;<a href="http://cartodb.com/attributions#basemaps">CartoDB</a>, CartoDB <a href="http://cartodb.com/attributions" target="_blank">attribution</a>', subdomains: '1234'}
   },
   tileServer: 'Mapquest',
-  locationData: 'countries'
+  locationData: 'countries',
+  thresholds: '0,10',
+  colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
 };
 
 export class WorldmapCtrl extends MetricsPanelCtrl {
@@ -52,6 +54,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     const data = [];
     this.setValues(data);
     this.data = data;
+
+    this.updateThresholdData();
 
     this.render();
   }
@@ -92,11 +96,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   setNewMapCenter() {
     this.mapCenterMoved = true;
-    this.panToMapCenter();
-  }
-
-  panToMapCenter() {
-    this.map.panTo([this.panel.mapCenterLatitude, this.panel.mapCenterLongitude]);
+    this.render();
   }
 
   setZoom() {
@@ -107,6 +107,18 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.map.remove();
     this.map = null;
     this.render();
+  }
+
+  changeThresholds() {
+    this.updateThresholdData();
+    this.legend.update();
+    this.render();
+  }
+
+  updateThresholdData() {
+    this.data.thresholds = this.panel.thresholds.split(',').map(strValue => {
+      return Number(strValue.trim());
+    });
   }
 
   changeLocationData() {

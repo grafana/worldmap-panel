@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer'], function (_export, _context) {
-  var MetricsPanelCtrl, _, L, TimeSeries, kbn, mapRenderer, _createClass, panelDefaults, WorldmapCtrl;
+System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './css/worldmap-panel.css!'], function (_export, _context) {
+  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, _createClass, panelDefaults, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -38,15 +38,13 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
     }, function (_lodash) {
       _ = _lodash.default;
-    }, function (_leaflet) {
-      L = _leaflet.default;
     }, function (_appCoreTime_series) {
       TimeSeries = _appCoreTime_series.default;
     }, function (_appCoreUtilsKbn) {
       kbn = _appCoreUtilsKbn.default;
     }, function (_map_renderer) {
       mapRenderer = _map_renderer.default;
-    }],
+    }, function (_cssWorldmapPanelCss) {}],
     execute: function () {
       _createClass = function () {
         function defineProperties(target, props) {
@@ -79,7 +77,9 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
           'CartoDB Dark': { url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, &copy;<a href="http://cartodb.com/attributions#basemaps">CartoDB</a>, CartoDB <a href="http://cartodb.com/attributions" target="_blank">attribution</a>', subdomains: '1234' }
         },
         tileServer: 'Mapquest',
-        locationData: 'countries'
+        locationData: 'countries',
+        thresholds: '0,10',
+        colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)']
       };
 
       _export('WorldmapCtrl', WorldmapCtrl = function (_MetricsPanelCtrl) {
@@ -122,6 +122,8 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             var data = [];
             this.setValues(data);
             this.data = data;
+
+            this.updateThresholdData();
 
             this.render();
           }
@@ -167,12 +169,7 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
           key: 'setNewMapCenter',
           value: function setNewMapCenter() {
             this.mapCenterMoved = true;
-            this.panToMapCenter();
-          }
-        }, {
-          key: 'panToMapCenter',
-          value: function panToMapCenter() {
-            this.map.panTo([this.panel.mapCenterLatitude, this.panel.mapCenterLongitude]);
+            this.render();
           }
         }, {
           key: 'setZoom',
@@ -185,6 +182,20 @@ System.register(['app/plugins/sdk', 'lodash', './leaflet', 'app/core/time_series
             this.map.remove();
             this.map = null;
             this.render();
+          }
+        }, {
+          key: 'changeThresholds',
+          value: function changeThresholds() {
+            this.updateThresholdData();
+            this.legend.update();
+            this.render();
+          }
+        }, {
+          key: 'updateThresholdData',
+          value: function updateThresholdData() {
+            this.data.thresholds = this.panel.thresholds.split(',').map(function (strValue) {
+              return Number(strValue.trim());
+            });
           }
         }, {
           key: 'changeLocationData',

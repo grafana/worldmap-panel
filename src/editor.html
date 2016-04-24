@@ -32,6 +32,15 @@
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ['min','max','avg', 'current', 'total']" ng-change="ctrl.refresh()"></select>
 			</div>
 		</div>
-    
+    <div class="gf-form">
+			<label class="gf-form-label width-9">Thresholds</label>
+			<input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.thresholds" ng-change="ctrl.changeThresholds()" placeholder="0,10" ng-model-onblur />
+		</div>
+    <div class="gf-form">
+			<label class="gf-form-label width-9">Colors</label>
+        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[0]" ng-change="ctrl.render()" ></spectrum-picker>
+        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[1]" ng-change="ctrl.render()" ></spectrum-picker>
+        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[2]" ng-change="ctrl.render()" ></spectrum-picker>
+		</div>
   </div>
 </div>

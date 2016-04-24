@@ -10,28 +10,15 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
     });
 
     function render() {
-      if (!ctrl.data) {
-        return;
-      }
+      if (!ctrl.data) return;
 
-      if (!ctrl.map) {
-        createMap();
-      }
-
+      if (!ctrl.map) createMap();
       resize();
 
-      if (ctrl.mapCenterMoved) {
-        ctrl.panToMapCenter();
-        ctrl.mapCenterMoved = false;
-      }
+      if (ctrl.mapCenterMoved) panToMapCenter();
 
-      if (ctrl.circles) {
-        ctrl.circles.eachLayer(function (layer) {
-          if (layer._container) ctrl.circles.removeLayer(layer);
-        });
-      }
+      if (!ctrl.legend) createLegend();
 
-      ctrl.circles = [];
       drawCircles();
     }
 
@@ -46,11 +33,47 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         detectRetina: true,
         attribution: selectedTileServer.attribution
       }).addTo(ctrl.map);
+    }
 
-      drawCircles();
+    function createLegend() {
+      ctrl.legend = window.L.control({ position: 'bottomleft' });
+      ctrl.legend.onAdd = function () {
+        ctrl.legend._div = window.L.DomUtil.create('div', 'info legend');
+        ctrl.legend.update();
+        return ctrl.legend._div;
+      };
+
+      ctrl.legend.update = function () {
+        var thresholds = ctrl.data.thresholds;
+        var legendHtml = '';
+        legendHtml += '<i style="background:' + ctrl.panel.colors[0] + '"></i> ' + '&lt; ' + thresholds[0] + '<br>';
+        for (var index = 0; index < thresholds.length; index++) {
+          legendHtml += '<i style="background:' + getColor(thresholds[index] + 1) + '"></i> ' + thresholds[index] + (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '<br>' : '+');
+        }
+        ctrl.legend._div.innerHTML = legendHtml;
+      };
+
+      ctrl.legend.addTo(ctrl.map);
+    }
+
+    function getColor(value) {
+      for (var index = ctrl.data.thresholds.length; index > 0; index--) {
+        if (value >= ctrl.data.thresholds[index - 1]) {
+          return ctrl.panel.colors[index];
+        }
+      }
+      return _.first(ctrl.panel.colors);
     }
 
     function drawCircles() {
+      if (ctrl.circles) {
+        ctrl.circles.eachLayer(function (layer) {
+          if (layer._container) ctrl.circles.removeLayer(layer);
+        });
+      }
+
+      ctrl.circles = [];
+
       var circles = [];
       ctrl.data.forEach(function (dataPoint) {
         var location = _.find(ctrl.locations, function (loc) {
@@ -60,13 +83,18 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         if (!location) return;
 
         var circle = window.L.circleMarker([location.latitude, location.longitude], {
-          radius: Math.min(10, Math.max(1, (dataPoint.value || 0) * ctrl.panel.circleSize)),
-          color: 'red',
-          fillColor: '#f03',
+          radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
+          color: getColor(dataPoint.value),
+          fillColor: getColor(dataPoint.value),
           fillOpacity: 0.5
         });
 
-        circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
+        if (dataPoint.value || dataPoint.value === 0) {
+          circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
+        } else {
+          circle.bindPopup(location.name + ': No data');
+        }
+
         circles.push(circle);
       });
       ctrl.circles = window.L.layerGroup(circles).addTo(ctrl.map);
@@ -74,6 +102,11 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
 
     function resize() {
       if (ctrl.map) ctrl.map.invalidateSize();
+    }
+
+    function panToMapCenter() {
+      ctrl.map.panTo([ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude]);
+      ctrl.mapCenterMoved = false;
     }
   }
 
