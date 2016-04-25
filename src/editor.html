@@ -17,7 +17,7 @@
     <div class="gf-form">
 			<label class="gf-form-label width-9">Map Provider</label>
 			<div class="gf-form-select-wrapper max-width-9">
-				<select class="input-small gf-form-input" ng-model="ctrl.panel.tileServer" ng-options="t for t in ['OpenStreetMap', 'Mapquest', 'CartoDB Dark']" ng-change="ctrl.changeTileServer()"></select>
+				<select class="input-small gf-form-input" ng-model="ctrl.panel.tileServer" ng-options="key as key for (key, value) in ctrl.tileServers" ng-change="ctrl.changeTileServer()"></select>
 			</div>
 		</div>
     <div class="gf-form">

@@ -25,7 +25,7 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
     function createMap() {
       ctrl.map = window.L.map('mapid_' + ctrl.panel.id, { worldCopyJump: true, center: [ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude] }).fitWorld().zoomIn(ctrl.panel.initialZoom);
 
-      var selectedTileServer = ctrl.panel.tileServers[ctrl.panel.tileServer];
+      var selectedTileServer = ctrl.tileServers[ctrl.panel.tileServer];
       window.L.tileLayer(selectedTileServer.url, {
         maxZoom: 18,
         subdomains: selectedTileServer.subdomains,

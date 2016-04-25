@@ -25,7 +25,7 @@ export default function link(scope, elem, attrs, ctrl) {
       .fitWorld()
       .zoomIn(ctrl.panel.initialZoom);
 
-    const selectedTileServer = ctrl.panel.tileServers[ctrl.panel.tileServer];
+    const selectedTileServer = ctrl.tileServers[ctrl.panel.tileServer];
     window.L.tileLayer(selectedTileServer.url, {
       maxZoom: 18,
       subdomains: selectedTileServer.subdomains,
