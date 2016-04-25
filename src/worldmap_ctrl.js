@@ -35,6 +35,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
     }
     _.defaults(this.panel, panelDefaults);
+    this.setMapSaturationClass();
     this.tileServers = tileServers;
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
@@ -46,6 +47,16 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
         this.locations = res;
         this.render();
       });
+    }
+  }
+
+  setMapSaturationClass() {
+    if (this.panel.tileServer === 'CartoDB Dark') {
+      this.saturationClass = 'map-darken';
+    } else if (this.panel.tileServer === 'Mapquest') {
+      this.saturationClass = 'map-lighten';
+    } else {
+      this.saturationClass = '';
     }
   }
 

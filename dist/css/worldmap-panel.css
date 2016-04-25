@@ -27,7 +27,7 @@
   z-index: 900;
 }
 
-img.leaflet-tile {
+.map-lighten img.leaflet-tile {
   -webkit-filter: brightness(1.03) grayscale(0.83) contrast(1.07);
   filter: brightness(1.03) grayscale(0.83) contrast(1.07);
 }

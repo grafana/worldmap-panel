@@ -96,6 +96,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             _this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
           }
           _.defaults(_this.panel, panelDefaults);
+          _this.setMapSaturationClass();
           _this.tileServers = tileServers;
 
           _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
@@ -112,6 +113,17 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }
 
         _createClass(WorldmapCtrl, [{
+          key: 'setMapSaturationClass',
+          value: function setMapSaturationClass() {
+            if (this.panel.tileServer === 'CartoDB Dark') {
+              this.saturationClass = 'map-darken';
+            } else if (this.panel.tileServer === 'Mapquest') {
+              this.saturationClass = 'map-lighten';
+            } else {
+              this.saturationClass = '';
+            }
+          }
+        }, {
           key: 'onPanelTeardown',
           value: function onPanelTeardown() {
             this.circles = [];
