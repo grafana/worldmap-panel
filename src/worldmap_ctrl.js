@@ -51,6 +51,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   onPanelTeardown() {
     this.circles = [];
+    this.circlesLayer.removeFrom(this.map);
     this.legend.removeFrom(this.map);
     this.legend = null;
     if (this.map) this.map.remove();

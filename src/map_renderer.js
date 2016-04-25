@@ -38,7 +38,6 @@ export default function link(scope, elem, attrs, ctrl) {
     }).addTo(ctrl.map);
 
     ctrl.circles = [];
-    ctrl.popups = [];
   }
 
   function createLegend() {
@@ -73,15 +72,24 @@ export default function link(scope, elem, attrs, ctrl) {
     }
     return _.first(ctrl.panel.colors);
   }
+  
+  function clearCircles() {
+    ctrl.map.removeLayer(ctrl.circlesLayer);
+    ctrl.circles = [];
+  }
 
   function drawCircles() {
+    if (ctrl.circles.length > 0 && ctrl.circles.length !== ctrl.data.length) {
+      clearCircles();
+    }
+
     const circles = [];
     ctrl.data.forEach(dataPoint => {
       const location = _.find(ctrl.locations, (loc) => { return loc.key === dataPoint.key; });
 
       if (!location) return;
 
-      let circle = _.find(ctrl.circles, cir => { return cir.options.location === location.key; });
+      const circle = _.find(ctrl.circles, cir => { return cir.options.location === location.key; });
 
       if (circle) {
         circle.setRadius(Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)));
@@ -91,35 +99,40 @@ export default function link(scope, elem, attrs, ctrl) {
           fillOpacity: 0.5,
           location: location.key
         });
+        circle.unbindPopup();
+        createPopup(circle, location.name, dataPoint.valueRounded);
       } else {
-        circle = window.L.circleMarker([location.latitude, location.longitude], {
-          radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
-          color: getColor(dataPoint.value),
-          fillColor: getColor(dataPoint.value),
-          fillOpacity: 0.5,
-          location: location.key
-        });
-
-        let popup;
-        if (dataPoint.value || dataPoint.value === 0) {
-          popup = circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
-        } else {
-          popup = circle.bindPopup(location.name + ': No data');
-        }
-        circle.on('mouseover', function (evt) {
-          const layer = evt.target;
-          layer.bringToFront();
-          this.openPopup();
-        });
-        circle.on('mouseout', function () {
-          circle.closePopup();
-        });
-        ctrl.popups.push(popup);
-        circles.push(circle);
+        circles.push(createCircle(location, dataPoint));
       }
     });
-    window.L.layerGroup(circles).addTo(ctrl.map);
+    ctrl.circlesLayer = window.L.layerGroup(circles).addTo(ctrl.map);
     ctrl.circles = ctrl.circles.concat(circles);
+  }
+
+  function createCircle(location, dataPoint) {
+    const circle = window.L.circleMarker([location.latitude, location.longitude], {
+      radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
+      color: getColor(dataPoint.value),
+      fillColor: getColor(dataPoint.value),
+      fillOpacity: 0.5,
+      location: location.key
+    });
+
+    createPopup(circle, location.name, dataPoint.valueRounded);
+    return circle;
+  }
+
+  function createPopup(circle, locationName, value) {
+    circle.bindPopup(locationName + ': ' + value);
+
+    circle.on('mouseover', function (evt) {
+      const layer = evt.target;
+      layer.bringToFront();
+      this.openPopup();
+    });
+    circle.on('mouseout', function () {
+      circle.closePopup();
+    });
   }
 
   function resize() {

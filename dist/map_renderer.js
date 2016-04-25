@@ -37,7 +37,6 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
       }).addTo(ctrl.map);
 
       ctrl.circles = [];
-      ctrl.popups = [];
     }
 
     function createLegend() {
@@ -70,7 +69,16 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
       return _.first(ctrl.panel.colors);
     }
 
+    function clearCircles() {
+      ctrl.map.removeLayer(ctrl.circlesLayer);
+      ctrl.circles = [];
+    }
+
     function drawCircles() {
+      if (ctrl.circles.length > 0 && ctrl.circles.length !== ctrl.data.length) {
+        clearCircles();
+      }
+
       var circles = [];
       ctrl.data.forEach(function (dataPoint) {
         var location = _.find(ctrl.locations, function (loc) {
@@ -91,35 +99,40 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
             fillOpacity: 0.5,
             location: location.key
           });
+          circle.unbindPopup();
+          createPopup(circle, location.name, dataPoint.valueRounded);
         } else {
-          circle = window.L.circleMarker([location.latitude, location.longitude], {
-            radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
-            color: getColor(dataPoint.value),
-            fillColor: getColor(dataPoint.value),
-            fillOpacity: 0.5,
-            location: location.key
-          });
-
-          var popup = void 0;
-          if (dataPoint.value || dataPoint.value === 0) {
-            popup = circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
-          } else {
-            popup = circle.bindPopup(location.name + ': No data');
-          }
-          circle.on('mouseover', function (evt) {
-            var layer = evt.target;
-            layer.bringToFront();
-            this.openPopup();
-          });
-          circle.on('mouseout', function () {
-            circle.closePopup();
-          });
-          ctrl.popups.push(popup);
-          circles.push(circle);
+          circles.push(createCircle(location, dataPoint));
         }
       });
-      window.L.layerGroup(circles).addTo(ctrl.map);
+      ctrl.circlesLayer = window.L.layerGroup(circles).addTo(ctrl.map);
       ctrl.circles = ctrl.circles.concat(circles);
+    }
+
+    function createCircle(location, dataPoint) {
+      var circle = window.L.circleMarker([location.latitude, location.longitude], {
+        radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
+        color: getColor(dataPoint.value),
+        fillColor: getColor(dataPoint.value),
+        fillOpacity: 0.5,
+        location: location.key
+      });
+
+      createPopup(circle, location.name, dataPoint.valueRounded);
+      return circle;
+    }
+
+    function createPopup(circle, locationName, value) {
+      circle.bindPopup(locationName + ': ' + value);
+
+      circle.on('mouseover', function (evt) {
+        var layer = evt.target;
+        layer.bringToFront();
+        this.openPopup();
+      });
+      circle.on('mouseout', function () {
+        circle.closePopup();
+      });
     }
 
     function resize() {
