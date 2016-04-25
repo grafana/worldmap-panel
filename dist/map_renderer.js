@@ -33,6 +33,8 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         detectRetina: true,
         attribution: selectedTileServer.attribution
       }).addTo(ctrl.map);
+
+      ctrl.circles = [];
     }
 
     function createLegend() {
@@ -66,14 +68,6 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
     }
 
     function drawCircles() {
-      if (ctrl.circles) {
-        ctrl.circles.eachLayer(function (layer) {
-          if (layer._container) ctrl.circles.removeLayer(layer);
-        });
-      }
-
-      ctrl.circles = [];
-
       var circles = [];
       ctrl.data.forEach(function (dataPoint) {
         var location = _.find(ctrl.locations, function (loc) {
@@ -82,22 +76,38 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
 
         if (!location) return;
 
-        var circle = window.L.circleMarker([location.latitude, location.longitude], {
-          radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
-          color: getColor(dataPoint.value),
-          fillColor: getColor(dataPoint.value),
-          fillOpacity: 0.5
+        var circle = _.find(ctrl.circles, function (cir) {
+          return cir.options.location === location.key;
         });
 
-        if (dataPoint.value || dataPoint.value === 0) {
-          circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
+        if (circle) {
+          circle.setRadius(Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)));
+          circle.setStyle({
+            color: getColor(dataPoint.value),
+            fillColor: getColor(dataPoint.value),
+            fillOpacity: 0.5,
+            location: location.key
+          });
         } else {
-          circle.bindPopup(location.name + ': No data');
-        }
+          circle = window.L.circleMarker([location.latitude, location.longitude], {
+            radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
+            color: getColor(dataPoint.value),
+            fillColor: getColor(dataPoint.value),
+            fillOpacity: 0.5,
+            location: location.key
+          });
 
-        circles.push(circle);
+          if (dataPoint.value || dataPoint.value === 0) {
+            circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
+          } else {
+            circle.bindPopup(location.name + ': No data');
+          }
+
+          circles.push(circle);
+        }
       });
-      ctrl.circles = window.L.layerGroup(circles).addTo(ctrl.map);
+      window.L.layerGroup(circles).addTo(ctrl.map);
+      ctrl.circles = ctrl.circles.concat(circles);
     }
 
     function resize() {

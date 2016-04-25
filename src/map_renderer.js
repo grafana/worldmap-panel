@@ -33,6 +33,8 @@ export default function link(scope, elem, attrs, ctrl) {
       detectRetina: true,
       attribution: selectedTileServer.attribution
     }).addTo(ctrl.map);
+
+    ctrl.circles = [];
   }
 
   function createLegend() {
@@ -69,36 +71,42 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function drawCircles() {
-    if (ctrl.circles) {
-      ctrl.circles.eachLayer(layer => {
-        if (layer._container) ctrl.circles.removeLayer(layer);
-      });
-    }
-
-    ctrl.circles = [];
-
     const circles = [];
     ctrl.data.forEach(dataPoint => {
       const location = _.find(ctrl.locations, (loc) => { return loc.key === dataPoint.key; });
 
       if (!location) return;
 
-      const circle = window.L.circleMarker([location.latitude, location.longitude], {
-        radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
-        color: getColor(dataPoint.value),
-        fillColor: getColor(dataPoint.value),
-        fillOpacity: 0.5
-      });
+      let circle = _.find(ctrl.circles, cir => { return cir.options.location === location.key; });
 
-      if (dataPoint.value || dataPoint.value === 0) {
-        circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
+      if (circle) {
+        circle.setRadius(Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)));
+        circle.setStyle({
+          color: getColor(dataPoint.value),
+          fillColor: getColor(dataPoint.value),
+          fillOpacity: 0.5,
+          location: location.key
+        });
       } else {
-        circle.bindPopup(location.name + ': No data');
-      }
+        circle = window.L.circleMarker([location.latitude, location.longitude], {
+          radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
+          color: getColor(dataPoint.value),
+          fillColor: getColor(dataPoint.value),
+          fillOpacity: 0.5,
+          location: location.key
+        });
 
-      circles.push(circle);
+        if (dataPoint.value || dataPoint.value === 0) {
+          circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
+        } else {
+          circle.bindPopup(location.name + ': No data');
+        }
+
+        circles.push(circle);
+      }
     });
-    ctrl.circles = window.L.layerGroup(circles).addTo(ctrl.map);
+    window.L.layerGroup(circles).addTo(ctrl.map);
+    ctrl.circles = ctrl.circles.concat(circles);
   }
 
   function resize() {

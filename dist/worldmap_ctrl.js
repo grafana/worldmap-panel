@@ -108,6 +108,9 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         _createClass(WorldmapCtrl, [{
           key: 'onPanelTeardown',
           value: function onPanelTeardown() {
+            this.circles = [];
+            this.legend.removeFrom(this.map);
+            this.legend = null;
             if (this.map) this.map.remove();
           }
         }, {
