@@ -1,7 +1,10 @@
 import _ from 'lodash';
 import L from './leaflet';
+import './css/leaflet.css!';
 
 export default function link(scope, elem, attrs, ctrl) {
+  const mapContainer = elem.find('.mapcontainer');
+
   ctrl.events.on('render', () => {
     render();
     ctrl.renderingCompleted();
@@ -21,7 +24,7 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function createMap() {
-    ctrl.map = window.L.map('mapid_' + ctrl.panel.id, {worldCopyJump: true, center: [ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude]})
+    ctrl.map = window.L.map(mapContainer[0], {worldCopyJump: true, center: [ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude]})
       .fitWorld()
       .zoomIn(ctrl.panel.initialZoom);
 
@@ -35,6 +38,7 @@ export default function link(scope, elem, attrs, ctrl) {
     }).addTo(ctrl.map);
 
     ctrl.circles = [];
+    ctrl.popups = [];
   }
 
   function createLegend() {
@@ -96,12 +100,21 @@ export default function link(scope, elem, attrs, ctrl) {
           location: location.key
         });
 
+        let popup;
         if (dataPoint.value || dataPoint.value === 0) {
-          circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
+          popup = circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
         } else {
-          circle.bindPopup(location.name + ': No data');
+          popup = circle.bindPopup(location.name + ': No data');
         }
-
+        circle.on('mouseover', function (evt) {
+          const layer = evt.target;
+          layer.bringToFront();
+          this.openPopup();
+        });
+        circle.on('mouseout', function () {
+          circle.closePopup();
+        });
+        ctrl.popups.push(popup);
         circles.push(circle);
       }
     });

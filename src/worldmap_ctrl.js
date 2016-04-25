@@ -28,8 +28,12 @@ const tileServers = {
 };
 
 export class WorldmapCtrl extends MetricsPanelCtrl {
-  constructor($scope, $injector) {
+  constructor($scope, $injector, contextSrv) {
     super($scope, $injector);
+
+    if (this.panel && !this.panel.tileServer) {
+      this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Dark' : 'CartoDB Positron';
+    }
     _.defaults(this.panel, panelDefaults);
     this.tileServers = tileServers;
 

@@ -1,9 +1,11 @@
 'use strict';
 
-System.register(['lodash', './leaflet'], function (_export, _context) {
+System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export, _context) {
   var _, L;
 
   function link(scope, elem, attrs, ctrl) {
+    var mapContainer = elem.find('.mapcontainer');
+
     ctrl.events.on('render', function () {
       render();
       ctrl.renderingCompleted();
@@ -23,7 +25,7 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
     }
 
     function createMap() {
-      ctrl.map = window.L.map('mapid_' + ctrl.panel.id, { worldCopyJump: true, center: [ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude] }).fitWorld().zoomIn(ctrl.panel.initialZoom);
+      ctrl.map = window.L.map(mapContainer[0], { worldCopyJump: true, center: [ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude] }).fitWorld().zoomIn(ctrl.panel.initialZoom);
 
       var selectedTileServer = ctrl.tileServers[ctrl.panel.tileServer];
       window.L.tileLayer(selectedTileServer.url, {
@@ -35,6 +37,7 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
       }).addTo(ctrl.map);
 
       ctrl.circles = [];
+      ctrl.popups = [];
     }
 
     function createLegend() {
@@ -97,12 +100,21 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
             location: location.key
           });
 
+          var popup = void 0;
           if (dataPoint.value || dataPoint.value === 0) {
-            circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
+            popup = circle.bindPopup(location.name + ': ' + dataPoint.valueRounded);
           } else {
-            circle.bindPopup(location.name + ': No data');
+            popup = circle.bindPopup(location.name + ': No data');
           }
-
+          circle.on('mouseover', function (evt) {
+            var layer = evt.target;
+            layer.bringToFront();
+            this.openPopup();
+          });
+          circle.on('mouseout', function () {
+            circle.closePopup();
+          });
+          ctrl.popups.push(popup);
           circles.push(circle);
         }
       });
@@ -127,7 +139,7 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
       _ = _lodash.default;
     }, function (_leaflet) {
       L = _leaflet.default;
-    }],
+    }, function (_cssLeafletCss) {}],
     execute: function () {}
   };
 });

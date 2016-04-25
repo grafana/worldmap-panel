@@ -87,11 +87,14 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
       _export('WorldmapCtrl', WorldmapCtrl = function (_MetricsPanelCtrl) {
         _inherits(WorldmapCtrl, _MetricsPanelCtrl);
 
-        function WorldmapCtrl($scope, $injector) {
+        function WorldmapCtrl($scope, $injector, contextSrv) {
           _classCallCheck(this, WorldmapCtrl);
 
           var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(WorldmapCtrl).call(this, $scope, $injector));
 
+          if (_this.panel && !_this.panel.tileServer) {
+            _this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Dark' : 'CartoDB Positron';
+          }
           _.defaults(_this.panel, panelDefaults);
           _this.tileServers = tileServers;
 
