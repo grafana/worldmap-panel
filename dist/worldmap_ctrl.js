@@ -93,7 +93,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(WorldmapCtrl).call(this, $scope, $injector));
 
           if (_this.panel && !_this.panel.tileServer) {
-            _this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Dark' : 'CartoDB Positron';
+            _this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
           }
           _.defaults(_this.panel, panelDefaults);
           _this.tileServers = tileServers;
