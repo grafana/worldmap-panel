@@ -2,45 +2,58 @@
 	<div class="section gf-form-group">
 		<h5 class="section-heading">Worldmap Options</h5>
 		<div class="gf-form">
-			<label class="gf-form-label width-9">Center</label>
-			<input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.mapCenterLatitude" ng-change="ctrl.setNewMapCenter()" ng-model-onblur />
-      <input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.mapCenterLongitude" ng-change="ctrl.setNewMapCenter()" ng-model-onblur />
+			<label class="gf-form-label width-10">Center</label>
+      <div class="gf-form-select-wrapper max-width-10">
+				<select class="input-small gf-form-input" ng-model="ctrl.panel.mapCenter" ng-options="t for t in ['(0°, 0°)', 'North America', 'Europe', 'West Asia', 'SE Asia', 'custom']" ng-change="ctrl.setNewMapCenter()"></select>
+			</div>
+      <div class="gf-form" ng-show="ctrl.panel.mapCenter === 'custom'">
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.mapCenterLatitude" ng-change="ctrl.setNewMapCenter()" ng-model-onblur />
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.mapCenterLongitude" ng-change="ctrl.setNewMapCenter()" ng-model-onblur />
+      </div>
 		</div>
 		<div class="gf-form">
-			<label class="gf-form-label width-9">Initial Zoom</label>
-			<input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.initialZoom" ng-change="ctrl.setZoom()" ng-model-onblur />
+			<label class="gf-form-label width-10">Initial Zoom</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.initialZoom" ng-change="ctrl.setZoom()" ng-model-onblur />
 		</div>
     <div class="gf-form">
-			<label class="gf-form-label width-9">Circle Scale Factor</label>
-			<input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.circleSize" ng-change="ctrl.render()" ng-model-onblur />
+			<label class="gf-form-label width-10">Circle Scale Factor</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleSizeFactor" ng-change="ctrl.render()" ng-model-onblur />
 		</div>
     <div class="gf-form">
-			<label class="gf-form-label width-9">Map Provider</label>
-			<div class="gf-form-select-wrapper max-width-9">
+			<label class="gf-form-label width-10">Min Circle Size</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMinSize" ng-change="ctrl.render()" ng-model-onblur />
+		</div>
+    <div class="gf-form">
+			<label class="gf-form-label width-10">Max Circle Size</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMaxSize" ng-change="ctrl.render()" ng-model-onblur />
+		</div>
+    <div class="gf-form">
+			<label class="gf-form-label width-10">Map Provider</label>
+			<div class="gf-form-select-wrapper max-width-10">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.tileServer" ng-options="key as key for (key, value) in ctrl.tileServers" ng-change="ctrl.changeTileServer()"></select>
 			</div>
 		</div>
     <div class="gf-form">
-			<label class="gf-form-label width-9">Location Data</label>
-			<div class="gf-form-select-wrapper max-width-9">
+			<label class="gf-form-label width-10">Location Data</label>
+			<div class="gf-form-select-wrapper max-width-10">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'probes']" ng-change="ctrl.changeLocationData()"></select>
 			</div>
 		</div>
     <div class="gf-form">
-			<label class="gf-form-label width-9">Aggregation</label>
-			<div class="gf-form-select-wrapper max-width-9">
+			<label class="gf-form-label width-10">Aggregation</label>
+			<div class="gf-form-select-wrapper max-width-10">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ['min','max','avg', 'current', 'total']" ng-change="ctrl.refresh()"></select>
 			</div>
 		</div>
     <div class="gf-form">
-			<label class="gf-form-label width-9">Thresholds</label>
-			<input type="text" class="input-small gf-form-input width-9" ng-model="ctrl.panel.thresholds" ng-change="ctrl.changeThresholds()" placeholder="0,10" ng-model-onblur />
+			<label class="gf-form-label width-10">Thresholds</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.thresholds" ng-change="ctrl.changeThresholds()" placeholder="0,10" ng-model-onblur />
 		</div>
     <div class="gf-form">
-			<label class="gf-form-label width-9">Colors</label>
-        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[0]" ng-change="ctrl.render()" ></spectrum-picker>
-        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[1]" ng-change="ctrl.render()" ></spectrum-picker>
-        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[2]" ng-change="ctrl.render()" ></spectrum-picker>
+			<label class="gf-form-label width-10">Colors</label>
+        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[0]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
+        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[1]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
+        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[2]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
 		</div>
   </div>
 </div>

@@ -92,7 +92,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
         });
 
         if (circle) {
-          circle.setRadius(Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)));
+          circle.setRadius(Math.min(ctrl.panel.circleMaxSize, Math.max(ctrl.panel.circleMinSize, (dataPoint.value || 0) * ctrl.panel.circleSizeFactor)));
           circle.setStyle({
             color: getColor(dataPoint.value),
             fillColor: getColor(dataPoint.value),
@@ -111,7 +111,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
 
     function createCircle(location, dataPoint) {
       var circle = window.L.circleMarker([location.latitude, location.longitude], {
-        radius: Math.min(30, Math.max(2, (dataPoint.value || 0) * ctrl.panel.circleSize)),
+        radius: Math.min(ctrl.panel.circleMaxSize, Math.max(ctrl.panel.circleMinSize, (dataPoint.value || 0) * ctrl.panel.circleSizeFactor)),
         color: getColor(dataPoint.value),
         fillColor: getColor(dataPoint.value),
         fillOpacity: 0.5,

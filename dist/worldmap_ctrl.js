@@ -1,7 +1,7 @@
 'use strict';
 
 System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './css/worldmap-panel.css!'], function (_export, _context) {
-  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, _createClass, panelDefaults, tileServers, WorldmapCtrl;
+  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, _createClass, panelDefaults, tileServers, mapCenters, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -65,12 +65,14 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
       }();
 
       panelDefaults = {
+        mapCenter: '(0°, 0°)',
         mapCenterLatitude: 0,
         mapCenterLongitude: 0,
         initialZoom: 1,
-        valueName: 'avg',
-        circleSize: 100,
-        tileServer: 'Mapquest',
+        valueName: 'total',
+        circleSizeFactor: 1,
+        circleMinSize: 2,
+        circleMaxSize: 30,
         locationData: 'countries',
         thresholds: '0,10',
         colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)']
@@ -82,6 +84,13 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           subdomains: '1234' },
         'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd' },
         'CartoDB Dark': { url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: '1234' }
+      };
+      mapCenters = {
+        '(0°, 0°)': { mapCenterLatitude: 0, mapCenterLongitude: 0 },
+        'North America': { mapCenterLatitude: 40, mapCenterLongitude: -100 },
+        'Europe': { mapCenterLatitude: 46, mapCenterLongitude: 14 },
+        'West Asia': { mapCenterLatitude: 26, mapCenterLongitude: 53 },
+        'SE Asia': { mapCenterLatitude: 10, mapCenterLongitude: 106 }
       };
 
       _export('WorldmapCtrl', WorldmapCtrl = function (_MetricsPanelCtrl) {
@@ -202,6 +211,10 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }, {
           key: 'setNewMapCenter',
           value: function setNewMapCenter() {
+            if (this.panel.mapCenter !== 'custom') {
+              this.panel.mapCenterLatitude = mapCenters[this.panel.mapCenter].mapCenterLatitude;
+              this.panel.mapCenterLongitude = mapCenters[this.panel.mapCenter].mapCenterLongitude;
+            }
             this.mapCenterMoved = true;
             this.render();
           }
