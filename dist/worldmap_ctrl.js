@@ -75,7 +75,9 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         circleMaxSize: 30,
         locationData: 'countries',
         thresholds: '0,10',
-        colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)']
+        colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+        unitSingle: '',
+        unitPlural: ''
       };
       tileServers = {
         'Estri WorldGrey': { url: 'http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ', subdomains: '' },

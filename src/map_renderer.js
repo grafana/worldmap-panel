@@ -123,7 +123,8 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function createPopup(circle, locationName, value) {
-    circle.bindPopup(locationName + ': ' + value, {'offset': window.L.point(0, -2), 'className': 'worldmap-popup'});
+    const unit = value && value === 1 ? ctrl.panel.unitSingular : ctrl.panel.unitPlural;
+    circle.bindPopup(locationName + ': ' + value + ' ' + unit, {'offset': window.L.point(0, -2), 'className': 'worldmap-popup'});
 
     circle.on('mouseover', function (evt) {
       const layer = evt.target;

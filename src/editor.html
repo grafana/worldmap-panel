@@ -28,6 +28,11 @@
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMaxSize" ng-change="ctrl.render()" ng-model-onblur />
 		</div>
     <div class="gf-form">
+			<label class="gf-form-label width-10">Unit</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.unitSingular" placeholder="singular form" ng-change="ctrl.render()" ng-model-onblur />
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.unitPlural" placeholder="plural form" ng-change="ctrl.render()" ng-model-onblur />
+		</div>
+    <div class="gf-form">
 			<label class="gf-form-label width-10">Map Provider</label>
 			<div class="gf-form-select-wrapper max-width-10">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.tileServer" ng-options="key as key for (key, value) in ctrl.tileServers" ng-change="ctrl.changeTileServer()"></select>
