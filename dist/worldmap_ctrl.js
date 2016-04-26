@@ -150,8 +150,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           key: 'onPanelTeardown',
           value: function onPanelTeardown() {
             this.circles = [];
-            this.circlesLayer.removeFrom(this.map);
-            this.legend.removeFrom(this.map);
+            if (this.circlesLayer) this.map.removeLayer(this.circlesLayer);
+            if (this.legend) this.legend.removeFrom(this.map);
             this.legend = null;
             if (this.map) this.map.remove();
           }
