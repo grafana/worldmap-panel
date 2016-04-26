@@ -123,7 +123,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
     }
 
     function createPopup(circle, locationName, value) {
-      circle.bindPopup(locationName + ': ' + value);
+      circle.bindPopup(locationName + ': ' + value, { 'offset': window.L.point(0, -2), 'className': 'worldmap-popup' });
 
       circle.on('mouseover', function (evt) {
         var layer = evt.target;

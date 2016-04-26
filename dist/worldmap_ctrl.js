@@ -92,27 +92,27 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
 
           var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(WorldmapCtrl).call(this, $scope, $injector));
 
-          if (_this.panel && !_this.panel.tileServer) {
-            _this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
-          }
-          _.defaults(_this.panel, panelDefaults);
-          _this.setMapSaturationClass();
-          _this.tileServers = tileServers;
+          _this.setDefaults(contextSrv);
 
           _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
           _this.events.on('data-received', _this.onDataReceived.bind(_this));
           _this.events.on('panel-teardown', _this.onPanelTeardown.bind(_this));
 
-          if (!_this.map) {
-            window.$.getJSON('public/plugins/grafana-worldmap-panel/' + _this.panel.locationData + '.json').then(function (res) {
-              _this.locations = res;
-              _this.render();
-            });
-          }
+          _this.loadLocationDataFromFile();
           return _this;
         }
 
         _createClass(WorldmapCtrl, [{
+          key: 'setDefaults',
+          value: function setDefaults(contextSrv) {
+            if (this.panel && !this.panel.tileServer) {
+              this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
+            }
+            _.defaults(this.panel, panelDefaults);
+            this.setMapSaturationClass();
+            this.tileServers = tileServers;
+          }
+        }, {
           key: 'setMapSaturationClass',
           value: function setMapSaturationClass() {
             if (this.panel.tileServer === 'CartoDB Dark') {
@@ -121,6 +121,18 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
               this.saturationClass = 'map-lighten';
             } else {
               this.saturationClass = '';
+            }
+          }
+        }, {
+          key: 'loadLocationDataFromFile',
+          value: function loadLocationDataFromFile() {
+            var _this2 = this;
+
+            if (!this.map) {
+              window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(function (res) {
+                _this2.locations = res;
+                _this2.render();
+              });
             }
           }
         }, {
@@ -152,7 +164,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }, {
           key: 'setValues',
           value: function setValues(data) {
-            var _this2 = this;
+            var _this3 = this;
 
             if (this.series && this.series.length > 0) {
               this.series.forEach(function (serie) {
@@ -164,7 +176,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                 } else {
                   var dataValue = {
                     key: serie.alias,
-                    value: serie.stats[_this2.panel.valueName],
+                    value: serie.stats[_this3.panel.valueName],
                     flotpairs: serie.flotpairs,
                     valueFormatted: lastValue,
                     valueRounded: 0
@@ -224,11 +236,11 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }, {
           key: 'changeLocationData',
           value: function changeLocationData() {
-            var _this3 = this;
+            var _this4 = this;
 
             window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(function (res) {
-              _this3.locations = res;
-              _this3.render();
+              _this4.locations = res;
+              _this4.render();
             });
           }
         }, {

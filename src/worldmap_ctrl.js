@@ -31,23 +31,22 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, contextSrv) {
     super($scope, $injector);
 
+    this.setDefaults(contextSrv);
+
+    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+    this.events.on('data-received', this.onDataReceived.bind(this));
+    this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
+
+    this.loadLocationDataFromFile();
+  }
+
+  setDefaults(contextSrv) {
     if (this.panel && !this.panel.tileServer) {
       this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
     }
     _.defaults(this.panel, panelDefaults);
     this.setMapSaturationClass();
     this.tileServers = tileServers;
-
-    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-    this.events.on('data-received', this.onDataReceived.bind(this));
-    this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
-
-    if (!this.map) {
-      window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(res => {
-        this.locations = res;
-        this.render();
-      });
-    }
   }
 
   setMapSaturationClass() {
@@ -57,6 +56,15 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       this.saturationClass = 'map-lighten';
     } else {
       this.saturationClass = '';
+    }
+  }
+
+  loadLocationDataFromFile() {
+    if (!this.map) {
+      window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(res => {
+        this.locations = res;
+        this.render();
+      });
     }
   }
 
