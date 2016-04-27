@@ -74,6 +74,7 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function clearCircles() {
+    ctrl.circlesLayer.clearLayers();
     ctrl.map.removeLayer(ctrl.circlesLayer);
     ctrl.circles = [];
   }

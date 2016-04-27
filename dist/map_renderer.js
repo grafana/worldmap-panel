@@ -70,6 +70,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
     }
 
     function clearCircles() {
+      ctrl.circlesLayer.clearLayers();
       ctrl.map.removeLayer(ctrl.circlesLayer);
       ctrl.circles = [];
     }
