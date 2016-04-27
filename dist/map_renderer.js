@@ -69,6 +69,14 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
       return _.first(ctrl.panel.colors);
     }
 
+    function needToRedrawCircles() {
+      if (ctrl.circles.length === 0) return false;
+      if (ctrl.circles.length > 0 && ctrl.circles.length !== ctrl.data.length) return true;
+      var locations = _.map(_.map(ctrl.circles, 'options'), 'location').sort();
+      var dataPoints = _.map(ctrl.data, 'key').sort();
+      return !_.isEqual(locations, dataPoints);
+    }
+
     function clearCircles() {
       ctrl.circlesLayer.clearLayers();
       ctrl.map.removeLayer(ctrl.circlesLayer);
@@ -76,7 +84,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
     }
 
     function drawCircles() {
-      if (ctrl.circles.length > 0 && ctrl.circles.length !== ctrl.data.length) {
+      if (needToRedrawCircles()) {
         clearCircles();
       }
 

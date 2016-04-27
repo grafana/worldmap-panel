@@ -73,6 +73,14 @@ export default function link(scope, elem, attrs, ctrl) {
     return _.first(ctrl.panel.colors);
   }
 
+  function needToRedrawCircles() {
+    if (ctrl.circles.length === 0) return false;
+    if (ctrl.circles.length > 0 && ctrl.circles.length !== ctrl.data.length) return true;
+    const locations = _.map(_.map(ctrl.circles, 'options'), 'location').sort();
+    const dataPoints = _.map(ctrl.data, 'key').sort();
+    return !_.isEqual(locations, dataPoints);
+  }
+
   function clearCircles() {
     ctrl.circlesLayer.clearLayers();
     ctrl.map.removeLayer(ctrl.circlesLayer);
@@ -80,7 +88,7 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function drawCircles() {
-    if (ctrl.circles.length > 0 && ctrl.circles.length !== ctrl.data.length) {
+    if (needToRedrawCircles()) {
       clearCircles();
     }
 
