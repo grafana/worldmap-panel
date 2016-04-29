@@ -25,7 +25,9 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
     }
 
     function createMap() {
-      ctrl.map = window.L.map(mapContainer[0], { worldCopyJump: true, center: [ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude] }).fitWorld().zoomIn(ctrl.panel.initialZoom);
+      var mapCenter = window.L.latLng(ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude);
+      ctrl.map = window.L.map(mapContainer[0], { worldCopyJump: true, center: mapCenter }).fitWorld().zoomIn(ctrl.panel.initialZoom);
+      ctrl.map.panTo(mapCenter);
 
       var selectedTileServer = ctrl.tileServers[ctrl.panel.tileServer];
       window.L.tileLayer(selectedTileServer.url, {

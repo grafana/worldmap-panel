@@ -24,9 +24,11 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function createMap() {
-    ctrl.map = window.L.map(mapContainer[0], {worldCopyJump: true, center: [ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude]})
+    const mapCenter = window.L.latLng(ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude);
+    ctrl.map = window.L.map(mapContainer[0], {worldCopyJump: true, center: mapCenter})
       .fitWorld()
       .zoomIn(ctrl.panel.initialZoom);
+    ctrl.map.panTo(mapCenter);
 
     const selectedTileServer = ctrl.tileServers[ctrl.panel.tileServer];
     window.L.tileLayer(selectedTileServer.url, {
