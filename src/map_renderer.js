@@ -30,7 +30,7 @@ export default function link(scope, elem, attrs, ctrl) {
       .zoomIn(ctrl.panel.initialZoom);
     ctrl.map.panTo(mapCenter);
 
-    const selectedTileServer = ctrl.tileServers[ctrl.panel.tileServer];
+    const selectedTileServer = ctrl.tileServers[ctrl.tileServer];
     window.L.tileLayer(selectedTileServer.url, {
       maxZoom: 18,
       subdomains: selectedTileServer.subdomains,

@@ -29,7 +29,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
       ctrl.map = window.L.map(mapContainer[0], { worldCopyJump: true, center: mapCenter }).fitWorld().zoomIn(ctrl.panel.initialZoom);
       ctrl.map.panTo(mapCenter);
 
-      var selectedTileServer = ctrl.tileServers[ctrl.panel.tileServer];
+      var selectedTileServer = ctrl.tileServers[ctrl.tileServer];
       window.L.tileLayer(selectedTileServer.url, {
         maxZoom: 18,
         subdomains: selectedTileServer.subdomains,

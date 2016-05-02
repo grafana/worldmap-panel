@@ -21,11 +21,6 @@ const panelDefaults = {
 };
 
 const tileServers = {
-  'Estri WorldGrey': {url: 'http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ', subdomains: '' },
-  'OpenStreetMap': {url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>', subdomains: 'abc'},
-  'Mapquest': {url: 'http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', attribution: 'Tiles by <a href="http://www.mapquest.com/">MapQuest</a> &mdash; ' +
-            'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-            subdomains: '1234'},
   'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'},
   'CartoDB Dark': {url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: '1234'}
 };
@@ -42,7 +37,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, contextSrv) {
     super($scope, $injector);
 
-    this.setDefaults(contextSrv);
+    this.setMapProvider(contextSrv);
+    _.defaults(this.panel, panelDefaults);
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
@@ -51,20 +47,16 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.loadLocationDataFromFile();
   }
 
-  setDefaults(contextSrv) {
-    if (this.panel && !this.panel.tileServer) {
-      this.panel.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
-    }
-    _.defaults(this.panel, panelDefaults);
+  setMapProvider(contextSrv) {
+    this.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
+
     this.setMapSaturationClass();
     this.tileServers = tileServers;
   }
 
   setMapSaturationClass() {
-    if (this.panel.tileServer === 'CartoDB Dark') {
+    if (this.tileServer === 'CartoDB Dark') {
       this.saturationClass = 'map-darken';
-    } else if (this.panel.tileServer === 'Mapquest') {
-      this.saturationClass = 'map-lighten';
     } else {
       this.saturationClass = '';
     }
@@ -157,14 +149,6 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   setZoom() {
     this.map.setZoom(this.panel.initialZoom);
-  }
-
-  changeTileServer() {
-    this.legend.removeFrom(this.map);
-    this.legend = null;
-    this.map.remove();
-    this.map = null;
-    this.render();
   }
 
   changeThresholds() {
