@@ -1,6 +1,6 @@
 <div class="editor-row">
 	<div class="section gf-form-group">
-		<h5 class="section-heading">Worldmap Options</h5>
+		<h5 class="section-heading">Map Visual Options</h5>
 		<div class="gf-form">
 			<label class="gf-form-label width-10">Center</label>
       <div class="gf-form-select-wrapper max-width-10">
@@ -32,33 +32,40 @@
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.unitSingular" placeholder="singular form" ng-change="ctrl.render()" ng-model-onblur />
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.unitPlural" placeholder="plural form" ng-change="ctrl.render()" ng-model-onblur />
 		</div>
-    <div class="gf-form">
+	</div>
+	<div class="section gf-form-group">
+	<h5 class="section-heading">Map Data Options</h5>
+		<div class="gf-form">
 			<label class="gf-form-label width-10">Map Provider</label>
 			<div class="gf-form-select-wrapper max-width-10">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.tileServer" ng-options="key as key for (key, value) in ctrl.tileServers" ng-change="ctrl.changeTileServer()"></select>
 			</div>
 		</div>
-    <div class="gf-form">
+		<div class="gf-form">
 			<label class="gf-form-label width-10">Location Data</label>
 			<div class="gf-form-select-wrapper max-width-10">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'probes']" ng-change="ctrl.changeLocationData()"></select>
 			</div>
 		</div>
-    <div class="gf-form">
+	</div>
+    
+	<div class="section gf-form-group">
+		<h5 class="section-heading">Data Value Options</h5>
+		<div class="gf-form">
 			<label class="gf-form-label width-10">Aggregation</label>
 			<div class="gf-form-select-wrapper max-width-10">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ['min','max','avg', 'current', 'total']" ng-change="ctrl.refresh()"></select>
 			</div>
 		</div>
-    <div class="gf-form">
+		<div class="gf-form">
 			<label class="gf-form-label width-10">Thresholds</label>
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.thresholds" ng-change="ctrl.changeThresholds()" placeholder="0,10" ng-model-onblur />
 		</div>
-    <div class="gf-form">
+		<div class="gf-form">
 			<label class="gf-form-label width-10">Colors</label>
-        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[0]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
-        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[1]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
-        <spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[2]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
+				<spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[0]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
+				<spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[1]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
+				<spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[2]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
 		</div>
   </div>
 </div>
