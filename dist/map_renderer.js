@@ -19,7 +19,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
 
       if (ctrl.mapCenterMoved) panToMapCenter();
 
-      if (!ctrl.legend) createLegend();
+      if (!ctrl.legend && ctrl.panel.showLegend) createLegend();
 
       drawCircles();
     }

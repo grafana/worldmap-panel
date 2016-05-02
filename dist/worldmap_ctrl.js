@@ -76,7 +76,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         thresholds: '0,10',
         colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
         unitSingle: '',
-        unitPlural: ''
+        unitPlural: '',
+        showLegend: true
       };
       tileServers = {
         'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd' },
@@ -228,6 +229,15 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           key: 'setZoom',
           value: function setZoom() {
             this.map.setZoom(this.panel.initialZoom);
+          }
+        }, {
+          key: 'toggleLegend',
+          value: function toggleLegend() {
+            if (!this.panel.showLegend) {
+              this.legend.removeFrom(this.map);
+              this.legend = null;
+            }
+            this.render();
           }
         }, {
           key: 'changeThresholds',

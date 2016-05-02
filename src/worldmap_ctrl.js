@@ -17,7 +17,8 @@ const panelDefaults = {
   thresholds: '0,10',
   colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
   unitSingle: '',
-  unitPlural: ''
+  unitPlural: '',
+  showLegend: true
 };
 
 const tileServers = {
@@ -149,6 +150,14 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   setZoom() {
     this.map.setZoom(this.panel.initialZoom);
+  }
+
+  toggleLegend() {
+    if (!this.panel.showLegend) {
+      this.legend.removeFrom(this.map);
+      this.legend = null;
+    }
+    this.render();
   }
 
   changeThresholds() {

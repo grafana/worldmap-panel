@@ -18,7 +18,7 @@ export default function link(scope, elem, attrs, ctrl) {
 
     if (ctrl.mapCenterMoved) panToMapCenter();
 
-    if (!ctrl.legend) createLegend();
+    if (!ctrl.legend && ctrl.panel.showLegend) createLegend();
 
     drawCircles();
   }
