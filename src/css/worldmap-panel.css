@@ -23,6 +23,6 @@
   opacity: 0.7;
 }
 
-.leaflet-bottom.leaflet-left, .leaflet-bottom.leaflet-right {
-  z-index: 900;
+.leaflet-top.leaflet-left, .leaflet-bottom.leaflet-left, .leaflet-bottom.leaflet-right {
+  z-index: 100;
 }
