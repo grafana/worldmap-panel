@@ -70,7 +70,6 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         mapCenterLongitude: 0,
         initialZoom: 1,
         valueName: 'total',
-        circleSizeFactor: 1,
         circleMinSize: 2,
         circleMaxSize: 30,
         locationData: 'countries',
@@ -178,25 +177,37 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             var _this3 = this;
 
             if (this.series && this.series.length > 0) {
-              this.series.forEach(function (serie) {
-                var lastPoint = _.last(serie.datapoints);
-                var lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
+              (function () {
+                var highestValue = 0;
+                var lowestValue = Number.MAX_VALUE;
 
-                if (_.isString(lastValue)) {
-                  data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
-                } else {
-                  var dataValue = {
-                    key: serie.alias,
-                    value: serie.stats[_this3.panel.valueName],
-                    flotpairs: serie.flotpairs,
-                    valueFormatted: lastValue,
-                    valueRounded: 0
-                  };
+                _this3.series.forEach(function (serie) {
+                  var lastPoint = _.last(serie.datapoints);
+                  var lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
 
-                  dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
-                  data.push(dataValue);
-                }
-              });
+                  if (_.isString(lastValue)) {
+                    data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
+                  } else {
+                    var dataValue = {
+                      key: serie.alias,
+                      value: serie.stats[_this3.panel.valueName],
+                      flotpairs: serie.flotpairs,
+                      valueFormatted: lastValue,
+                      valueRounded: 0
+                    };
+
+                    if (dataValue.value > highestValue) highestValue = dataValue.value;
+                    if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+
+                    dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
+                    data.push(dataValue);
+                  }
+                });
+
+                data.highestValue = highestValue;
+                data.lowestValue = lowestValue;
+                data.valueRange = highestValue - lowestValue;
+              })();
             }
           }
         }, {

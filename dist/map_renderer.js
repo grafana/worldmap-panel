@@ -103,7 +103,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
         });
 
         if (circle) {
-          circle.setRadius(Math.min(ctrl.panel.circleMaxSize, Math.max(ctrl.panel.circleMinSize, (dataPoint.value || 0) * ctrl.panel.circleSizeFactor)));
+          circle.setRadius(calcCircleSize(dataPoint.value || 0));
           circle.setStyle({
             color: getColor(dataPoint.value),
             fillColor: getColor(dataPoint.value),
@@ -122,7 +122,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
 
     function createCircle(location, dataPoint) {
       var circle = window.L.circleMarker([location.latitude, location.longitude], {
-        radius: Math.min(ctrl.panel.circleMaxSize, Math.max(ctrl.panel.circleMinSize, (dataPoint.value || 0) * ctrl.panel.circleSizeFactor)),
+        radius: calcCircleSize(dataPoint.value || 0),
         color: getColor(dataPoint.value),
         fillColor: getColor(dataPoint.value),
         fillOpacity: 0.5,
@@ -131,6 +131,17 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
 
       createPopup(circle, location.name, dataPoint.valueRounded);
       return circle;
+    }
+
+    function calcCircleSize(dataPointValue) {
+      if (ctrl.data.valueRange === 0) {
+        return ctrl.panel.circleMinSize;
+      }
+
+      var dataFactor = (dataPointValue - ctrl.data.lowestValue) / ctrl.data.valueRange;
+      var circleSizeRange = ctrl.panel.circleMaxSize - ctrl.panel.circleMinSize;
+
+      return circleSizeRange * dataFactor + ctrl.panel.circleMinSize;
     }
 
     function createPopup(circle, locationName, value) {

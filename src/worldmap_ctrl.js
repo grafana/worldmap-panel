@@ -11,7 +11,6 @@ const panelDefaults = {
   mapCenterLongitude: 0,
   initialZoom: 1,
   valueName: 'total',
-  circleSizeFactor: 1,
   circleMinSize: 2,
   circleMaxSize: 30,
   locationData: 'countries',
@@ -105,6 +104,9 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   setValues(data) {
     if (this.series && this.series.length > 0) {
+      let highestValue = 0;
+      let lowestValue = Number.MAX_VALUE;
+
       this.series.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
@@ -120,10 +122,17 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
             valueRounded: 0
           };
 
+          if (dataValue.value > highestValue) highestValue = dataValue.value;
+          if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+
           dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
           data.push(dataValue);
         }
       });
+
+      data.highestValue = highestValue;
+      data.lowestValue = lowestValue;
+      data.valueRange = highestValue - lowestValue;
     }
   }
 
