@@ -141,7 +141,8 @@ System.register(['lodash', './leaflet', './css/leaflet.css!', './worldmap'], fun
 
     function createPopup(circle, locationName, value) {
       var unit = value && value === 1 ? ctrl.panel.unitSingular : ctrl.panel.unitPlural;
-      circle.bindPopup(locationName + ': ' + value + ' ' + unit, { 'offset': window.L.point(0, -2), 'className': 'worldmap-popup' });
+      var label = locationName + ': ' + value + ' ' + (unit || '');
+      circle.bindPopup(label, { 'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': false });
 
       circle.on('mouseover', function (evt) {
         var layer = evt.target;
