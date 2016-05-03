@@ -77,7 +77,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
         unitSingle: '',
         unitPlural: '',
-        showLegend: true
+        showLegend: true,
+        esMetric: 'Count'
       };
       tileServers = {
         'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd' },
@@ -132,7 +133,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           value: function loadLocationDataFromFile() {
             var _this2 = this;
 
-            if (!this.map) {
+            if (!this.map && this.panel.locationData !== 'geohash') {
               window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(function (res) {
                 _this2.locations = res;
                 _this2.render();
@@ -158,7 +159,11 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           value: function onDataReceived(dataList) {
             this.series = dataList.map(this.seriesHandler.bind(this));
             var data = [];
-            this.setValues(data);
+            if (this.panel.locationData === 'geohash') {
+              this.setGeohashValues(data);
+            } else {
+              this.setValues(data);
+            }
             this.data = data;
 
             this.updateThresholdData();
@@ -166,8 +171,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             this.render();
           }
         }, {
-          key: 'setValues',
-          value: function setValues(data) {
+          key: 'setGeohashValues',
+          value: function setGeohashValues(data) {
             var _this3 = this;
 
             if (this.series && this.series.length > 0) {
@@ -175,7 +180,39 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                 var highestValue = 0;
                 var lowestValue = Number.MAX_VALUE;
 
-                _this3.series.forEach(function (serie) {
+                _this3.series[0].datapoints.forEach(function (datapoint) {
+                  var dataValue = {
+                    key: datapoint.location,
+                    locationName: _this3.panel.esLocationName ? datapoint[_this3.panel.esLocationName] : 'No name',
+                    value: datapoint[_this3.panel.esMetric],
+                    valueFormatted: datapoint[_this3.panel.esMetric],
+                    valueRounded: 0
+                  };
+
+                  if (dataValue.value > highestValue) highestValue = dataValue.value;
+                  if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+
+                  dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
+                  data.push(dataValue);
+                });
+
+                data.highestValue = highestValue;
+                data.lowestValue = lowestValue;
+                data.valueRange = highestValue - lowestValue;
+              })();
+            }
+          }
+        }, {
+          key: 'setValues',
+          value: function setValues(data) {
+            var _this4 = this;
+
+            if (this.series && this.series.length > 0) {
+              (function () {
+                var highestValue = 0;
+                var lowestValue = Number.MAX_VALUE;
+
+                _this4.series.forEach(function (serie) {
                   var lastPoint = _.last(serie.datapoints);
                   var lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
 
@@ -184,7 +221,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                   } else {
                     var dataValue = {
                       key: serie.alias,
-                      value: serie.stats[_this3.panel.valueName],
+                      value: serie.stats[_this4.panel.valueName],
                       flotpairs: serie.flotpairs,
                       valueFormatted: lastValue,
                       valueRounded: 0
@@ -256,11 +293,11 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }, {
           key: 'changeLocationData',
           value: function changeLocationData() {
-            var _this4 = this;
+            var _this5 = this;
 
             window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(function (res) {
-              _this4.locations = res;
-              _this4.render();
+              _this5.locations = res;
+              _this5.render();
             });
           }
         }, {

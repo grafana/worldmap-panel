@@ -18,7 +18,8 @@ const panelDefaults = {
   colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
   unitSingle: '',
   unitPlural: '',
-  showLegend: true
+  showLegend: true,
+  esMetric: 'Count'
 };
 
 const tileServers = {
@@ -64,7 +65,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   loadLocationDataFromFile() {
-    if (!this.map) {
+    if (!this.map && this.panel.locationData !== 'geohash') {
       window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(res => {
         this.locations = res;
         this.render();
@@ -87,12 +88,43 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList) {
     this.series = dataList.map(this.seriesHandler.bind(this));
     const data = [];
-    this.setValues(data);
+    if (this.panel.locationData === 'geohash') {
+      this.setGeohashValues(data);
+    } else {
+      this.setValues(data);
+    }
     this.data = data;
 
     this.updateThresholdData();
 
     this.render();
+  }
+
+  setGeohashValues(data) {
+    if (this.series && this.series.length > 0) {
+      let highestValue = 0;
+      let lowestValue = Number.MAX_VALUE;
+
+      this.series[0].datapoints.forEach(datapoint => {
+        const dataValue = {
+          key: datapoint.location,
+          locationName: this.panel.esLocationName ? datapoint[this.panel.esLocationName] : 'No name',
+          value: datapoint[this.panel.esMetric],
+          valueFormatted: datapoint[this.panel.esMetric],
+          valueRounded: 0
+        };
+
+        if (dataValue.value > highestValue) highestValue = dataValue.value;
+        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+
+        dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
+        data.push(dataValue);
+      });
+
+      data.highestValue = highestValue;
+      data.lowestValue = lowestValue;
+      data.valueRange = highestValue - lowestValue;
+    }
   }
 
   setValues(data) {

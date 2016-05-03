@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export, _context) {
-  var _, L;
+System.register(['lodash', './leaflet', './css/leaflet.css!', './geohash'], function (_export, _context) {
+  var _, L, decodeGeoHash;
 
   function link(scope, elem, attrs, ctrl) {
     var mapContainer = elem.find('.mapcontainer');
@@ -96,10 +96,10 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
           return loc.key === dataPoint.key;
         });
 
-        if (!location) return;
+        if (!location && ctrl.panel.locationData !== 'geohash') return;
 
         var circle = _.find(ctrl.circles, function (cir) {
-          return cir.options.location === location.key;
+          return cir.options.location === dataPoint.key;
         });
 
         if (circle) {
@@ -108,10 +108,10 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
             color: getColor(dataPoint.value),
             fillColor: getColor(dataPoint.value),
             fillOpacity: 0.5,
-            location: location.key
+            location: dataPoint.key
           });
           circle.unbindPopup();
-          createPopup(circle, location.name, dataPoint.valueRounded);
+          createPopup(circle, location ? location.name : dataPoint.locationName, dataPoint.valueRounded);
         } else {
           circles.push(createCircle(location, dataPoint));
         }
@@ -121,16 +121,25 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
     }
 
     function createCircle(location, dataPoint) {
-      var circle = window.L.circleMarker([location.latitude, location.longitude], {
+      var circle = window.L.circleMarker(getLatLng(location, dataPoint.key), {
         radius: calcCircleSize(dataPoint.value || 0),
         color: getColor(dataPoint.value),
         fillColor: getColor(dataPoint.value),
         fillOpacity: 0.5,
-        location: location.key
+        location: dataPoint.key
       });
 
-      createPopup(circle, location.name, dataPoint.valueRounded);
+      createPopup(circle, location ? location.name : dataPoint.locationName, dataPoint.valueRounded);
       return circle;
+    }
+
+    function getLatLng(location, key) {
+      if (ctrl.panel.locationData === 'geohash') {
+        var decodedGeohash = decodeGeoHash(key);
+        return [decodedGeohash.latitude, decodedGeohash.longitude];
+      }
+
+      return [location.latitude, location.longitude];
     }
 
     function calcCircleSize(dataPointValue) {
@@ -175,7 +184,9 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
       _ = _lodash.default;
     }, function (_leaflet) {
       L = _leaflet.default;
-    }, function (_cssLeafletCss) {}],
+    }, function (_cssLeafletCss) {}, function (_geohash) {
+      decodeGeoHash = _geohash.default;
+    }],
     execute: function () {}
   };
 });

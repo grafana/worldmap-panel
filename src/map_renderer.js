@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import L from './leaflet';
 import './css/leaflet.css!';
+import decodeGeoHash from './geohash';
 
 export default function link(scope, elem, attrs, ctrl) {
   const mapContainer = elem.find('.mapcontainer');
@@ -98,9 +99,9 @@ export default function link(scope, elem, attrs, ctrl) {
     ctrl.data.forEach(dataPoint => {
       const location = _.find(ctrl.locations, (loc) => { return loc.key === dataPoint.key; });
 
-      if (!location) return;
+      if (!location && ctrl.panel.locationData !== 'geohash') return;
 
-      const circle = _.find(ctrl.circles, cir => { return cir.options.location === location.key; });
+      const circle = _.find(ctrl.circles, cir => { return cir.options.location === dataPoint.key; });
 
       if (circle) {
         circle.setRadius(calcCircleSize(dataPoint.value || 0));
@@ -108,10 +109,10 @@ export default function link(scope, elem, attrs, ctrl) {
           color: getColor(dataPoint.value),
           fillColor: getColor(dataPoint.value),
           fillOpacity: 0.5,
-          location: location.key
+          location: dataPoint.key
         });
         circle.unbindPopup();
-        createPopup(circle, location.name, dataPoint.valueRounded);
+        createPopup(circle, location ? location.name : dataPoint.locationName, dataPoint.valueRounded);
       } else {
         circles.push(createCircle(location, dataPoint));
       }
@@ -121,16 +122,25 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function createCircle(location, dataPoint) {
-    const circle = window.L.circleMarker([location.latitude, location.longitude], {
+    const circle = window.L.circleMarker(getLatLng(location, dataPoint.key), {
       radius: calcCircleSize(dataPoint.value || 0),
       color: getColor(dataPoint.value),
       fillColor: getColor(dataPoint.value),
       fillOpacity: 0.5,
-      location: location.key
+      location: dataPoint.key
     });
 
-    createPopup(circle, location.name, dataPoint.valueRounded);
+    createPopup(circle, location ? location.name : dataPoint.locationName, dataPoint.valueRounded);
     return circle;
+  }
+
+  function getLatLng(location, key) {
+    if (ctrl.panel.locationData === 'geohash') {
+      const decodedGeohash = decodeGeoHash(key);
+      return [decodedGeohash.latitude, decodedGeohash.longitude];
+    }
+
+    return [location.latitude, location.longitude];
   }
 
   function calcCircleSize(dataPointValue) {
