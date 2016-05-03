@@ -58,7 +58,7 @@ System.register([], function (_export, _context) {
         }, {
           key: "resize",
           value: function resize() {
-            if (this.map) this.map.invalidateSize();
+            this.map.invalidateSize();
           }
         }, {
           key: "panToMapCenter",

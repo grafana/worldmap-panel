@@ -102,16 +102,19 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   setGeohashValues(data) {
+    if (!this.panel.esGeoPoint || !this.panel.esMetric) return;
+
     if (this.series && this.series.length > 0) {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
       this.series[0].datapoints.forEach(datapoint => {
-        const decodedGeohash = decodeGeoHash(datapoint.location);
+        const encodedGeohash = datapoint[this.panel.esGeoPoint];
+        const decodedGeohash = decodeGeoHash(encodedGeohash);
 
         const dataValue = {
-          key: datapoint.location,
-          locationName: this.panel.esLocationName ? datapoint[this.panel.esLocationName] : 'No name',
+          key: encodedGeohash,
+          locationName: this.panel.esLocationName ? datapoint[this.panel.esLocationName] : encodedGeohash,
           locationLatitude: decodedGeohash.latitude,
           locationLongitude: decodedGeohash.longitude,
           value: datapoint[this.panel.esMetric],
@@ -214,10 +217,11 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   changeLocationData() {
-    window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(res => {
-      this.locations = res;
+    this.loadLocationDataFromFile();
+
+    if (this.panel.locationData === 'geohash') {
       this.render();
-    });
+    }
   }
 
   link(scope, elem, attrs, ctrl) {

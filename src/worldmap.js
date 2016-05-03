@@ -23,7 +23,7 @@ export default class WorldMap {
   }
 
   resize() {
-    if (this.map) this.map.invalidateSize();
+    this.map.invalidateSize();
   }
 
   panToMapCenter() {

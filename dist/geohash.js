@@ -2,6 +2,8 @@
 
 System.register([], function (_export, _context) {
   function decodeGeoHash(geohash) {
+    if (!geohash || geohash.length === 0) throw new Error('Missing geohash value');
+
     var BITS = [16, 8, 4, 2, 1];
     var BASE32 = '0123456789bcdefghjkmnpqrstuvwxyz';
     var isEven = 1;

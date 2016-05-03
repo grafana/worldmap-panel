@@ -35,29 +35,33 @@
 	<div class="section gf-form-group">
 	<h5 class="section-heading">Map Data Options</h5>
 		<div class="gf-form">
-			<label class="gf-form-label width-10">Location Data</label>
+			<label class="gf-form-label width-12">Location Data</label>
 			<div class="gf-form-select-wrapper max-width-10">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'probes', 'geohash']" ng-change="ctrl.changeLocationData()"></select>
 			</div>
 		</div>
-		<div class="gf-form">
-			<label class="gf-form-label width-10">ES Metric Field</label>
-			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esMetric" ng-change="ctrl.render()" ng-model-onblur />
-		</div>
-		<div class="gf-form">
-			<label class="gf-form-label width-10">ES Location Name Field</label>
-			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLocationName" ng-change="ctrl.render()" ng-model-onblur />
-		</div>
-	</div>
-    
-	<div class="section gf-form-group">
-		<h5 class="section-heading">Data Value Options</h5>
-		<div class="gf-form">
-			<label class="gf-form-label width-10">Aggregation</label>
+		<div class="gf-form" ng-show="ctrl.panel.locationData !== 'geohash'">
+			<label class="gf-form-label width-12">Aggregation</label>
 			<div class="gf-form-select-wrapper max-width-10">
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ['min','max','avg', 'current', 'total']" ng-change="ctrl.refresh()"></select>
 			</div>
 		</div>
+		<div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
+			<label class="gf-form-label width-12">ES Metric Field</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esMetric" ng-change="ctrl.refresh()" ng-model-onblur />
+		</div>
+		<div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
+			<label class="gf-form-label width-12">ES Location Name Field</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLocationName" ng-change="ctrl.refresh()" ng-model-onblur />
+		</div>
+		<div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
+			<label class="gf-form-label width-12">ES geo_point Field</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esGeoPoint" ng-change="ctrl.refresh()" ng-model-onblur />
+		</div>
+	</div>
+    
+	<div class="section gf-form-group">
+		<h5 class="section-heading">Threshold Options</h5>
 		<div class="gf-form">
 			<label class="gf-form-label width-10">Thresholds</label>
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.thresholds" ng-change="ctrl.changeThresholds()" placeholder="0,10" ng-model-onblur />
