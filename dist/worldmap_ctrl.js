@@ -136,7 +136,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             var _this2 = this;
 
             if (!this.map && this.panel.locationData !== 'geohash') {
-              window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(function (res) {
+              window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(function (res) {
                 _this2.locations = res;
                 _this2.render();
               });

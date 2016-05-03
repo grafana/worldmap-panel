@@ -67,7 +67,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   loadLocationDataFromFile() {
     if (!this.map && this.panel.locationData !== 'geohash') {
-      window.$.getJSON('public/plugins/grafana-worldmap-panel/' + this.panel.locationData + '.json').then(res => {
+      window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(res => {
         this.locations = res;
         this.render();
       });
