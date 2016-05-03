@@ -3,6 +3,7 @@ import _ from 'lodash';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
 import mapRenderer from './map_renderer';
+import decodeGeoHash from './geohash';
 import './css/worldmap-panel.css!';
 
 const panelDefaults = {
@@ -106,9 +107,13 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       let lowestValue = Number.MAX_VALUE;
 
       this.series[0].datapoints.forEach(datapoint => {
+        const decodedGeohash = decodeGeoHash(datapoint.location);
+
         const dataValue = {
           key: datapoint.location,
           locationName: this.panel.esLocationName ? datapoint[this.panel.esLocationName] : 'No name',
+          locationLatitude: decodedGeohash.latitude,
+          locationLongitude: decodedGeohash.longitude,
           value: datapoint[this.panel.esMetric],
           valueFormatted: datapoint[this.panel.esMetric],
           valueRounded: 0
@@ -135,14 +140,18 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       this.series.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
+        const location = _.find(this.locations, (loc) => { return loc.key === serie.alias; });
 
         if (_.isString(lastValue)) {
+          console.log('was string: ' + lastValue);
           data.push({key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0});
         } else {
           const dataValue = {
             key: serie.alias,
+            locationName: location.name,
+            locationLatitude: location.latitude,
+            locationLongitude: location.longitude,
             value: serie.stats[this.panel.valueName],
-            flotpairs: serie.flotpairs,
             valueFormatted: lastValue,
             valueRounded: 0
           };

@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './css/worldmap-panel.css!'], function (_export, _context) {
-  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, _createClass, panelDefaults, tileServers, mapCenters, WorldmapCtrl;
+System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './geohash', './css/worldmap-panel.css!'], function (_export, _context) {
+  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, decodeGeoHash, _createClass, panelDefaults, tileServers, mapCenters, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -44,6 +44,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
       kbn = _appCoreUtilsKbn.default;
     }, function (_map_renderer) {
       mapRenderer = _map_renderer.default;
+    }, function (_geohash) {
+      decodeGeoHash = _geohash.default;
     }, function (_cssWorldmapPanelCss) {}],
     execute: function () {
       _createClass = function () {
@@ -181,9 +183,13 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                 var lowestValue = Number.MAX_VALUE;
 
                 _this3.series[0].datapoints.forEach(function (datapoint) {
+                  var decodedGeohash = decodeGeoHash(datapoint.location);
+
                   var dataValue = {
                     key: datapoint.location,
                     locationName: _this3.panel.esLocationName ? datapoint[_this3.panel.esLocationName] : 'No name',
+                    locationLatitude: decodedGeohash.latitude,
+                    locationLongitude: decodedGeohash.longitude,
                     value: datapoint[_this3.panel.esMetric],
                     valueFormatted: datapoint[_this3.panel.esMetric],
                     valueRounded: 0
@@ -215,14 +221,20 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                 _this4.series.forEach(function (serie) {
                   var lastPoint = _.last(serie.datapoints);
                   var lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
+                  var location = _.find(_this4.locations, function (loc) {
+                    return loc.key === serie.alias;
+                  });
 
                   if (_.isString(lastValue)) {
+                    console.log('was string: ' + lastValue);
                     data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
                   } else {
                     var dataValue = {
                       key: serie.alias,
+                      locationName: location.name,
+                      locationLatitude: location.latitude,
+                      locationLongitude: location.longitude,
                       value: serie.stats[_this4.panel.valueName],
-                      flotpairs: serie.flotpairs,
                       valueFormatted: lastValue,
                       valueRounded: 0
                     };

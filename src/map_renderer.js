@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import L from './leaflet';
 import './css/leaflet.css!';
-import decodeGeoHash from './geohash';
 
 export default function link(scope, elem, attrs, ctrl) {
   const mapContainer = elem.find('.mapcontainer');
@@ -77,29 +76,43 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function needToRedrawCircles() {
-    if (ctrl.circles.length === 0) return false;
-    if (ctrl.circles.length > 0 && ctrl.circles.length !== ctrl.data.length) return true;
+    if (ctrl.circles.length === 0 && ctrl.data.length > 0) return true;
+    if (ctrl.circles.length !== ctrl.data.length) return true;
     const locations = _.map(_.map(ctrl.circles, 'options'), 'location').sort();
     const dataPoints = _.map(ctrl.data, 'key').sort();
     return !_.isEqual(locations, dataPoints);
   }
 
   function clearCircles() {
-    ctrl.circlesLayer.clearLayers();
-    ctrl.map.removeLayer(ctrl.circlesLayer);
-    ctrl.circles = [];
+    if (ctrl.circlesLayer) {
+      ctrl.circlesLayer.clearLayers();
+      ctrl.map.removeLayer(ctrl.circlesLayer);
+      ctrl.circles = [];
+    }
   }
 
   function drawCircles() {
     if (needToRedrawCircles()) {
       clearCircles();
+      createCircles();
+    } else {
+      updateCircles();
     }
+  }
 
+  function createCircles() {
     const circles = [];
     ctrl.data.forEach(dataPoint => {
-      const location = _.find(ctrl.locations, (loc) => { return loc.key === dataPoint.key; });
+      if (!dataPoint.locationName) return;
+      circles.push(createCircle(dataPoint));
+    });
+    ctrl.circlesLayer = window.L.layerGroup(circles).addTo(ctrl.map);
+    ctrl.circles = ctrl.circles.concat(circles);
+  }
 
-      if (!location && ctrl.panel.locationData !== 'geohash') return;
+  function updateCircles() {
+    ctrl.data.forEach(dataPoint => {
+      if (!dataPoint.locationName) return;
 
       const circle = _.find(ctrl.circles, cir => { return cir.options.location === dataPoint.key; });
 
@@ -112,17 +125,13 @@ export default function link(scope, elem, attrs, ctrl) {
           location: dataPoint.key
         });
         circle.unbindPopup();
-        createPopup(circle, location ? location.name : dataPoint.locationName, dataPoint.valueRounded);
-      } else {
-        circles.push(createCircle(location, dataPoint));
+        createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
       }
     });
-    ctrl.circlesLayer = window.L.layerGroup(circles).addTo(ctrl.map);
-    ctrl.circles = ctrl.circles.concat(circles);
   }
 
-  function createCircle(location, dataPoint) {
-    const circle = window.L.circleMarker(getLatLng(location, dataPoint.key), {
+  function createCircle(dataPoint) {
+    const circle = window.L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
       radius: calcCircleSize(dataPoint.value || 0),
       color: getColor(dataPoint.value),
       fillColor: getColor(dataPoint.value),
@@ -130,17 +139,8 @@ export default function link(scope, elem, attrs, ctrl) {
       location: dataPoint.key
     });
 
-    createPopup(circle, location ? location.name : dataPoint.locationName, dataPoint.valueRounded);
+    createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
     return circle;
-  }
-
-  function getLatLng(location, key) {
-    if (ctrl.panel.locationData === 'geohash') {
-      const decodedGeohash = decodeGeoHash(key);
-      return [decodedGeohash.latitude, decodedGeohash.longitude];
-    }
-
-    return [location.latitude, location.longitude];
   }
 
   function calcCircleSize(dataPointValue) {

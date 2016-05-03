@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['lodash', './leaflet', './css/leaflet.css!', './geohash'], function (_export, _context) {
-  var _, L, decodeGeoHash;
+System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export, _context) {
+  var _, L;
 
   function link(scope, elem, attrs, ctrl) {
     var mapContainer = elem.find('.mapcontainer');
@@ -72,31 +72,43 @@ System.register(['lodash', './leaflet', './css/leaflet.css!', './geohash'], func
     }
 
     function needToRedrawCircles() {
-      if (ctrl.circles.length === 0) return false;
-      if (ctrl.circles.length > 0 && ctrl.circles.length !== ctrl.data.length) return true;
+      if (ctrl.circles.length === 0 && ctrl.data.length > 0) return true;
+      if (ctrl.circles.length !== ctrl.data.length) return true;
       var locations = _.map(_.map(ctrl.circles, 'options'), 'location').sort();
       var dataPoints = _.map(ctrl.data, 'key').sort();
       return !_.isEqual(locations, dataPoints);
     }
 
     function clearCircles() {
-      ctrl.circlesLayer.clearLayers();
-      ctrl.map.removeLayer(ctrl.circlesLayer);
-      ctrl.circles = [];
+      if (ctrl.circlesLayer) {
+        ctrl.circlesLayer.clearLayers();
+        ctrl.map.removeLayer(ctrl.circlesLayer);
+        ctrl.circles = [];
+      }
     }
 
     function drawCircles() {
       if (needToRedrawCircles()) {
         clearCircles();
+        createCircles();
+      } else {
+        updateCircles();
       }
+    }
 
+    function createCircles() {
       var circles = [];
       ctrl.data.forEach(function (dataPoint) {
-        var location = _.find(ctrl.locations, function (loc) {
-          return loc.key === dataPoint.key;
-        });
+        if (!dataPoint.locationName) return;
+        circles.push(createCircle(dataPoint));
+      });
+      ctrl.circlesLayer = window.L.layerGroup(circles).addTo(ctrl.map);
+      ctrl.circles = ctrl.circles.concat(circles);
+    }
 
-        if (!location && ctrl.panel.locationData !== 'geohash') return;
+    function updateCircles() {
+      ctrl.data.forEach(function (dataPoint) {
+        if (!dataPoint.locationName) return;
 
         var circle = _.find(ctrl.circles, function (cir) {
           return cir.options.location === dataPoint.key;
@@ -111,17 +123,13 @@ System.register(['lodash', './leaflet', './css/leaflet.css!', './geohash'], func
             location: dataPoint.key
           });
           circle.unbindPopup();
-          createPopup(circle, location ? location.name : dataPoint.locationName, dataPoint.valueRounded);
-        } else {
-          circles.push(createCircle(location, dataPoint));
+          createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
         }
       });
-      ctrl.circlesLayer = window.L.layerGroup(circles).addTo(ctrl.map);
-      ctrl.circles = ctrl.circles.concat(circles);
     }
 
-    function createCircle(location, dataPoint) {
-      var circle = window.L.circleMarker(getLatLng(location, dataPoint.key), {
+    function createCircle(dataPoint) {
+      var circle = window.L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
         radius: calcCircleSize(dataPoint.value || 0),
         color: getColor(dataPoint.value),
         fillColor: getColor(dataPoint.value),
@@ -129,17 +137,8 @@ System.register(['lodash', './leaflet', './css/leaflet.css!', './geohash'], func
         location: dataPoint.key
       });
 
-      createPopup(circle, location ? location.name : dataPoint.locationName, dataPoint.valueRounded);
+      createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
       return circle;
-    }
-
-    function getLatLng(location, key) {
-      if (ctrl.panel.locationData === 'geohash') {
-        var decodedGeohash = decodeGeoHash(key);
-        return [decodedGeohash.latitude, decodedGeohash.longitude];
-      }
-
-      return [location.latitude, location.longitude];
     }
 
     function calcCircleSize(dataPointValue) {
@@ -184,9 +183,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!', './geohash'], func
       _ = _lodash.default;
     }, function (_leaflet) {
       L = _leaflet.default;
-    }, function (_cssLeafletCss) {}, function (_geohash) {
-      decodeGeoHash = _geohash.default;
-    }],
+    }, function (_cssLeafletCss) {}],
     execute: function () {}
   };
 });
