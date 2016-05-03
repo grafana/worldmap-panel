@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import L from './leaflet';
 import './css/leaflet.css!';
+import WorldMap from './worldmap';
 
 export default function link(scope, elem, attrs, ctrl) {
   const mapContainer = elem.find('.mapcontainer');
@@ -13,33 +14,18 @@ export default function link(scope, elem, attrs, ctrl) {
   function render() {
     if (!ctrl.data) return;
 
-    if (!ctrl.map) createMap();
-    resize();
+    if (!ctrl.map) {
+      ctrl.map = new WorldMap(ctrl, mapContainer[0]);
+      ctrl.circles = [];
+    }
 
-    if (ctrl.mapCenterMoved) panToMapCenter();
+    ctrl.map.resize();
+
+    if (ctrl.mapCenterMoved) ctrl.map.panToMapCenter();
 
     if (!ctrl.legend && ctrl.panel.showLegend) createLegend();
 
     drawCircles();
-  }
-
-  function createMap() {
-    const mapCenter = window.L.latLng(ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude);
-    ctrl.map = window.L.map(mapContainer[0], {worldCopyJump: true, center: mapCenter})
-      .fitWorld()
-      .zoomIn(ctrl.panel.initialZoom);
-    ctrl.map.panTo(mapCenter);
-
-    const selectedTileServer = ctrl.tileServers[ctrl.tileServer];
-    window.L.tileLayer(selectedTileServer.url, {
-      maxZoom: 18,
-      subdomains: selectedTileServer.subdomains,
-      reuseTiles: true,
-      detectRetina: true,
-      attribution: selectedTileServer.attribution
-    }).addTo(ctrl.map);
-
-    ctrl.circles = [];
   }
 
   function createLegend() {
@@ -63,7 +49,7 @@ export default function link(scope, elem, attrs, ctrl) {
       ctrl.legend._div.innerHTML = legendHtml;
     };
 
-    ctrl.legend.addTo(ctrl.map);
+    ctrl.map.addLegend(ctrl.legend);
   }
 
   function getColor(value) {
@@ -86,7 +72,7 @@ export default function link(scope, elem, attrs, ctrl) {
   function clearCircles() {
     if (ctrl.circlesLayer) {
       ctrl.circlesLayer.clearLayers();
-      ctrl.map.removeLayer(ctrl.circlesLayer);
+      ctrl.map.removeCircles(ctrl.circlesLayer);
       ctrl.circles = [];
     }
   }
@@ -106,8 +92,8 @@ export default function link(scope, elem, attrs, ctrl) {
       if (!dataPoint.locationName) return;
       circles.push(createCircle(dataPoint));
     });
-    ctrl.circlesLayer = window.L.layerGroup(circles).addTo(ctrl.map);
-    ctrl.circles = ctrl.circles.concat(circles);
+    ctrl.circlesLayer = ctrl.map.addCircles(circles);
+    ctrl.circles = circles;
   }
 
   function updateCircles() {
@@ -166,14 +152,5 @@ export default function link(scope, elem, attrs, ctrl) {
     circle.on('mouseout', function () {
       circle.closePopup();
     });
-  }
-
-  function resize() {
-    if (ctrl.map) ctrl.map.invalidateSize();
-  }
-
-  function panToMapCenter() {
-    ctrl.map.panTo([ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude]);
-    ctrl.mapCenterMoved = false;
   }
 }

@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export, _context) {
-  var _, L;
+System.register(['lodash', './leaflet', './css/leaflet.css!', './worldmap'], function (_export, _context) {
+  var _, L, WorldMap;
 
   function link(scope, elem, attrs, ctrl) {
     var mapContainer = elem.find('.mapcontainer');
@@ -14,31 +14,18 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
     function render() {
       if (!ctrl.data) return;
 
-      if (!ctrl.map) createMap();
-      resize();
+      if (!ctrl.map) {
+        ctrl.map = new WorldMap(ctrl, mapContainer[0]);
+        ctrl.circles = [];
+      }
 
-      if (ctrl.mapCenterMoved) panToMapCenter();
+      ctrl.map.resize();
+
+      if (ctrl.mapCenterMoved) ctrl.map.panToMapCenter();
 
       if (!ctrl.legend && ctrl.panel.showLegend) createLegend();
 
       drawCircles();
-    }
-
-    function createMap() {
-      var mapCenter = window.L.latLng(ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude);
-      ctrl.map = window.L.map(mapContainer[0], { worldCopyJump: true, center: mapCenter }).fitWorld().zoomIn(ctrl.panel.initialZoom);
-      ctrl.map.panTo(mapCenter);
-
-      var selectedTileServer = ctrl.tileServers[ctrl.tileServer];
-      window.L.tileLayer(selectedTileServer.url, {
-        maxZoom: 18,
-        subdomains: selectedTileServer.subdomains,
-        reuseTiles: true,
-        detectRetina: true,
-        attribution: selectedTileServer.attribution
-      }).addTo(ctrl.map);
-
-      ctrl.circles = [];
     }
 
     function createLegend() {
@@ -59,7 +46,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
         ctrl.legend._div.innerHTML = legendHtml;
       };
 
-      ctrl.legend.addTo(ctrl.map);
+      ctrl.map.addLegend(ctrl.legend);
     }
 
     function getColor(value) {
@@ -82,7 +69,7 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
     function clearCircles() {
       if (ctrl.circlesLayer) {
         ctrl.circlesLayer.clearLayers();
-        ctrl.map.removeLayer(ctrl.circlesLayer);
+        ctrl.map.removeCircles(ctrl.circlesLayer);
         ctrl.circles = [];
       }
     }
@@ -102,8 +89,8 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
         if (!dataPoint.locationName) return;
         circles.push(createCircle(dataPoint));
       });
-      ctrl.circlesLayer = window.L.layerGroup(circles).addTo(ctrl.map);
-      ctrl.circles = ctrl.circles.concat(circles);
+      ctrl.circlesLayer = ctrl.map.addCircles(circles);
+      ctrl.circles = circles;
     }
 
     function updateCircles() {
@@ -165,15 +152,6 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
         circle.closePopup();
       });
     }
-
-    function resize() {
-      if (ctrl.map) ctrl.map.invalidateSize();
-    }
-
-    function panToMapCenter() {
-      ctrl.map.panTo([ctrl.panel.mapCenterLatitude, ctrl.panel.mapCenterLongitude]);
-      ctrl.mapCenterMoved = false;
-    }
   }
 
   _export('default', link);
@@ -183,7 +161,9 @@ System.register(['lodash', './leaflet', './css/leaflet.css!'], function (_export
       _ = _lodash.default;
     }, function (_leaflet) {
       L = _leaflet.default;
-    }, function (_cssLeafletCss) {}],
+    }, function (_cssLeafletCss) {}, function (_worldmap) {
+      WorldMap = _worldmap.default;
+    }],
     execute: function () {}
   };
 });

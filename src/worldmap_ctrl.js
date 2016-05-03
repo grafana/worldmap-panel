@@ -76,8 +76,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   onPanelTeardown() {
     this.circles = [];
-    if (this.circlesLayer) this.map.removeLayer(this.circlesLayer);
-    if (this.legend) this.legend.removeFrom(this.map);
+    if (this.circlesLayer) this.map.removeCircles(this.circlesLayer);
+    if (this.legend) this.map.removeLegend(this.legend);
     this.legend = null;
     if (this.map) this.map.remove();
   }
@@ -195,7 +195,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   toggleLegend() {
     if (!this.panel.showLegend) {
-      this.legend.removeFrom(this.map);
+      this.map.removeLegend(this.legend);
       this.legend = null;
     }
     this.render();
