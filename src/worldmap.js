@@ -1,3 +1,8 @@
+const tileServers = {
+  'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'},
+  'CartoDB Dark': {url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: '1234'}
+};
+
 export default class WorldMap {
   constructor(ctrl, mapContainer) {
     this.ctrl = ctrl;
@@ -12,7 +17,7 @@ export default class WorldMap {
       .zoomIn(this.ctrl.panel.initialZoom);
     this.map.panTo(mapCenter);
 
-    const selectedTileServer = this.ctrl.tileServers[this.ctrl.tileServer];
+    const selectedTileServer = tileServers[this.ctrl.tileServer];
     window.L.tileLayer(selectedTileServer.url, {
       maxZoom: 18,
       subdomains: selectedTileServer.subdomains,

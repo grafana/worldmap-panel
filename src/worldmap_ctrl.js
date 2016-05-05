@@ -23,11 +23,6 @@ const panelDefaults = {
   esMetric: 'Count'
 };
 
-const tileServers = {
-  'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'},
-  'CartoDB Dark': {url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: '1234'}
-};
-
 const mapCenters = {
   '(0°, 0°)': {mapCenterLatitude: 0, mapCenterLongitude: 0},
   'North America': {mapCenterLatitude: 40, mapCenterLongitude: -100},
@@ -52,9 +47,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   setMapProvider(contextSrv) {
     this.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
-
     this.setMapSaturationClass();
-    this.tileServers = tileServers;
   }
 
   setMapSaturationClass() {

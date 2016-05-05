@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 System.register([], function (_export, _context) {
-  var _createClass, WorldMap;
+  var _createClass, tileServers, WorldMap;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -30,6 +30,11 @@ System.register([], function (_export, _context) {
         };
       }();
 
+      tileServers = {
+        'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd' },
+        'CartoDB Dark': { url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: '1234' }
+      };
+
       WorldMap = function () {
         function WorldMap(ctrl, mapContainer) {
           _classCallCheck(this, WorldMap);
@@ -40,13 +45,13 @@ System.register([], function (_export, _context) {
         }
 
         _createClass(WorldMap, [{
-          key: "createMap",
+          key: 'createMap',
           value: function createMap() {
             var mapCenter = window.L.latLng(this.ctrl.panel.mapCenterLatitude, this.ctrl.panel.mapCenterLongitude);
             this.map = window.L.map(this.mapContainer, { worldCopyJump: true, center: mapCenter }).fitWorld().zoomIn(this.ctrl.panel.initialZoom);
             this.map.panTo(mapCenter);
 
-            var selectedTileServer = this.ctrl.tileServers[this.ctrl.tileServer];
+            var selectedTileServer = tileServers[this.ctrl.tileServer];
             window.L.tileLayer(selectedTileServer.url, {
               maxZoom: 18,
               subdomains: selectedTileServer.subdomains,
@@ -56,43 +61,43 @@ System.register([], function (_export, _context) {
             }).addTo(this.map);
           }
         }, {
-          key: "resize",
+          key: 'resize',
           value: function resize() {
             this.map.invalidateSize();
           }
         }, {
-          key: "panToMapCenter",
+          key: 'panToMapCenter',
           value: function panToMapCenter() {
             this.map.panTo([this.ctrl.panel.mapCenterLatitude, this.ctrl.panel.mapCenterLongitude]);
             this.ctrl.mapCenterMoved = false;
           }
         }, {
-          key: "addLegend",
+          key: 'addLegend',
           value: function addLegend(legend) {
             legend.addTo(this.map);
           }
         }, {
-          key: "removeLegend",
+          key: 'removeLegend',
           value: function removeLegend(legend) {
             legend.removeFrom(this.map);
           }
         }, {
-          key: "addCircles",
+          key: 'addCircles',
           value: function addCircles(circles) {
             return window.L.layerGroup(circles).addTo(this.map);
           }
         }, {
-          key: "removeCircles",
+          key: 'removeCircles',
           value: function removeCircles(circlesLayer) {
             this.map.removeLayer(circlesLayer);
           }
         }, {
-          key: "setZoom",
+          key: 'setZoom',
           value: function setZoom(zoomFactor) {
             this.map.setZoom(zoomFactor);
           }
         }, {
-          key: "remove",
+          key: 'remove',
           value: function remove() {
             this.map.remove();
           }
@@ -101,7 +106,7 @@ System.register([], function (_export, _context) {
         return WorldMap;
       }();
 
-      _export("default", WorldMap);
+      _export('default', WorldMap);
     }
   };
 });

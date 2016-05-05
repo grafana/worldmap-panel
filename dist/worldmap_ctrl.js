@@ -1,7 +1,7 @@
 'use strict';
 
 System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './geohash', './css/worldmap-panel.css!'], function (_export, _context) {
-  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, decodeGeoHash, _createClass, panelDefaults, tileServers, mapCenters, WorldmapCtrl;
+  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, decodeGeoHash, _createClass, panelDefaults, mapCenters, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -82,10 +82,6 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         showLegend: true,
         esMetric: 'Count'
       };
-      tileServers = {
-        'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd' },
-        'CartoDB Dark': { url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: '1234' }
-      };
       mapCenters = {
         '(0°, 0°)': { mapCenterLatitude: 0, mapCenterLongitude: 0 },
         'North America': { mapCenterLatitude: 40, mapCenterLongitude: -100 },
@@ -117,9 +113,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           key: 'setMapProvider',
           value: function setMapProvider(contextSrv) {
             this.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
-
             this.setMapSaturationClass();
-            this.tileServers = tileServers;
           }
         }, {
           key: 'setMapSaturationClass',

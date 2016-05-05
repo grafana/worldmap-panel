@@ -11,9 +11,7 @@ module.exports = (config) => {
     files: [
       'node_modules/es6-shim/es6-shim.js',
       'node_modules/lodash/lodash.js',
-      '../../../public/vendor/plugin-css/css.js',
       'src/worldmap.js',
-      'src/map_renderer.js',
       'src/leaflet.js',
       'test/*.js'
     ],
@@ -47,7 +45,6 @@ module.exports = (config) => {
     systemjs: {
         // File patterns for application code, dependencies, and test suites
       files: [
-        'src/map_renderer.js',
         'src/worldmap.js',
         'src/leaflet.js',
         'test/**/*.js'
@@ -66,7 +63,6 @@ module.exports = (config) => {
           'system-polyfills': 'node_modules/systemjs/dist/system-polyfills.js',
           'es6-module-loader': 'node_modules/es6-module-loader/dist/es6-module-loader.js',
           'lodash': 'node_modules/lodash/lodash.js',
-          'css': '../../../public/vendor/plugin-css/css.js',
         },
 
         transpiler: 'babel'
