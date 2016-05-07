@@ -68,10 +68,6 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   onPanelTeardown() {
-    this.circles = [];
-    if (this.circlesLayer) this.map.removeCircles(this.circlesLayer);
-    if (this.legend) this.map.removeLegend(this.legend);
-    this.legend = null;
     if (this.map) this.map.remove();
   }
 
@@ -191,15 +187,14 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   toggleLegend() {
     if (!this.panel.showLegend) {
-      this.map.removeLegend(this.legend);
-      this.legend = null;
+      this.map.removeLegend();
     }
     this.render();
   }
 
   changeThresholds() {
     this.updateThresholdData();
-    this.legend.update();
+    this.map.legend.update();
     this.render();
   }
 

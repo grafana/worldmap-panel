@@ -139,10 +139,6 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }, {
           key: 'onPanelTeardown',
           value: function onPanelTeardown() {
-            this.circles = [];
-            if (this.circlesLayer) this.map.removeCircles(this.circlesLayer);
-            if (this.legend) this.map.removeLegend(this.legend);
-            this.legend = null;
             if (this.map) this.map.remove();
           }
         }, {
@@ -280,8 +276,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           key: 'toggleLegend',
           value: function toggleLegend() {
             if (!this.panel.showLegend) {
-              this.map.removeLegend(this.legend);
-              this.legend = null;
+              this.map.removeLegend();
             }
             this.render();
           }
@@ -289,7 +284,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           key: 'changeThresholds',
           value: function changeThresholds() {
             this.updateThresholdData();
-            this.legend.update();
+            this.map.legend.update();
             this.render();
           }
         }, {

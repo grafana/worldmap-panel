@@ -1,7 +1,7 @@
 'use strict';
 
-System.register([], function (_export, _context) {
-  var _createClass, tileServers, WorldMap;
+System.register(['lodash', './leaflet'], function (_export, _context) {
+  var _, L, _createClass, tileServers, WorldMap;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -10,7 +10,11 @@ System.register([], function (_export, _context) {
   }
 
   return {
-    setters: [],
+    setters: [function (_lodash) {
+      _ = _lodash.default;
+    }, function (_leaflet) {
+      L = _leaflet.default;
+    }],
     execute: function () {
       _createClass = function () {
         function defineProperties(target, props) {
@@ -42,6 +46,7 @@ System.register([], function (_export, _context) {
           this.ctrl = ctrl;
           this.mapContainer = mapContainer;
           this.createMap();
+          this.circles = [];
         }
 
         _createClass(WorldMap, [{
@@ -61,6 +66,147 @@ System.register([], function (_export, _context) {
             }).addTo(this.map);
           }
         }, {
+          key: 'createLegend',
+          value: function createLegend() {
+            var _this = this;
+
+            this.legend = window.L.control({ position: 'bottomleft' });
+            this.legend.onAdd = function () {
+              _this.legend._div = window.L.DomUtil.create('div', 'info legend');
+              _this.legend.update();
+              return _this.legend._div;
+            };
+
+            this.legend.update = function () {
+              var thresholds = _this.ctrl.data.thresholds;
+              var legendHtml = '';
+              legendHtml += '<i style="background:' + _this.ctrl.panel.colors[0] + '"></i> ' + '&lt; ' + thresholds[0] + '<br>';
+              for (var index = 0; index < thresholds.length; index++) {
+                legendHtml += '<i style="background:' + _this.getColor(thresholds[index] + 1) + '"></i> ' + thresholds[index] + (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '<br>' : '+');
+              }
+              _this.legend._div.innerHTML = legendHtml;
+            };
+            this.legend.addTo(this.map);
+          }
+        }, {
+          key: 'needToRedrawCircles',
+          value: function needToRedrawCircles() {
+            if (this.circles.length === 0 && this.ctrl.data.length > 0) return true;
+            if (this.circles.length !== this.ctrl.data.length) return true;
+            var locations = _.map(_.map(this.circles, 'options'), 'location').sort();
+            var dataPoints = _.map(this.ctrl.data, 'key').sort();
+            return !_.isEqual(locations, dataPoints);
+          }
+        }, {
+          key: 'clearCircles',
+          value: function clearCircles() {
+            if (this.circlesLayer) {
+              this.circlesLayer.clearLayers();
+              this.removeCircles(this.circlesLayer);
+              this.circles = [];
+            }
+          }
+        }, {
+          key: 'drawCircles',
+          value: function drawCircles() {
+            if (this.needToRedrawCircles()) {
+              this.clearCircles();
+              this.createCircles();
+            } else {
+              this.updateCircles();
+            }
+          }
+        }, {
+          key: 'createCircles',
+          value: function createCircles() {
+            var _this2 = this;
+
+            var circles = [];
+            this.ctrl.data.forEach(function (dataPoint) {
+              if (!dataPoint.locationName) return;
+              circles.push(_this2.createCircle(dataPoint));
+            });
+            this.circlesLayer = this.addCircles(circles);
+            this.circles = circles;
+          }
+        }, {
+          key: 'updateCircles',
+          value: function updateCircles() {
+            var _this3 = this;
+
+            this.ctrl.data.forEach(function (dataPoint) {
+              if (!dataPoint.locationName) return;
+
+              var circle = _.find(_this3.circles, function (cir) {
+                return cir.options.location === dataPoint.key;
+              });
+
+              if (circle) {
+                circle.setRadius(_this3.calcCircleSize(dataPoint.value || 0));
+                circle.setStyle({
+                  color: _this3.getColor(dataPoint.value),
+                  fillColor: _this3.getColor(dataPoint.value),
+                  fillOpacity: 0.5,
+                  location: dataPoint.key
+                });
+                circle.unbindPopup();
+                _this3.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
+              }
+            });
+          }
+        }, {
+          key: 'createCircle',
+          value: function createCircle(dataPoint) {
+            var circle = window.L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
+              radius: this.calcCircleSize(dataPoint.value || 0),
+              color: this.getColor(dataPoint.value),
+              fillColor: this.getColor(dataPoint.value),
+              fillOpacity: 0.5,
+              location: dataPoint.key
+            });
+
+            this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
+            return circle;
+          }
+        }, {
+          key: 'calcCircleSize',
+          value: function calcCircleSize(dataPointValue) {
+            if (this.ctrl.data.valueRange === 0) {
+              return this.ctrl.panel.circleMaxSize;
+            }
+
+            var dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
+            var circleSizeRange = this.ctrl.panel.circleMaxSize - this.ctrl.panel.circleMinSize;
+
+            return circleSizeRange * dataFactor + this.ctrl.panel.circleMinSize;
+          }
+        }, {
+          key: 'createPopup',
+          value: function createPopup(circle, locationName, value) {
+            var unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
+            var label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
+            circle.bindPopup(label, { 'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': false });
+
+            circle.on('mouseover', function (evt) {
+              var layer = evt.target;
+              layer.bringToFront();
+              this.openPopup();
+            });
+            circle.on('mouseout', function () {
+              circle.closePopup();
+            });
+          }
+        }, {
+          key: 'getColor',
+          value: function getColor(value) {
+            for (var index = this.ctrl.data.thresholds.length; index > 0; index--) {
+              if (value >= this.ctrl.data.thresholds[index - 1]) {
+                return this.ctrl.panel.colors[index];
+              }
+            }
+            return _.first(this.ctrl.panel.colors);
+          }
+        }, {
           key: 'resize',
           value: function resize() {
             this.map.invalidateSize();
@@ -72,14 +218,10 @@ System.register([], function (_export, _context) {
             this.ctrl.mapCenterMoved = false;
           }
         }, {
-          key: 'addLegend',
-          value: function addLegend(legend) {
-            legend.addTo(this.map);
-          }
-        }, {
           key: 'removeLegend',
-          value: function removeLegend(legend) {
-            legend.removeFrom(this.map);
+          value: function removeLegend() {
+            this.legend.removeFrom(this.map);
+            this.legend = null;
           }
         }, {
           key: 'addCircles',
@@ -88,8 +230,8 @@ System.register([], function (_export, _context) {
           }
         }, {
           key: 'removeCircles',
-          value: function removeCircles(circlesLayer) {
-            this.map.removeLayer(circlesLayer);
+          value: function removeCircles() {
+            this.map.removeLayer(this.circlesLayer);
           }
         }, {
           key: 'setZoom',
@@ -99,6 +241,9 @@ System.register([], function (_export, _context) {
         }, {
           key: 'remove',
           value: function remove() {
+            this.circles = [];
+            if (this.circlesLayer) this.removeCircles();
+            if (this.legend) this.removeLegend();
             this.map.remove();
           }
         }]);

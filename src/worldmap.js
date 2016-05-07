@@ -1,3 +1,6 @@
+import _ from 'lodash';
+import L from './leaflet';
+
 const tileServers = {
   'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'},
   'CartoDB Dark': {url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: '1234'}
@@ -8,6 +11,7 @@ export default class WorldMap {
     this.ctrl = ctrl;
     this.mapContainer = mapContainer;
     this.createMap();
+    this.circles = [];
   }
 
   createMap() {
@@ -27,6 +31,132 @@ export default class WorldMap {
     }).addTo(this.map);
   }
 
+  createLegend() {
+    this.legend = window.L.control({position: 'bottomleft'});
+    this.legend.onAdd = () => {
+      this.legend._div = window.L.DomUtil.create('div', 'info legend');
+      this.legend.update();
+      return this.legend._div;
+    };
+
+    this.legend.update = () => {
+      const thresholds = this.ctrl.data.thresholds;
+      let legendHtml = '';
+      legendHtml += '<i style="background:' + this.ctrl.panel.colors[0] + '"></i> ' +
+          '&lt; ' + thresholds[0] + '<br>';
+      for (let index = 0; index < thresholds.length; index++) {
+        legendHtml +=
+          '<i style="background:' + this.getColor(thresholds[index] + 1) + '"></i> ' +
+          thresholds[index] + (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '<br>' : '+');
+      }
+      this.legend._div.innerHTML = legendHtml;
+    };
+    this.legend.addTo(this.map);
+  }
+
+  needToRedrawCircles() {
+    if (this.circles.length === 0 && this.ctrl.data.length > 0) return true;
+    if (this.circles.length !== this.ctrl.data.length) return true;
+    const locations = _.map(_.map(this.circles, 'options'), 'location').sort();
+    const dataPoints = _.map(this.ctrl.data, 'key').sort();
+    return !_.isEqual(locations, dataPoints);
+  }
+
+  clearCircles() {
+    if (this.circlesLayer) {
+      this.circlesLayer.clearLayers();
+      this.removeCircles(this.circlesLayer);
+      this.circles = [];
+    }
+  }
+
+  drawCircles() {
+    if (this.needToRedrawCircles()) {
+      this.clearCircles();
+      this.createCircles();
+    } else {
+      this.updateCircles();
+    }
+  }
+
+  createCircles() {
+    const circles = [];
+    this.ctrl.data.forEach(dataPoint => {
+      if (!dataPoint.locationName) return;
+      circles.push(this.createCircle(dataPoint));
+    });
+    this.circlesLayer = this.addCircles(circles);
+    this.circles = circles;
+  }
+
+  updateCircles() {
+    this.ctrl.data.forEach(dataPoint => {
+      if (!dataPoint.locationName) return;
+
+      const circle = _.find(this.circles, cir => { return cir.options.location === dataPoint.key; });
+
+      if (circle) {
+        circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
+        circle.setStyle({
+          color: this.getColor(dataPoint.value),
+          fillColor: this.getColor(dataPoint.value),
+          fillOpacity: 0.5,
+          location: dataPoint.key
+        });
+        circle.unbindPopup();
+        this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
+      }
+    });
+  }
+
+  createCircle(dataPoint) {
+    const circle = window.L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
+      radius: this.calcCircleSize(dataPoint.value || 0),
+      color: this.getColor(dataPoint.value),
+      fillColor: this.getColor(dataPoint.value),
+      fillOpacity: 0.5,
+      location: dataPoint.key
+    });
+
+    this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
+    return circle;
+  }
+
+  calcCircleSize(dataPointValue) {
+    if (this.ctrl.data.valueRange === 0) {
+      return this.ctrl.panel.circleMaxSize;
+    }
+
+    const dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
+    const circleSizeRange = this.ctrl.panel.circleMaxSize - this.ctrl.panel.circleMinSize;
+
+    return (circleSizeRange * dataFactor) + this.ctrl.panel.circleMinSize;
+  }
+
+  createPopup(circle, locationName, value) {
+    const unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
+    const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
+    circle.bindPopup(label, {'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': false});
+
+    circle.on('mouseover', function (evt) {
+      const layer = evt.target;
+      layer.bringToFront();
+      this.openPopup();
+    });
+    circle.on('mouseout', function () {
+      circle.closePopup();
+    });
+  }
+
+  getColor(value) {
+    for (let index = this.ctrl.data.thresholds.length; index > 0; index--) {
+      if (value >= this.ctrl.data.thresholds[index - 1]) {
+        return this.ctrl.panel.colors[index];
+      }
+    }
+    return _.first(this.ctrl.panel.colors);
+  }
+
   resize() {
     this.map.invalidateSize();
   }
@@ -36,20 +166,17 @@ export default class WorldMap {
     this.ctrl.mapCenterMoved = false;
   }
 
-  addLegend(legend) {
-    legend.addTo(this.map);
-  }
-
-  removeLegend(legend) {
-    legend.removeFrom(this.map);
+  removeLegend() {
+    this.legend.removeFrom(this.map);
+    this.legend = null;
   }
 
   addCircles(circles) {
     return window.L.layerGroup(circles).addTo(this.map);
   }
 
-  removeCircles(circlesLayer) {
-    this.map.removeLayer(circlesLayer);
+  removeCircles() {
+    this.map.removeLayer(this.circlesLayer);
   }
 
   setZoom(zoomFactor) {
@@ -57,6 +184,9 @@ export default class WorldMap {
   }
 
   remove() {
+    this.circles = [];
+    if (this.circlesLayer) this.removeCircles();
+    if (this.legend) this.removeLegend();
     this.map.remove();
   }
 }
