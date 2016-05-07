@@ -21,7 +21,7 @@ describe('Worldmap', () => {
         .withCountryAndValue('SE', 1)
         .withDataRange(1, 1, 0)
         .build();
-      ctrl.panel.circleMaxSize = 10;
+      ctrl.panel.circleMaxSize = '10';
       worldMap.drawCircles();
     });
 
@@ -47,8 +47,8 @@ describe('Worldmap', () => {
         .withCountryAndValue('IE', 2)
         .withDataRange(1, 2, 1)
         .build();
-      ctrl.panel.circleMinSize = 2;
-      ctrl.panel.circleMaxSize = 10;
+      ctrl.panel.circleMinSize = '2';
+      ctrl.panel.circleMaxSize = '10';
       worldMap.drawCircles();
     });
 
@@ -77,8 +77,8 @@ describe('Worldmap', () => {
         .withCountryAndValue('IE', 2)
         .withDataRange(1, 2, 1)
         .build();
-      ctrl.panel.circleMinSize = 2;
-      ctrl.panel.circleMaxSize = 10;
+      ctrl.panel.circleMinSize = '2';
+      ctrl.panel.circleMaxSize = '10';
       ctrl.panel.unitSingular = 'error';
       ctrl.panel.unitPlural = 'errors';
       worldMap.drawCircles();
@@ -102,8 +102,8 @@ describe('Worldmap', () => {
         .withDataRange(1, 3, 2)
         .withThresholdValues([2])
         .build();
-      ctrl.panel.circleMinSize = 2;
-      ctrl.panel.circleMaxSize = 10;
+      ctrl.panel.circleMinSize = '2';
+      ctrl.panel.circleMaxSize = '10';
       worldMap.drawCircles();
     });
 
@@ -141,8 +141,8 @@ describe('Worldmap', () => {
 
   describe('when the data is updated but not locations', () => {
     beforeEach(() => {
-      ctrl.panel.circleMinSize = 2;
-      ctrl.panel.circleMaxSize = 10;
+      ctrl.panel.circleMinSize = '2';
+      ctrl.panel.circleMaxSize = '10';
 
       ctrl.data = new DataBuilder()
         .withCountryAndValue('SE', 1)
@@ -183,8 +183,8 @@ describe('Worldmap', () => {
 
   describe('when the number of locations changes', () => {
     beforeEach(() => {
-      ctrl.panel.circleMinSize = 2;
-      ctrl.panel.circleMaxSize = 10;
+      ctrl.panel.circleMinSize = '2';
+      ctrl.panel.circleMaxSize = '10';
 
       ctrl.data = new DataBuilder()
         .withCountryAndValue('SE', 1)

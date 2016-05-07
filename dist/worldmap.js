@@ -171,14 +171,17 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         }, {
           key: 'calcCircleSize',
           value: function calcCircleSize(dataPointValue) {
+            var circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10);
+            var circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10);
+
             if (this.ctrl.data.valueRange === 0) {
-              return this.ctrl.panel.circleMaxSize;
+              return circleMaxSize;
             }
 
             var dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
-            var circleSizeRange = this.ctrl.panel.circleMaxSize - this.ctrl.panel.circleMinSize;
+            var circleSizeRange = this.ctrl.panel.circleMaxSize - circleMinSize;
 
-            return circleSizeRange * dataFactor + this.ctrl.panel.circleMinSize;
+            return circleSizeRange * dataFactor + circleMinSize;
           }
         }, {
           key: 'createPopup',

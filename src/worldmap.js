@@ -123,14 +123,17 @@ export default class WorldMap {
   }
 
   calcCircleSize(dataPointValue) {
+    const circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10);
+    const circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10);
+
     if (this.ctrl.data.valueRange === 0) {
-      return this.ctrl.panel.circleMaxSize;
+      return circleMaxSize;
     }
 
     const dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
-    const circleSizeRange = this.ctrl.panel.circleMaxSize - this.ctrl.panel.circleMinSize;
+    const circleSizeRange = this.ctrl.panel.circleMaxSize - circleMinSize;
 
-    return (circleSizeRange * dataFactor) + this.ctrl.panel.circleMinSize;
+    return (circleSizeRange * dataFactor) + circleMinSize;
   }
 
   createPopup(circle, locationName, value) {
