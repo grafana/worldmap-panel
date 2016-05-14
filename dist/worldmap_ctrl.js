@@ -1,7 +1,7 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './geohash', './css/worldmap-panel.css!'], function (_export, _context) {
-  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, decodeGeoHash, _createClass, panelDefaults, mapCenters, WorldmapCtrl;
+System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './data_formatter', './geohash', './css/worldmap-panel.css!'], function (_export, _context) {
+  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, DataFormatter, decodeGeoHash, _createClass, panelDefaults, mapCenters, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -44,6 +44,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
       kbn = _appCoreUtilsKbn.default;
     }, function (_map_renderer) {
       mapRenderer = _map_renderer.default;
+    }, function (_data_formatter) {
+      DataFormatter = _data_formatter.default;
     }, function (_geohash) {
       decodeGeoHash = _geohash.default;
     }, function (_cssWorldmapPanelCss) {}],
@@ -101,6 +103,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           _this.setMapProvider(contextSrv);
           _.defaults(_this.panel, panelDefaults);
 
+          _this.dataFormatter = new DataFormatter(_this, kbn);
+
           _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
           _this.events.on('data-received', _this.onDataReceived.bind(_this));
           _this.events.on('panel-teardown', _this.onPanelTeardown.bind(_this));
@@ -154,7 +158,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             if (this.panel.locationData === 'geohash') {
               this.setGeohashValues(data);
             } else {
-              this.setValues(data);
+              this.dataFormatter.setValues(data);
             }
             this.data = data;
 
@@ -193,51 +197,6 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
 
                   dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
                   data.push(dataValue);
-                });
-
-                data.highestValue = highestValue;
-                data.lowestValue = lowestValue;
-                data.valueRange = highestValue - lowestValue;
-              })();
-            }
-          }
-        }, {
-          key: 'setValues',
-          value: function setValues(data) {
-            var _this4 = this;
-
-            if (this.series && this.series.length > 0) {
-              (function () {
-                var highestValue = 0;
-                var lowestValue = Number.MAX_VALUE;
-
-                _this4.series.forEach(function (serie) {
-                  var lastPoint = _.last(serie.datapoints);
-                  var lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
-                  var location = _.find(_this4.locations, function (loc) {
-                    return loc.key === serie.alias;
-                  });
-
-                  if (_.isString(lastValue)) {
-                    console.log('was string: ' + lastValue);
-                    data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
-                  } else {
-                    var dataValue = {
-                      key: serie.alias,
-                      locationName: location.name,
-                      locationLatitude: location.latitude,
-                      locationLongitude: location.longitude,
-                      value: serie.stats[_this4.panel.valueName],
-                      valueFormatted: lastValue,
-                      valueRounded: 0
-                    };
-
-                    if (dataValue.value > highestValue) highestValue = dataValue.value;
-                    if (dataValue.value < lowestValue) lowestValue = dataValue.value;
-
-                    dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
-                    data.push(dataValue);
-                  }
                 });
 
                 data.highestValue = highestValue;

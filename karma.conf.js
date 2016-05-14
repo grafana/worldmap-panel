@@ -12,6 +12,7 @@ module.exports = (config) => {
       'node_modules/es6-shim/es6-shim.js',
       'node_modules/lodash/lodash.js',
       'src/worldmap.js',
+      'src/data_formatter.js',
       'src/leaflet.js',
       'test/*.js'
     ],
@@ -46,11 +47,12 @@ module.exports = (config) => {
         // File patterns for application code, dependencies, and test suites
       files: [
         'src/worldmap.js',
+        'src/data_formatter.js',
         'src/leaflet.js',
         'test/**/*.js'
       ],
 
-      // SystemJS configuration specifically for tests, added after your config file. 
+      // SystemJS configuration specifically for tests, added after your config file.
       // Good for adding test libraries and mock modules
       config: {
         defaultJSExtensions: true,

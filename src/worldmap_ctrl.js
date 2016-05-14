@@ -3,6 +3,7 @@ import _ from 'lodash';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
 import mapRenderer from './map_renderer';
+import DataFormatter from './data_formatter';
 import decodeGeoHash from './geohash';
 import './css/worldmap-panel.css!';
 
@@ -37,6 +38,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
     this.setMapProvider(contextSrv);
     _.defaults(this.panel, panelDefaults);
+
+    this.dataFormatter = new DataFormatter(this, kbn);
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
@@ -81,7 +84,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     if (this.panel.locationData === 'geohash') {
       this.setGeohashValues(data);
     } else {
-      this.setValues(data);
+      this.dataFormatter.setValues(data);
     }
     this.data = data;
 
@@ -116,44 +119,6 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
         dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
         data.push(dataValue);
-      });
-
-      data.highestValue = highestValue;
-      data.lowestValue = lowestValue;
-      data.valueRange = highestValue - lowestValue;
-    }
-  }
-
-  setValues(data) {
-    if (this.series && this.series.length > 0) {
-      let highestValue = 0;
-      let lowestValue = Number.MAX_VALUE;
-
-      this.series.forEach(serie => {
-        const lastPoint = _.last(serie.datapoints);
-        const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
-        const location = _.find(this.locations, (loc) => { return loc.key === serie.alias; });
-
-        if (_.isString(lastValue)) {
-          console.log('was string: ' + lastValue);
-          data.push({key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0});
-        } else {
-          const dataValue = {
-            key: serie.alias,
-            locationName: location.name,
-            locationLatitude: location.latitude,
-            locationLongitude: location.longitude,
-            value: serie.stats[this.panel.valueName],
-            valueFormatted: lastValue,
-            valueRounded: 0
-          };
-
-          if (dataValue.value > highestValue) highestValue = dataValue.value;
-          if (dataValue.value < lowestValue) lowestValue = dataValue.value;
-
-          dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
-          data.push(dataValue);
-        }
       });
 
       data.highestValue = highestValue;
