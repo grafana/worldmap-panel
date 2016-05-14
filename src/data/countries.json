@@ -90,6 +90,12 @@
     "name": "Aruba"
   },
   {
+    "key": "AX",
+    "latitude": 60.3385485,
+    "longitude": 20.2712585,
+    "name": "Åland"
+  },
+  {
     "key": "AZ",
     "latitude": 40.143105,
     "longitude": 47.576927,
@@ -150,6 +156,12 @@
     "name": "Benin"
   },
   {
+    "key": "BL",
+    "latitude": 17.9000000,
+    "longitude": -62.8333330,
+    "name": "Saint-Barthélemy"
+  },
+  {
     "key": "BM",
     "latitude": 32.321384,
     "longitude": -64.75737,
@@ -166,6 +178,12 @@
     "latitude": -16.290154,
     "longitude": -63.588653,
     "name": "Bolivia"
+  },
+  {
+    "key": "BQ",
+    "latitude": 12.1783611,
+    "longitude": -68.2385339,
+    "name": "Bonaire, Sint Eustatius, and Saba"
   },
   {
     "key": "BR",
@@ -298,6 +316,12 @@
     "latitude": 16.002082,
     "longitude": -24.013197,
     "name": "Cape Verde"
+  },
+  {
+    "key": "CW",
+    "latitude": 12.1695700,
+    "longitude": -68.9900200,
+    "name": "Curaçao"
   },
   {
     "key": "CX",
@@ -828,6 +852,12 @@
     "name": "Montenegro"
   },
   {
+    "key": "MF",
+    "latitude": 18.0825500,
+    "longitude": -63.0522510,
+    "name": "Saint Martin"
+  },
+  {
     "key": "MG",
     "latitude": -18.766947,
     "longitude": 46.869107,
@@ -1234,6 +1264,12 @@
     "latitude": 13.794185,
     "longitude": -88.89653,
     "name": "El Salvador"
+  },
+  {
+    "key": "SX",
+    "latitude": 18.030827,
+    "longitude": -63.073633,
+    "name": "Sint Maarten"
   },
   {
     "key": "SY",
