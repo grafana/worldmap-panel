@@ -75,3 +75,9 @@ Thresholds control the color of the circles. A threshold can contain one or two 
 If one value is specified then two colors are used. For example, if the threshold is set to 10 then values under 10 get the first color and values that are 10 or more get the second color.
 
 The threshold field also accepts 2 comma-separated values which represent 3 ranges that correspond to the three colors. For example: if the thresholds are 70, 90 then the first color represents < 70, the second color represents between 70 and 90 and the third color represents > 90.
+
+#### Changelog
+
+##### v0.0.2
+- Fixs bug where time series with a country code not found in the country data crashes the panel.
+- Adds some extra country codes to the country data to be more similar to the MaxMind Country database.
