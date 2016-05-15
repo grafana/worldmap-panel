@@ -54,7 +54,7 @@ System.register(['lodash'], function (_export, _context) {
                   var lastPoint = _.last(serie.datapoints);
                   var lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
                   var location = _.find(_this.ctrl.locations, function (loc) {
-                    return loc.key === serie.alias;
+                    return loc.key.toUpperCase() === serie.alias.toUpperCase();
                   });
 
                   if (!location) return;

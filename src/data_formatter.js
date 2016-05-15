@@ -14,7 +14,7 @@ export default class DataFormatter {
       this.ctrl.series.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
-        const location = _.find(this.ctrl.locations, (loc) => { return loc.key === serie.alias; });
+        const location = _.find(this.ctrl.locations, (loc) => { return loc.key.toUpperCase() === serie.alias.toUpperCase(); });
 
         if (!location) return;
 

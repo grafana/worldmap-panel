@@ -38,6 +38,40 @@ describe('DataFormatter', () => {
     });
   });
 
+  describe('when the time series data has lowercase country codes', () => {
+    beforeEach(() => {
+      const ctrl = {
+        panel: {
+          valueName: 'total'
+        },
+        locations: [
+          {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
+          {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
+        ],
+        series: [
+          {alias: 'ie', datapoints: [1, 2], stats: {total: 3}},
+          {alias: 'se', datapoints: [2, 3], stats: {total: 5}},
+        ]
+      };
+      dataFormatter = new DataFormatter(ctrl, {roundValue: () => {}});
+      dataFormatter.setValues(formattedData);
+    });
+
+    it('should format the data and match the serie to a location', () => {
+      expect(formattedData[0].key).to.equal('ie');
+      expect(formattedData[0].locationName).to.equal('Ireland');
+      expect(formattedData[0].locationLatitude).to.equal(1);
+      expect(formattedData[0].locationLongitude).to.equal(1);
+      expect(formattedData[0].value).to.equal(3);
+
+      expect(formattedData[1].key).to.equal('se');
+      expect(formattedData[1].locationName).to.equal('Sweden');
+      expect(formattedData[1].locationLatitude).to.equal(2);
+      expect(formattedData[1].locationLongitude).to.equal(2);
+      expect(formattedData[1].value).to.equal(5);
+    });
+  });
+
   describe('when the time series data does not match any location', () => {
     beforeEach(() => {
       const ctrl = {
