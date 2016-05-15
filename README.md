@@ -79,5 +79,8 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 #### Changelog
 
 ##### v0.0.2
-- Fixs bug where time series with a country code not found in the country data crashes the panel.
+- Fixes bug where time series with a country code not found in the country data crashes the panel.
 - Adds some extra country codes to the country data to be more similar to the MaxMind Country database.
+
+##### v0.0.3
+- Support for lowercase country codes for non-elasticsearch datasources.
