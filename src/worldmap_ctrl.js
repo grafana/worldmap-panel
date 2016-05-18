@@ -44,6 +44,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
     this.events.on('panel-teardown', this.onPanelTeardown.bind(this));
+    this.events.on('data-snapshot-load', this.onDataSnapshotLoad.bind(this));
 
     this.loadLocationDataFromFile();
   }
@@ -79,6 +80,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
+    if (!dataList) return;
+
     this.series = dataList.map(this.seriesHandler.bind(this));
     const data = [];
     if (this.panel.locationData === 'geohash') {
@@ -91,6 +94,10 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.updateThresholdData();
 
     this.render();
+  }
+
+  onDataSnapshotLoad(snapshotData) {
+    this.onDataReceived(snapshotData);
   }
 
   setGeohashValues(data) {

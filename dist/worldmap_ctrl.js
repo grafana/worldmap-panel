@@ -108,6 +108,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
           _this.events.on('data-received', _this.onDataReceived.bind(_this));
           _this.events.on('panel-teardown', _this.onPanelTeardown.bind(_this));
+          _this.events.on('data-snapshot-load', _this.onDataSnapshotLoad.bind(_this));
 
           _this.loadLocationDataFromFile();
           return _this;
@@ -153,6 +154,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }, {
           key: 'onDataReceived',
           value: function onDataReceived(dataList) {
+            if (!dataList) return;
+
             this.series = dataList.map(this.seriesHandler.bind(this));
             var data = [];
             if (this.panel.locationData === 'geohash') {
@@ -165,6 +168,11 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             this.updateThresholdData();
 
             this.render();
+          }
+        }, {
+          key: 'onDataSnapshotLoad',
+          value: function onDataSnapshotLoad(snapshotData) {
+            this.onDataReceived(snapshotData);
           }
         }, {
           key: 'setGeohashValues',
