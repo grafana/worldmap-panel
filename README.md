@@ -55,7 +55,11 @@ Shows/hide the legend on the bottom left that shows the threshold ranges and the
 
 **Location Data**
 
-There are main ways to provide data for the worldmap panel. Either by matching a country code (US, FR, AU) to a node alias in a time series query or with an ElasticSearch query that returns geohashes. Choose *countries* for the first choice and *geohash* for the latter.
+There are four ways to provide data for the worldmap panel:
+ - *countries*: This is a list of all the countries in the world. It works by matching a country code (US, FR, AU) to a node alias in a time series query.
+ - *geohash*: An ElasticSearch query that returns geohashes.
+ - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/grafana/worldmap-panel/blob/master/src/data/countries.json) or [this list of cities](https://github.com/grafana/worldmap-panel/blob/master/src/data/probes.json).
+ - *jsonp*: A jsonp endpoint that returns custom json wrapped as jsonp. Use this if you are having problems with CORS.
 
 **Aggregation**
 
@@ -87,3 +91,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 
 ##### v0.0.4
 - Fixes snapshotting.
+
+##### v.0.0.5
+
+- Adds support for json and jsonp endpoints for location data.

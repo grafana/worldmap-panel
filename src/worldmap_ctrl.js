@@ -63,7 +63,30 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   loadLocationDataFromFile() {
-    if (!this.map && this.panel.locationData !== 'geohash') {
+    if (this.map) return;
+
+    if (this.panel.locationData === 'jsonp endpoint') {
+      if (!this.panel.jsonpUrl || !this.panel.jsonpCallback) return;
+
+      window.$.ajax({
+        type: 'GET',
+        url: this.panel.jsonpUrl + '?callback=?',
+        contentType: 'application/json',
+        jsonpCallback: this.panel.jsonpCallback,
+        dataType: 'jsonp',
+        success: (res) => {
+          this.locations = res;
+          this.render();
+        }
+      });
+    } else if (this.panel.locationData === 'json endpoint') {
+      if (!this.panel.jsonUrl) return;
+
+      window.$.getJSON(this.panel.jsonUrl).then(res => {
+        this.locations = res;
+        this.render();
+      });
+    } else if (this.panel.locationData !== 'geohash') {
       window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(res => {
         this.locations = res;
         this.render();

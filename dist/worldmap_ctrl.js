@@ -134,7 +134,30 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           value: function loadLocationDataFromFile() {
             var _this2 = this;
 
-            if (!this.map && this.panel.locationData !== 'geohash') {
+            if (this.map) return;
+
+            if (this.panel.locationData === 'jsonp endpoint') {
+              if (!this.panel.jsonpUrl || !this.panel.jsonpCallback) return;
+
+              window.$.ajax({
+                type: 'GET',
+                url: this.panel.jsonpUrl + '?callback=?',
+                contentType: 'application/json',
+                jsonpCallback: this.panel.jsonpCallback,
+                dataType: 'jsonp',
+                success: function success(res) {
+                  _this2.locations = res;
+                  _this2.render();
+                }
+              });
+            } else if (this.panel.locationData === 'json endpoint') {
+              if (!this.panel.jsonUrl) return;
+
+              window.$.getJSON(this.panel.jsonUrl).then(function (res) {
+                _this2.locations = res;
+                _this2.render();
+              });
+            } else if (this.panel.locationData !== 'geohash') {
               window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(function (res) {
                 _this2.locations = res;
                 _this2.render();
