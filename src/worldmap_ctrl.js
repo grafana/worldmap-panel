@@ -21,7 +21,8 @@ const panelDefaults = {
   unitSingle: '',
   unitPlural: '',
   showLegend: true,
-  esMetric: 'Count'
+  esMetric: 'Count',
+  decimals: 0
 };
 
 const mapCenters = {
@@ -147,7 +148,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
         if (dataValue.value > highestValue) highestValue = dataValue.value;
         if (dataValue.value < lowestValue) lowestValue = dataValue.value;
 
-        dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
+        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.panel.decimals || 0);
         data.push(dataValue);
       });
 

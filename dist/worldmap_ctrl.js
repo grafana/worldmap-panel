@@ -82,7 +82,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         unitSingle: '',
         unitPlural: '',
         showLegend: true,
-        esMetric: 'Count'
+        esMetric: 'Count',
+        decimals: 0
       };
       mapCenters = {
         '(0°, 0°)': { mapCenterLatitude: 0, mapCenterLongitude: 0 },
@@ -226,7 +227,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                   if (dataValue.value > highestValue) highestValue = dataValue.value;
                   if (dataValue.value < lowestValue) lowestValue = dataValue.value;
 
-                  dataValue.valueRounded = kbn.roundValue(dataValue.value, 0);
+                  dataValue.valueRounded = kbn.roundValue(dataValue.value, _this3.panel.decimals || 0);
                   data.push(dataValue);
                 });
 

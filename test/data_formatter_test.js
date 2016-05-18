@@ -93,6 +93,37 @@ describe('DataFormatter', () => {
     });
   });
 
+  describe('when the time series data has decimals', () => {
+    let numberOfDecimals;
+
+    beforeEach(() => {
+      const ctrl = {
+        panel: {
+          valueName: 'total',
+          decimals: 2
+        },
+        locations: [
+          {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
+          {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
+        ],
+        series: [
+          {alias: 'IE', datapoints: [1.11, 2.22], stats: {total: 3.33}},
+          {alias: 'SE', datapoints: [2.221, 3.331], stats: {total: 5.552}},
+        ]
+      };
+      dataFormatter = new DataFormatter(ctrl, {
+        roundValue: (value, decimals) => {
+          numberOfDecimals = decimals;
+        }
+      });
+      dataFormatter.setValues(formattedData);
+    });
+
+    it('should format the value with 2 decimals', () => {
+      expect(numberOfDecimals).to.equal(2);
+    });
+  });
+
   afterEach(() => {
     formattedData = [];
   });
