@@ -95,3 +95,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 ##### v.0.0.5
 
 - Adds support for json and jsonp endpoints for location data.
+
+##### v.0.0.6
+
+- Adds decimal places option for data values in circle popovers.
