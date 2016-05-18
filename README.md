@@ -84,3 +84,6 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 
 ##### v0.0.3
 - Support for lowercase country codes for non-elasticsearch datasources.
+
+##### v0.0.4
+- Fixes snapshotting.
