@@ -12,6 +12,9 @@ export default class DataFormatter {
       let lowestValue = Number.MAX_VALUE;
 
       this.ctrl.series.forEach(serie => {
+        console.log(serie);
+        console.log(this.ctrl.locations);
+        
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
         const location = _.find(this.ctrl.locations, (loc) => { return loc.key.toUpperCase() === serie.alias.toUpperCase(); });

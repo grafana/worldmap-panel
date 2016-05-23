@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['lodash', './leaflet'], function (_export, _context) {
+  "use strict";
+
   var _, L, _createClass, tileServers, WorldMap;
 
   function _classCallCheck(instance, Constructor) {

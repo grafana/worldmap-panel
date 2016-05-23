@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['lodash'], function (_export, _context) {
+  "use strict";
+
   var _, _createClass, DataFormatter;
 
   function _classCallCheck(instance, Constructor) {
@@ -51,6 +53,9 @@ System.register(['lodash'], function (_export, _context) {
                 var lowestValue = Number.MAX_VALUE;
 
                 _this.ctrl.series.forEach(function (serie) {
+                  console.log(serie);
+                  console.log(_this.ctrl.locations);
+
                   var lastPoint = _.last(serie.datapoints);
                   var lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
                   var location = _.find(_this.ctrl.locations, function (loc) {

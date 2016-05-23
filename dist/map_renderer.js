@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['./css/leaflet.css!', './worldmap'], function (_export, _context) {
+  "use strict";
+
   var WorldMap;
   function link(scope, elem, attrs, ctrl) {
     var mapContainer = elem.find('.mapcontainer');

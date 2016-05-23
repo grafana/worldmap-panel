@@ -87,6 +87,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
         this.locations = res;
         this.render();
       });
+    } else if (this.panel.locationData === 'influxDB') {
+      console.log('InfluxDB');
     } else if (this.panel.locationData !== 'geohash') {
       window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(res => {
         this.locations = res;
@@ -106,10 +108,17 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList) {
     if (!dataList) return;
 
+    console.log(dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
     const data = [];
     if (this.panel.locationData === 'geohash') {
       this.setGeohashValues(data);
+    } else if (this.panel.locationData === 'influxDB') {
+      console.log(dataList);
+      console.log(this.series);
+      console.log(data);
+      this.dataFormatter.setValues(data);
+      // this.setGeohashValues(data);
     } else {
       this.dataFormatter.setValues(data);
     }

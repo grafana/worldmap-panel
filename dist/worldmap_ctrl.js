@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './data_formatter', './geohash', './css/worldmap-panel.css!'], function (_export, _context) {
+  "use strict";
+
   var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, DataFormatter, decodeGeoHash, _createClass, panelDefaults, mapCenters, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
@@ -158,6 +160,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                 _this2.locations = res;
                 _this2.render();
               });
+            } else if (this.panel.locationData === 'influxDB') {
+              console.log('InfluxDB');
             } else if (this.panel.locationData !== 'geohash') {
               window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(function (res) {
                 _this2.locations = res;
@@ -180,13 +184,20 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           value: function onDataReceived(dataList) {
             if (!dataList) return;
 
+            console.log(dataList);
             this.series = dataList.map(this.seriesHandler.bind(this));
             var data = [];
             if (this.panel.locationData === 'geohash') {
               this.setGeohashValues(data);
-            } else {
+            } else if (this.panel.locationData === 'influxDB') {
+              console.log(dataList);
+              console.log(this.series);
+              console.log(data);
               this.dataFormatter.setValues(data);
-            }
+              // this.setGeohashValues(data);
+            } else {
+                this.dataFormatter.setValues(data);
+              }
             this.data = data;
 
             this.updateThresholdData();

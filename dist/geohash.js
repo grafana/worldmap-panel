@@ -1,6 +1,8 @@
 'use strict';
 
 System.register([], function (_export, _context) {
+  "use strict";
+
   function decodeGeoHash(geohash) {
     if (!geohash || geohash.length === 0) throw new Error('Missing geohash value');
 
