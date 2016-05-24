@@ -87,8 +87,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
         this.locations = res;
         this.render();
       });
-    } else if (this.panel.locationData === 'influxDB') {
-      console.log('InfluxDB');
+    } else if (this.panel.locationData === 'influx') {
+      //.. Do nothing
     } else if (this.panel.locationData !== 'geohash') {
       window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(res => {
         this.locations = res;
@@ -108,24 +108,22 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList) {
     if (!dataList) return;
 
+    console.log('datalist');
     console.log(dataList);
-    this.series = dataList.map(this.seriesHandler.bind(this));
     const data = [];
+
     if (this.panel.locationData === 'geohash') {
+      this.series = dataList.map(this.seriesHandler.bind(this));
       this.setGeohashValues(data);
-    } else if (this.panel.locationData === 'influxDB') {
-      console.log(dataList);
-      console.log(this.series);
-      console.log(data);
-      this.dataFormatter.setValues(data);
-      // this.setGeohashValues(data);
+    } else if (this.panel.locationData === 'influx') {
+      this.series = dataList.map(this.tableHandler.bind(this));
+      this.setTableValues(data);
     } else {
       this.dataFormatter.setValues(data);
     }
+
     this.data = data;
-
     this.updateThresholdData();
-
     this.render();
   }
 
@@ -166,6 +164,40 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       data.valueRange = highestValue - lowestValue;
     }
   }
+  
+  setTableValues(data) {
+    if (!this.panel.influxMetric) return;
+
+    if (this.series && this.series.length > 0) {
+      let highestValue = 0;
+      let lowestValue = Number.MAX_VALUE;
+
+      this.series[0].datapoints.forEach(datapoint => {
+        const encodedGeohash = datapoint['geohash'];
+        const decodedGeohash = decodeGeoHash(encodedGeohash);
+
+        const dataValue = {
+          key: encodedGeohash,
+          locationName: datapoint[this.panel.influxLabel] || 'n/a',
+          locationLatitude: decodedGeohash.latitude,
+          locationLongitude: decodedGeohash.longitude,
+          value: datapoint['metric'],
+          valueFormatted: datapoint['metric'],
+          valueRounded: 0
+        };
+
+        if (dataValue.value > highestValue) highestValue = dataValue.value;
+        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+
+        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.panel.decimals || 0);
+        data.push(dataValue);
+      });
+
+      data.highestValue = highestValue;
+      data.lowestValue = lowestValue;
+      data.valueRange = highestValue - lowestValue;
+    }
+  }
 
   seriesHandler(seriesData) {
     const series = new TimeSeries({
@@ -173,6 +205,42 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       alias: seriesData.target,
     });
 
+    series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+    return series;
+  }
+  
+  tableHandler(tableData) {
+    const datapoints = [];
+    const alias = null;
+    
+    console.log('tabel data');
+    console.log(tableData);
+    
+    if (tableData.type === 'table') {
+      const columnNames = {};
+
+      tableData.columns.forEach((column, i) => {
+        columnNames[i] = column.text;
+      });
+      
+      console.log(columnNames);
+      
+      tableData.rows.forEach(row => {
+        const datapoint = {};
+        
+        row.forEach((value, i) => {
+          const key = columnNames[i];
+          datapoint[key] = value;
+        });
+
+        datapoints.push(datapoint);
+      });
+    }
+    
+    console.log('datapoints');
+    console.log(datapoints);
+    
+    const series = new TimeSeries({ datapoints, alias });
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     return series;
   }

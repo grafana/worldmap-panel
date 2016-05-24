@@ -13,7 +13,6 @@ export default class DataFormatter {
 
       this.ctrl.series.forEach(serie => {
         console.log(serie);
-        console.log(this.ctrl.locations);
         
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
