@@ -198,6 +198,9 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
               this.dataFormatter.setValues(data);
             }
 
+            console.log('data');
+            console.log(data);
+
             this.data = data;
             this.updateThresholdData();
             this.render();
@@ -251,7 +254,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           value: function setTableValues(data) {
             var _this4 = this;
 
-            if (!this.panel.influxMetric) return;
+            //if (!this.panel.influxMetric) return;
 
             if (this.series && this.series.length > 0) {
               (function () {
