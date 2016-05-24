@@ -108,8 +108,6 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList) {
     if (!dataList) return;
 
-    console.log('datalist');
-    console.log(dataList);
     const data = [];
 
     if (this.panel.locationData === 'geohash') {
@@ -121,9 +119,6 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     } else {
       this.dataFormatter.setValues(data);
     }
-
-    console.log('data');
-    console.log(data);
 
     this.data = data;
     this.updateThresholdData();
@@ -213,38 +208,30 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     return series;
   }
-  
+
   tableHandler(tableData) {
     const datapoints = [];
     const alias = null;
-    
-    console.log('tabel data');
-    console.log(tableData);
-    
+
     if (tableData.type === 'table') {
       const columnNames = {};
 
-      tableData.columns.forEach((column, i) => {
-        columnNames[i] = column.text;
+      tableData.columns.forEach((column, columnIndex) => {
+        columnNames[columnIndex] = column.text;
       });
-      
-      console.log(columnNames);
-      
+
       tableData.rows.forEach(row => {
         const datapoint = {};
-        
-        row.forEach((value, i) => {
-          const key = columnNames[i];
+
+        row.forEach((value, columnIndex) => {
+          const key = columnNames[columnIndex];
           datapoint[key] = value;
         });
 
         datapoints.push(datapoint);
       });
     }
-    
-    console.log('datapoints');
-    console.log(datapoints);
-    
+
     const series = new TimeSeries({ datapoints, alias });
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     return series;
