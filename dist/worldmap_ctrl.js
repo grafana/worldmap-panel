@@ -161,7 +161,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                 _this2.render();
               });
             } else if (this.panel.locationData === 'influx') {
-              //.. Do nothing
+              // .. Do nothing
             } else if (this.panel.locationData !== 'geohash') {
                 window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(function (res) {
                   _this2.locations = res;
@@ -254,15 +254,17 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           value: function setTableValues(data) {
             var _this4 = this;
 
-            //if (!this.panel.influxMetric) return;
-
             if (this.series && this.series.length > 0) {
               (function () {
                 var highestValue = 0;
                 var lowestValue = Number.MAX_VALUE;
 
                 _this4.series[0].datapoints.forEach(function (datapoint) {
-                  var encodedGeohash = datapoint['geohash'];
+                  if (!datapoint.geohash) {
+                    return;
+                  }
+
+                  var encodedGeohash = datapoint.geohash;
                   var decodedGeohash = decodeGeoHash(encodedGeohash);
 
                   var dataValue = {
@@ -270,8 +272,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                     locationName: datapoint[_this4.panel.influxLabel] || 'n/a',
                     locationLatitude: decodedGeohash.latitude,
                     locationLongitude: decodedGeohash.longitude,
-                    value: datapoint['metric'],
-                    valueFormatted: datapoint['metric'],
+                    value: datapoint.metric,
+                    valueFormatted: datapoint.metric,
                     valueRounded: 0
                   };
 

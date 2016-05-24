@@ -88,7 +88,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
         this.render();
       });
     } else if (this.panel.locationData === 'influx') {
-      //.. Do nothing
+      // .. Do nothing
     } else if (this.panel.locationData !== 'geohash') {
       window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(res => {
         this.locations = res;
@@ -121,7 +121,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     } else {
       this.dataFormatter.setValues(data);
     }
-    
+
     console.log('data');
     console.log(data);
 
@@ -167,16 +167,18 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       data.valueRange = highestValue - lowestValue;
     }
   }
-  
-  setTableValues(data) {
-    //if (!this.panel.influxMetric) return;
 
+  setTableValues(data) {
     if (this.series && this.series.length > 0) {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
       this.series[0].datapoints.forEach(datapoint => {
-        const encodedGeohash = datapoint['geohash'];
+        if (!datapoint.geohash) {
+          return;
+        }
+
+        const encodedGeohash = datapoint.geohash;
         const decodedGeohash = decodeGeoHash(encodedGeohash);
 
         const dataValue = {
@@ -184,8 +186,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
           locationName: datapoint[this.panel.influxLabel] || 'n/a',
           locationLatitude: decodedGeohash.latitude,
           locationLongitude: decodedGeohash.longitude,
-          value: datapoint['metric'],
-          valueFormatted: datapoint['metric'],
+          value: datapoint.metric,
+          valueFormatted: datapoint.metric,
           valueRounded: 0
         };
 
