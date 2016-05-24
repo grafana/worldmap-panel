@@ -166,7 +166,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
   
   setTableValues(data) {
-    if (!this.panel.influxMetric) return;
+    //if (!this.panel.influxMetric) return;
 
     if (this.series && this.series.length > 0) {
       let highestValue = 0;
