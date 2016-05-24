@@ -184,8 +184,6 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           value: function onDataReceived(dataList) {
             if (!dataList) return;
 
-            console.log('datalist');
-            console.log(dataList);
             var data = [];
 
             if (this.panel.locationData === 'geohash') {
@@ -197,9 +195,6 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             } else {
               this.dataFormatter.setValues(data);
             }
-
-            console.log('data');
-            console.log(data);
 
             this.data = data;
             this.updateThresholdData();
@@ -307,24 +302,19 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             var datapoints = [];
             var alias = null;
 
-            console.log('tabel data');
-            console.log(tableData);
-
             if (tableData.type === 'table') {
               (function () {
                 var columnNames = {};
 
-                tableData.columns.forEach(function (column, i) {
-                  columnNames[i] = column.text;
+                tableData.columns.forEach(function (column, columnIndex) {
+                  columnNames[columnIndex] = column.text;
                 });
-
-                console.log(columnNames);
 
                 tableData.rows.forEach(function (row) {
                   var datapoint = {};
 
-                  row.forEach(function (value, i) {
-                    var key = columnNames[i];
+                  row.forEach(function (value, columnIndex) {
+                    var key = columnNames[columnIndex];
                     datapoint[key] = value;
                   });
 
@@ -332,9 +322,6 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                 });
               })();
             }
-
-            console.log('datapoints');
-            console.log(datapoints);
 
             var series = new TimeSeries({ datapoints: datapoints, alias: alias });
             series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
