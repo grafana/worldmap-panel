@@ -121,6 +121,9 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     } else {
       this.dataFormatter.setValues(data);
     }
+    
+    console.log('data');
+    console.log(data);
 
     this.data = data;
     this.updateThresholdData();
