@@ -99,3 +99,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 ##### v.0.0.6
 
 - Adds decimal places option for data values in circle popovers.
+
+##### v.0.0.7
+
+- Updates tile map urls to https to avoid mixed content warnings on https sites.
