@@ -107,3 +107,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 ##### v.0.0.8
 
 - Saves location data in the dashboard json when snapshotting. This means snapshots should work even when using a custom endpoint for returning a location data json file.
+
+##### v.0.0.9
+
+- Fixes bug that meant location data did not refresh after being changed in the editor. It required the page to be refreshed to reload it.
