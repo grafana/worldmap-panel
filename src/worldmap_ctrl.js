@@ -66,6 +66,11 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   loadLocationDataFromFile() {
     if (this.map) return;
 
+    if (this.panel.snapshotLocationData) {
+      this.locations = this.panel.snapshotLocationData;
+      return;
+    }
+
     if (this.panel.locationData === 'jsonp endpoint') {
       if (!this.panel.jsonpUrl || !this.panel.jsonpCallback) return;
 
@@ -105,6 +110,10 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList) {
     if (!dataList) return;
+
+    if (this.dashboard.snapshot && this.locations) {
+      this.panel.snapshotLocationData = this.locations;
+    }
 
     this.series = dataList.map(this.seriesHandler.bind(this));
     const data = [];

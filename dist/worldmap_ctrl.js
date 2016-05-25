@@ -137,6 +137,11 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
 
             if (this.map) return;
 
+            if (this.panel.snapshotLocationData) {
+              this.locations = this.panel.snapshotLocationData;
+              return;
+            }
+
             if (this.panel.locationData === 'jsonp endpoint') {
               if (!this.panel.jsonpUrl || !this.panel.jsonpCallback) return;
 
@@ -179,6 +184,10 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           key: 'onDataReceived',
           value: function onDataReceived(dataList) {
             if (!dataList) return;
+
+            if (this.dashboard.snapshot && this.locations) {
+              this.panel.snapshotLocationData = this.locations;
+            }
 
             this.series = dataList.map(this.seriesHandler.bind(this));
             var data = [];
