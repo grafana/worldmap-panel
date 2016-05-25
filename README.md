@@ -103,3 +103,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 ##### v.0.0.7
 
 - Updates tile map urls to https to avoid mixed content warnings on https sites.
+
+##### v.0.0.8
+
+- Saves location data in the dashboard json when snapshotting. This means snapshots should work even when using a custom endpoint for returning a location data json file.

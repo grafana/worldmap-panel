@@ -23,7 +23,7 @@
       {"name": "USA", "path": "src/images/worldmap-usa.png"},
       {"name": "Light Theme", "path": "src/images/worldmap-light-theme.png"}
     ],
-    "version": "0.0.7",
+    "version": "0.0.8",
     "updated": "2015-05-25"
   },
 
