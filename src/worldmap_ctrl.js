@@ -63,8 +63,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     }
   }
 
-  loadLocationDataFromFile() {
-    if (this.map) return;
+  loadLocationDataFromFile(reload) {
+    if (this.map && !reload) return;
 
     if (this.panel.snapshotLocationData) {
       this.locations = this.panel.snapshotLocationData;
@@ -88,16 +88,15 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     } else if (this.panel.locationData === 'json endpoint') {
       if (!this.panel.jsonUrl) return;
 
-      window.$.getJSON(this.panel.jsonUrl).then(res => {
-        this.locations = res;
-        this.render();
-      });
+      window.$.getJSON(this.panel.jsonUrl).then(res => this.reloadLocations.bind(this, res));
     } else if (this.panel.locationData !== 'geohash') {
-      window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(res => {
-        this.locations = res;
-        this.render();
-      });
+      window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
     }
+  }
+
+  reloadLocations(res) {
+    this.locations = res;
+    this.refresh();
   }
 
   onPanelTeardown() {
@@ -210,7 +209,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   changeLocationData() {
-    this.loadLocationDataFromFile();
+    this.loadLocationDataFromFile(true);
 
     if (this.panel.locationData === 'geohash') {
       this.render();

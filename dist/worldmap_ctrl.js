@@ -132,10 +132,10 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           }
         }, {
           key: 'loadLocationDataFromFile',
-          value: function loadLocationDataFromFile() {
+          value: function loadLocationDataFromFile(reload) {
             var _this2 = this;
 
-            if (this.map) return;
+            if (this.map && !reload) return;
 
             if (this.panel.snapshotLocationData) {
               this.locations = this.panel.snapshotLocationData;
@@ -160,15 +160,17 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
               if (!this.panel.jsonUrl) return;
 
               window.$.getJSON(this.panel.jsonUrl).then(function (res) {
-                _this2.locations = res;
-                _this2.render();
+                return _this2.reloadLocations.bind(_this2, res);
               });
             } else if (this.panel.locationData !== 'geohash') {
-              window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(function (res) {
-                _this2.locations = res;
-                _this2.render();
-              });
+              window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
             }
+          }
+        }, {
+          key: 'reloadLocations',
+          value: function reloadLocations(res) {
+            this.locations = res;
+            this.refresh();
           }
         }, {
           key: 'onPanelTeardown',
@@ -297,7 +299,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }, {
           key: 'changeLocationData',
           value: function changeLocationData() {
-            this.loadLocationDataFromFile();
+            this.loadLocationDataFromFile(true);
 
             if (this.panel.locationData === 'geohash') {
               this.render();
