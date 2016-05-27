@@ -69,6 +69,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
       }();
 
       panelDefaults = {
+        maxDataPoints: 1,
         mapCenter: '(0°, 0°)',
         mapCenterLatitude: 0,
         mapCenterLongitude: 0,

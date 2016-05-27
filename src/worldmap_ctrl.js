@@ -8,6 +8,7 @@ import decodeGeoHash from './geohash';
 import './css/worldmap-panel.css!';
 
 const panelDefaults = {
+  maxDataPoints: 1,
   mapCenter: '(0°, 0°)',
   mapCenterLatitude: 0,
   mapCenterLongitude: 0,
