@@ -111,3 +111,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 ##### v.0.0.9
 
 - Fixes bug that meant location data did not refresh after being changed in the editor. It required the page to be refreshed to reload it.
+
+##### v.0.0.10
+
+- Performance fix for snapshotting. Sets maxdatapoints to 1 to minimize data that needs to be saved in the snapshot.
