@@ -6,7 +6,7 @@ The Worldmap Panel is a tile map of the world that can be overlaid with circles 
 
 ## Time Series Data as the Datasource
 
-If you are using a database like graphite then country codes (like US or GB or FR) are matched to a node or a wildcard in a metric namespace e.g. apps.country.FR.requests.count or apps.country.*.requests.count. Use the aliasByNode function to point to the field containing the country code. See the image below for an example of a graphite query.
+If you are using a database like graphite then country codes (like US or GB or FR) are matched to a node or a wildcard in a metric namespace e.g. apps.country.FR.requests.count or apps.country.*.requests.count. Use the aliasByNode function to point to the field containing the country code. See the image below for an example of a graphite query. See this [issue](https://github.com/grafana/worldmap-panel/issues/9#issuecomment-224861471) for an example of alias pattern in InfluxDB.
 
 ![Graphite Query for Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-timeseries-query.png)
 
@@ -57,6 +57,7 @@ Shows/hide the legend on the bottom left that shows the threshold ranges and the
 
 There are four ways to provide data for the worldmap panel:
  - *countries*: This is a list of all the countries in the world. It works by matching a country code (US, FR, AU) to a node alias in a time series query.
+ - *states*: Similar to countries but for the states in USA e.g. CA for California
  - *geohash*: An ElasticSearch query that returns geohashes.
  - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/grafana/worldmap-panel/blob/master/src/data/countries.json) or [this list of cities](https://github.com/grafana/worldmap-panel/blob/master/src/data/probes.json).
  - *jsonp*: A jsonp endpoint that returns custom json wrapped as jsonp. Use this if you are having problems with CORS.
@@ -115,3 +116,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 ##### v.0.0.10
 
 - Performance fix for snapshotting. Sets maxdatapoints to 1 to minimize data that needs to be saved in the snapshot.
+
+##### v.0.0.11
+
+- Zoom issue fix and adds a states options for USA states location data.
