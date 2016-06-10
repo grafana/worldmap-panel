@@ -1,5 +1,7 @@
 import _ from 'lodash';
+/* eslint-disable id-length, no-unused-vars */
 import L from './leaflet';
+/* eslint-disable id-length, no-unused-vars */
 
 const tileServers = {
   'CartoDB Positron': { url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'},
@@ -141,12 +143,12 @@ export default class WorldMap {
     const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
     circle.bindPopup(label, {'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': false});
 
-    circle.on('mouseover', function (evt) {
+    circle.on('mouseover', function onMouseOver(evt) {
       const layer = evt.target;
       layer.bringToFront();
       this.openPopup();
     });
-    circle.on('mouseout', function () {
+    circle.on('mouseout', function onMouseOut() {
       circle.closePopup();
     });
   }

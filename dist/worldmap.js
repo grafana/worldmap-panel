@@ -190,12 +190,12 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
             var label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
             circle.bindPopup(label, { 'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': false });
 
-            circle.on('mouseover', function (evt) {
+            circle.on('mouseover', function onMouseOver(evt) {
               var layer = evt.target;
               layer.bringToFront();
               this.openPopup();
             });
-            circle.on('mouseout', function () {
+            circle.on('mouseout', function onMouseOut() {
               circle.closePopup();
             });
           }
