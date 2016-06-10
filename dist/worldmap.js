@@ -52,7 +52,7 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         _createClass(WorldMap, [{
           key: 'createMap',
           value: function createMap() {
-            var mapCenter = window.L.latLng(this.ctrl.panel.mapCenterLatitude, this.ctrl.panel.mapCenterLongitude);
+            var mapCenter = window.L.latLng(parseInt(this.ctrl.panel.mapCenterLatitude, 10), parseInt(this.ctrl.panel.mapCenterLongitude, 10));
             this.map = window.L.map(this.mapContainer, { worldCopyJump: true, center: mapCenter }).fitWorld().zoomIn(parseInt(this.ctrl.panel.initialZoom, 10));
             this.map.panTo(mapCenter);
 
@@ -217,7 +217,7 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         }, {
           key: 'panToMapCenter',
           value: function panToMapCenter() {
-            this.map.panTo([this.ctrl.panel.mapCenterLatitude, this.ctrl.panel.mapCenterLongitude]);
+            this.map.panTo([parseInt(this.ctrl.panel.mapCenterLatitude, 10), parseInt(this.ctrl.panel.mapCenterLongitude, 10)]);
             this.ctrl.mapCenterMoved = false;
           }
         }, {

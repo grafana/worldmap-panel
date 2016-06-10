@@ -1,3 +1,5 @@
+/* global describe it beforeEach expect afterEach */
+
 import WorldMap from 'src/worldmap';
 import DataBuilder from 'test/data_builder';
 
@@ -256,7 +258,7 @@ describe('Worldmap', () => {
     });
   });
 
-  afterEach(function() {
+  afterEach(() => {
     document.body.removeChild(document.getElementById('fixture'));
   });
 

@@ -34,7 +34,7 @@ export default class DataFormatter {
           if (dataValue.value > highestValue) highestValue = dataValue.value;
           if (dataValue.value < lowestValue) lowestValue = dataValue.value;
 
-          dataValue.valueRounded = this.kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+          dataValue.valueRounded = this.kbn.roundValue(dataValue.value, parseInt(this.ctrl.panel.decimals, 10) || 0);
           data.push(dataValue);
         }
       });
