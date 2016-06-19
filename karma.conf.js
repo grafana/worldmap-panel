@@ -38,7 +38,7 @@ module.exports = (config) => {
       // filename: function (file) {
       //   return file.originalPath.replace(/\.js$/, '.es5.js');
       // },
-      sourceFileName: function (file) {
+      sourceFileName: (file) => {
         return file.originalPath;
       }
     },

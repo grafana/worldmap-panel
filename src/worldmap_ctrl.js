@@ -8,6 +8,7 @@ import decodeGeoHash from './geohash';
 import './css/worldmap-panel.css!';
 
 const panelDefaults = {
+  maxDataPoints: 1,
   mapCenter: '(0°, 0°)',
   mapCenterLatitude: 0,
   mapCenterLongitude: 0,
@@ -63,8 +64,13 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     }
   }
 
-  loadLocationDataFromFile() {
-    if (this.map) return;
+  loadLocationDataFromFile(reload) {
+    if (this.map && !reload) return;
+
+    if (this.panel.snapshotLocationData) {
+      this.locations = this.panel.snapshotLocationData;
+      return;
+    }
 
     if (this.panel.locationData === 'jsonp endpoint') {
       if (!this.panel.jsonpUrl || !this.panel.jsonpCallback) return;
@@ -83,18 +89,17 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     } else if (this.panel.locationData === 'json endpoint') {
       if (!this.panel.jsonUrl) return;
 
-      window.$.getJSON(this.panel.jsonUrl).then(res => {
-        this.locations = res;
-        this.render();
-      });
+      window.$.getJSON(this.panel.jsonUrl).then(res => this.reloadLocations.bind(this, res));
     } else if (this.panel.locationData === 'influx') {
       // .. Do nothing
     } else if (this.panel.locationData !== 'geohash') {
-      window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(res => {
-        this.locations = res;
-        this.render();
-      });
+      window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
     }
+  }
+
+  reloadLocations(res) {
+    this.locations = res;
+    this.refresh();
   }
 
   onPanelTeardown() {
@@ -108,20 +113,25 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList) {
     if (!dataList) return;
 
+    if (this.dashboard.snapshot && this.locations) {
+      this.panel.snapshotLocationData = this.locations;
+    }
+
+    this.series = dataList.map(this.seriesHandler.bind(this));
     const data = [];
 
     if (this.panel.locationData === 'geohash') {
-      this.series = dataList.map(this.seriesHandler.bind(this));
       this.setGeohashValues(data);
-    } else if (this.panel.locationData === 'influx') {
+    } else if (this.panel.locationData === 'table') {
       this.series = dataList.map(this.tableHandler.bind(this));
       this.setTableValues(data);
     } else {
       this.dataFormatter.setValues(data);
     }
-
     this.data = data;
+
     this.updateThresholdData();
+
     this.render();
   }
 
@@ -270,7 +280,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   changeLocationData() {
-    this.loadLocationDataFromFile();
+    this.loadLocationDataFromFile(true);
 
     if (this.panel.locationData === 'geohash') {
       this.render();
