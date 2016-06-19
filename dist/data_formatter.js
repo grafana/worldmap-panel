@@ -77,7 +77,7 @@ System.register(['lodash'], function (_export, _context) {
                     if (dataValue.value > highestValue) highestValue = dataValue.value;
                     if (dataValue.value < lowestValue) lowestValue = dataValue.value;
 
-                    dataValue.valueRounded = _this.kbn.roundValue(dataValue.value, _this.ctrl.panel.decimals || 0);
+                    dataValue.valueRounded = _this.kbn.roundValue(dataValue.value, parseInt(_this.ctrl.panel.decimals, 10) || 0);
                     data.push(dataValue);
                   }
                 });

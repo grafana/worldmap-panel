@@ -1,9 +1,11 @@
 import _ from 'lodash';
+/* eslint-disable id-length, no-unused-vars */
 import L from './leaflet';
+/* eslint-disable id-length, no-unused-vars */
 
 const tileServers = {
-  'CartoDB Positron': { url: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'},
-  'CartoDB Dark': {url: 'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'}
+  'CartoDB Positron': { url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'},
+  'CartoDB Dark': {url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'}
 };
 
 export default class WorldMap {
@@ -15,10 +17,10 @@ export default class WorldMap {
   }
 
   createMap() {
-    const mapCenter = window.L.latLng(this.ctrl.panel.mapCenterLatitude, this.ctrl.panel.mapCenterLongitude);
+    const mapCenter = window.L.latLng(parseInt(this.ctrl.panel.mapCenterLatitude, 10), parseInt(this.ctrl.panel.mapCenterLongitude, 10));
     this.map = window.L.map(this.mapContainer, {worldCopyJump: true, center: mapCenter})
       .fitWorld()
-      .zoomIn(this.ctrl.panel.initialZoom);
+      .zoomIn(parseInt(this.ctrl.panel.initialZoom, 10));
     this.map.panTo(mapCenter);
 
     const selectedTileServer = tileServers[this.ctrl.tileServer];
@@ -141,12 +143,12 @@ export default class WorldMap {
     const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
     circle.bindPopup(label, {'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': false});
 
-    circle.on('mouseover', function (evt) {
+    circle.on('mouseover', function onMouseOver(evt) {
       const layer = evt.target;
       layer.bringToFront();
       this.openPopup();
     });
-    circle.on('mouseout', function () {
+    circle.on('mouseout', function onMouseOut() {
       circle.closePopup();
     });
   }
@@ -165,7 +167,7 @@ export default class WorldMap {
   }
 
   panToMapCenter() {
-    this.map.panTo([this.ctrl.panel.mapCenterLatitude, this.ctrl.panel.mapCenterLongitude]);
+    this.map.panTo([parseInt(this.ctrl.panel.mapCenterLatitude, 10), parseInt(this.ctrl.panel.mapCenterLongitude, 10)]);
     this.ctrl.mapCenterMoved = false;
   }
 

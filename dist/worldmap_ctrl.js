@@ -71,6 +71,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
       }();
 
       panelDefaults = {
+        maxDataPoints: 1,
         mapCenter: '(0°, 0°)',
         mapCenterLatitude: 0,
         mapCenterLongitude: 0,
@@ -134,10 +135,15 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           }
         }, {
           key: 'loadLocationDataFromFile',
-          value: function loadLocationDataFromFile() {
+          value: function loadLocationDataFromFile(reload) {
             var _this2 = this;
 
-            if (this.map) return;
+            if (this.map && !reload) return;
+
+            if (this.panel.snapshotLocationData) {
+              this.locations = this.panel.snapshotLocationData;
+              return;
+            }
 
             if (this.panel.locationData === 'jsonp endpoint') {
               if (!this.panel.jsonpUrl || !this.panel.jsonpCallback) return;
@@ -157,17 +163,19 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
               if (!this.panel.jsonUrl) return;
 
               window.$.getJSON(this.panel.jsonUrl).then(function (res) {
-                _this2.locations = res;
-                _this2.render();
+                return _this2.reloadLocations.bind(_this2, res);
               });
             } else if (this.panel.locationData === 'influx') {
               // .. Do nothing
             } else if (this.panel.locationData !== 'geohash') {
-                window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(function (res) {
-                  _this2.locations = res;
-                  _this2.render();
-                });
+                window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
               }
+          }
+        }, {
+          key: 'reloadLocations',
+          value: function reloadLocations(res) {
+            this.locations = res;
+            this.refresh();
           }
         }, {
           key: 'onPanelTeardown',
@@ -184,20 +192,25 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           value: function onDataReceived(dataList) {
             if (!dataList) return;
 
+            if (this.dashboard.snapshot && this.locations) {
+              this.panel.snapshotLocationData = this.locations;
+            }
+
+            this.series = dataList.map(this.seriesHandler.bind(this));
             var data = [];
 
             if (this.panel.locationData === 'geohash') {
-              this.series = dataList.map(this.seriesHandler.bind(this));
               this.setGeohashValues(data);
-            } else if (this.panel.locationData === 'influx') {
+            } else if (this.panel.locationData === 'table') {
               this.series = dataList.map(this.tableHandler.bind(this));
               this.setTableValues(data);
             } else {
               this.dataFormatter.setValues(data);
             }
-
             this.data = data;
+
             this.updateThresholdData();
+
             this.render();
           }
         }, {
@@ -367,7 +380,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }, {
           key: 'changeLocationData',
           value: function changeLocationData() {
-            this.loadLocationDataFromFile();
+            this.loadLocationDataFromFile(true);
 
             if (this.panel.locationData === 'geohash') {
               this.render();
