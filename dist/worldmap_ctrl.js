@@ -165,7 +165,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
               window.$.getJSON(this.panel.jsonUrl).then(function (res) {
                 return _this2.reloadLocations.bind(_this2, res);
               });
-            } else if (this.panel.locationData === 'influx') {
+            } else if (this.panel.locationData === 'table') {
               // .. Do nothing
             } else if (this.panel.locationData !== 'geohash') {
                 window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
@@ -277,7 +277,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
 
                   var dataValue = {
                     key: encodedGeohash,
-                    locationName: datapoint[_this4.panel.influxLabel] || 'n/a',
+                    locationName: datapoint[_this4.panel.tableLabel] || 'n/a',
                     locationLatitude: decodedGeohash.latitude,
                     locationLongitude: decodedGeohash.longitude,
                     value: datapoint.metric,
