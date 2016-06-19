@@ -202,6 +202,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             if (this.panel.locationData === 'geohash') {
               this.setGeohashValues(data);
             } else if (this.panel.locationData === 'table') {
+              console.log('table');
               this.series = dataList.map(this.tableHandler.bind(this));
               this.setTableValues(data);
             } else {
@@ -262,6 +263,9 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
           value: function setTableValues(data) {
             var _this4 = this;
 
+            conso.log('setTableValues');
+            console.log(data);
+            console.log(this.series);
             if (this.series && this.series.length > 0) {
               (function () {
                 var highestValue = 0;
