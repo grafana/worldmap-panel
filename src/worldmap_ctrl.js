@@ -90,7 +90,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       if (!this.panel.jsonUrl) return;
 
       window.$.getJSON(this.panel.jsonUrl).then(res => this.reloadLocations.bind(this, res));
-    } else if (this.panel.locationData === 'influx') {
+    } else if (this.panel.locationData === 'table') {
       // .. Do nothing
     } else if (this.panel.locationData !== 'geohash') {
       window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
@@ -188,7 +188,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
 
         const dataValue = {
           key: encodedGeohash,
-          locationName: datapoint[this.panel.influxLabel] || 'n/a',
+          locationName: datapoint[this.panel.tableLabel] || 'n/a',
           locationLatitude: decodedGeohash.latitude,
           locationLongitude: decodedGeohash.longitude,
           value: datapoint.metric,

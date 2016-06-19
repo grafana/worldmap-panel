@@ -50,9 +50,9 @@
 				<select class="input-small gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ['min','max','avg', 'current', 'total']" ng-change="ctrl.refresh()"></select>
 			</div>
 		</div>
-		<div class="gf-form" ng-show="ctrl.panel.locationData === 'influx'">
-			<label class="gf-form-label width-12">InfluxDB Label Field</label>
-			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.influxLabel" ng-change="ctrl.refresh()" ng-model-onblur />
+		<div class="gf-form" ng-show="ctrl.panel.locationData === 'table'">
+			<label class="gf-form-label width-12">Table Label Field</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableLabel" ng-change="ctrl.refresh()" ng-model-onblur />
 		</div>
 		<div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
 			<label class="gf-form-label width-12">ES Metric Field</label>
