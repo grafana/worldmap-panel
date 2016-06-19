@@ -117,17 +117,18 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       this.panel.snapshotLocationData = this.locations;
     }
 
-    this.series = dataList.map(this.seriesHandler.bind(this));
     const data = [];
 
     console.log(this.panel.locationData);
     if (this.panel.locationData === 'geohash') {
+      this.series = dataList.map(this.seriesHandler.bind(this));
       this.setGeohashValues(data);
     } else if (this.panel.locationData === 'table') {
       console.log('table');
       this.series = dataList.map(this.tableHandler.bind(this));
       this.setTableValues(data);
     } else {
+      this.series = dataList.map(this.seriesHandler.bind(this));
       this.dataFormatter.setValues(data);
     }
     this.data = data;
