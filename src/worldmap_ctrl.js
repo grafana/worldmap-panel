@@ -123,6 +123,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     if (this.panel.locationData === 'geohash') {
       this.setGeohashValues(data);
     } else if (this.panel.locationData === 'table') {
+      console.log('table');
       this.series = dataList.map(this.tableHandler.bind(this));
       this.setTableValues(data);
     } else {
@@ -174,6 +175,9 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   setTableValues(data) {
+    conso.log('setTableValues');
+    console.log(data);
+    console.log(this.series);
     if (this.series && this.series.length > 0) {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
