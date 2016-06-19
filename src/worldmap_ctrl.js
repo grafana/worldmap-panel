@@ -120,6 +120,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.series = dataList.map(this.seriesHandler.bind(this));
     const data = [];
 
+    console.log(this.panel.locationData);
     if (this.panel.locationData === 'geohash') {
       this.setGeohashValues(data);
     } else if (this.panel.locationData === 'table') {

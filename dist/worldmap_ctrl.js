@@ -199,6 +199,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             this.series = dataList.map(this.seriesHandler.bind(this));
             var data = [];
 
+            console.log(this.panel.locationData);
             if (this.panel.locationData === 'geohash') {
               this.setGeohashValues(data);
             } else if (this.panel.locationData === 'table') {
