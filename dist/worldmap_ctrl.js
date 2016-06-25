@@ -161,7 +161,8 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
               if (!this.panel.jsonUrl) return;
 
               window.$.getJSON(this.panel.jsonUrl).then(function (res) {
-                return _this2.reloadLocations.bind(_this2, res);
+                _this2.locations = res;
+                _this2.render();
               });
             } else if (this.panel.locationData !== 'geohash') {
               window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));

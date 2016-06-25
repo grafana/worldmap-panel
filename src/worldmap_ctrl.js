@@ -89,7 +89,10 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     } else if (this.panel.locationData === 'json endpoint') {
       if (!this.panel.jsonUrl) return;
 
-      window.$.getJSON(this.panel.jsonUrl).then(res => this.reloadLocations.bind(this, res));
+      window.$.getJSON(this.panel.jsonUrl).then(res => {
+        this.locations = res;
+        this.render();
+      });
     } else if (this.panel.locationData !== 'geohash') {
       window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
     }
