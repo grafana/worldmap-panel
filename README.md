@@ -120,3 +120,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 ##### v.0.0.11
 
 - Zoom issue fix and adds a states options for USA states location data.
+
+##### v.0.0.12
+
+- Fixes [issue with the JSON endpoint not working](https://github.com/grafana/worldmap-panel/issues/22)
