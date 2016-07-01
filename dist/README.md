@@ -4,7 +4,7 @@ The Worldmap Panel is a tile map of the world that can be overlaid with circles 
 
 ![Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-world.png)
 
-## Time Series Data as the Datasource
+## Time Series Data as the Data Source
 
 If you are using a database like graphite then country codes (like US or GB or FR) are matched to a node or a wildcard in a metric namespace e.g. apps.country.FR.requests.count or apps.country.*.requests.count. Use the aliasByNode function to point to the field containing the country code. See the image below for an example of a graphite query. See this [issue](https://github.com/grafana/worldmap-panel/issues/9#issuecomment-224861471) for an example of alias pattern in InfluxDB.
 
@@ -14,7 +14,7 @@ A circle is then drawn for every country code matched and the size of the circle
 
 At the moment, only country codes are supported right now but support for uploading a custom location file with keys and coordinates is on the backlog.
 
-## ElasticSearch as the Datasource
+## ElasticSearch as the Data Source
 
 The [Geo-point](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/geo-point.html) data type with geohash indexing in Elasticsearch can also be used as a datasource for the worldmap panel. Grafana has a new bucket aggregate for Elasticsearch queries - Geo Hash Grid that allows grouping of coordinates. The Geo Hash Grid has a precision option where 1 is the highest level and 7 is the lowest.
 
@@ -24,6 +24,17 @@ Three fields need to be provided by the ElasticSearch query:
 - A metric (Count, Average, Sum etc.)
 - Location Name (optional - geohash value will be shown if not chosen)
 - geo_point field that provides the geohash value.
+
+## Table Data as the Data Source
+
+An example of Table Data would using InfluxDB and then formatting the data returned from the metric query as Table.
+
+Similar to the Elasticsearch query above, 3 fields are expected (2 of them are mandatory)
+- a field named *metric*
+- a geohash tag named *geohash*
+- an optional location name (shown in the mouse over). This location name has to be specified in the Worldmap settings tab too.
+
+![Example influxdb query](https://cloud.githubusercontent.com/assets/434655/16535977/8cd520be-3fec-11e6-8dc9-2ecf7b16ad5f.png)
 
 ### Map Visual Option Settings
 
@@ -61,10 +72,11 @@ There are four ways to provide data for the worldmap panel:
  - *geohash*: An ElasticSearch query that returns geohashes.
  - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/grafana/worldmap-panel/blob/master/src/data/countries.json) or [this list of cities](https://github.com/grafana/worldmap-panel/blob/master/src/data/probes.json).
  - *jsonp*: A jsonp endpoint that returns custom json wrapped as jsonp. Use this if you are having problems with CORS.
+ - *table*: This expects the metric query to return data points with a field named geohash. This field should contain a string in the [geohash form](https://www.elastic.co/guide/en/elasticsearch/guide/current/geohashes.html). For example: London -> "gcpvh3zgu992".
 
 **Aggregation**
 
-If you chose *countries* as the source of the location data then you can choose an aggregation here: avg, total etc.
+If you chose *countries* or *table* as the source of the location data then you can choose an aggregation here: avg, total etc.
 
 **ES Metric/Location Name/geo_point Field**
 
@@ -124,3 +136,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 ##### v.0.0.12
 
 - Fixes [issue with the JSON endpoint not working](https://github.com/grafana/worldmap-panel/issues/22)
+
+##### v.0.0.13
+
+- New location data option -> table data. Location data can now come from data sources other than graphite and Elasticsearch (InfluxDb for example). See table data instructions above on how to use it.
