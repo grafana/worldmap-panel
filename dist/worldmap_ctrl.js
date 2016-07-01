@@ -164,9 +164,11 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
                 _this2.locations = res;
                 _this2.render();
               });
+            } else if (this.panel.locationData === 'table') {
+              // .. Do nothing
             } else if (this.panel.locationData !== 'geohash') {
-              window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
-            }
+                window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
+              }
           }
         }, {
           key: 'reloadLocations',
@@ -193,11 +195,16 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
               this.panel.snapshotLocationData = this.locations;
             }
 
-            this.series = dataList.map(this.seriesHandler.bind(this));
             var data = [];
+
             if (this.panel.locationData === 'geohash') {
+              this.series = dataList.map(this.seriesHandler.bind(this));
               this.setGeohashValues(data);
+            } else if (this.panel.locationData === 'table') {
+              this.series = dataList.map(this.tableHandler.bind(this));
+              this.setTableValues(data);
             } else {
+              this.series = dataList.map(this.seriesHandler.bind(this));
               this.dataFormatter.setValues(data);
             }
             this.data = data;
@@ -251,6 +258,47 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
             }
           }
         }, {
+          key: 'setTableValues',
+          value: function setTableValues(data) {
+            var _this4 = this;
+
+            if (this.series && this.series.length > 0) {
+              (function () {
+                var highestValue = 0;
+                var lowestValue = Number.MAX_VALUE;
+
+                _this4.series[0].datapoints.forEach(function (datapoint) {
+                  if (!datapoint.geohash) {
+                    return;
+                  }
+
+                  var encodedGeohash = datapoint.geohash;
+                  var decodedGeohash = decodeGeoHash(encodedGeohash);
+
+                  var dataValue = {
+                    key: encodedGeohash,
+                    locationName: datapoint[_this4.panel.tableLabel] || 'n/a',
+                    locationLatitude: decodedGeohash.latitude,
+                    locationLongitude: decodedGeohash.longitude,
+                    value: datapoint.metric,
+                    valueFormatted: datapoint.metric,
+                    valueRounded: 0
+                  };
+
+                  if (dataValue.value > highestValue) highestValue = dataValue.value;
+                  if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+
+                  dataValue.valueRounded = kbn.roundValue(dataValue.value, _this4.panel.decimals || 0);
+                  data.push(dataValue);
+                });
+
+                data.highestValue = highestValue;
+                data.lowestValue = lowestValue;
+                data.valueRange = highestValue - lowestValue;
+              })();
+            }
+          }
+        }, {
           key: 'seriesHandler',
           value: function seriesHandler(seriesData) {
             var series = new TimeSeries({
@@ -258,6 +306,37 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
               alias: seriesData.target
             });
 
+            series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+            return series;
+          }
+        }, {
+          key: 'tableHandler',
+          value: function tableHandler(tableData) {
+            var datapoints = [];
+            var alias = null;
+
+            if (tableData.type === 'table') {
+              (function () {
+                var columnNames = {};
+
+                tableData.columns.forEach(function (column, columnIndex) {
+                  columnNames[columnIndex] = column.text;
+                });
+
+                tableData.rows.forEach(function (row) {
+                  var datapoint = {};
+
+                  row.forEach(function (value, columnIndex) {
+                    var key = columnNames[columnIndex];
+                    datapoint[key] = value;
+                  });
+
+                  datapoints.push(datapoint);
+                });
+              })();
+            }
+
+            var series = new TimeSeries({ datapoints: datapoints, alias: alias });
             series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
             return series;
           }
