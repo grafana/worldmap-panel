@@ -185,7 +185,7 @@ export default class WorldMap {
   }
 
   setZoom(zoomFactor) {
-    this.map.setZoom(zoomFactor);
+    this.map.setZoom(parseInt(zoomFactor, 10));
   }
 
   remove() {
