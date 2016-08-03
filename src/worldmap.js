@@ -17,7 +17,7 @@ export default class WorldMap {
   }
 
   createMap() {
-    const mapCenter = window.L.latLng(parseInt(this.ctrl.panel.mapCenterLatitude, 10), parseInt(this.ctrl.panel.mapCenterLongitude, 10));
+    const mapCenter = window.L.latLng(parseFloat(this.ctrl.panel.mapCenterLatitude), parseFloat(this.ctrl.panel.mapCenterLongitude));
     this.map = window.L.map(this.mapContainer, {worldCopyJump: true, center: mapCenter})
       .fitWorld()
       .zoomIn(parseInt(this.ctrl.panel.initialZoom, 10));
@@ -167,7 +167,7 @@ export default class WorldMap {
   }
 
   panToMapCenter() {
-    this.map.panTo([parseInt(this.ctrl.panel.mapCenterLatitude, 10), parseInt(this.ctrl.panel.mapCenterLongitude, 10)]);
+    this.map.panTo([parseFloat(this.ctrl.panel.mapCenterLatitude), parseFloat(this.ctrl.panel.mapCenterLongitude)]);
     this.ctrl.mapCenterMoved = false;
   }
 
