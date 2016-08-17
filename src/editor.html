@@ -88,9 +88,7 @@
 		</div>
 		<div class="gf-form">
 			<label class="gf-form-label width-10">Colors</label>
-				<spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[0]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
-				<spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[1]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
-				<spectrum-picker class="gf-form-input width-3" ng-model="ctrl.panel.colors[2]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
+				<spectrum-picker class="gf-form-input width-3" ng-repeat="color in ctrl.panel.colors track by $index" ng-model="ctrl.panel.colors[$index]" ng-change="ctrl.changeThresholds()" ></spectrum-picker>
 		</div>
   </div>
 </div>
