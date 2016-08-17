@@ -13,7 +13,7 @@ export default class WorldMap {
     this.ctrl = ctrl;
     this.mapContainer = mapContainer;
     this.createMap();
-    this.circles = [];
+    this.circles = {};
   }
 
   createMap() {
@@ -57,8 +57,9 @@ export default class WorldMap {
   }
 
   needToRedrawCircles() {
-    if (this.circles.length === 0 && this.ctrl.data.length > 0) return true;
-    if (this.circles.length !== this.ctrl.data.length) return true;
+    let nCirc = _.size(this.circles);
+    if (nCirc === 0 && this.ctrl.data.length > 0) return true;
+    if (nCirc !== this.ctrl.data.length) return true;
     const locations = _.map(_.map(this.circles, 'options'), 'location').sort();
     const dataPoints = _.map(this.ctrl.data, 'key').sort();
     return !_.isEqual(locations, dataPoints);
@@ -68,7 +69,7 @@ export default class WorldMap {
     if (this.circlesLayer) {
       this.circlesLayer.clearLayers();
       this.removeCircles(this.circlesLayer);
-      this.circles = [];
+      this.circles = {};
     }
   }
 
@@ -82,12 +83,12 @@ export default class WorldMap {
   }
 
   createCircles() {
-    const circles = [];
+    const circles = {};
     this.ctrl.data.forEach(dataPoint => {
       if (!dataPoint.locationName) return;
-      circles.push(this.createCircle(dataPoint));
+      circles[dataPoint.key] = this.createCircle(dataPoint);
     });
-    this.circlesLayer = this.addCircles(circles);
+    this.circlesLayer = this.addCircles(_.values(circles));
     this.circles = circles;
   }
 
@@ -95,7 +96,7 @@ export default class WorldMap {
     this.ctrl.data.forEach(dataPoint => {
       if (!dataPoint.locationName) return;
 
-      const circle = _.find(this.circles, cir => { return cir.options.location === dataPoint.key; });
+      const circle = this.circles[dataPoint.key];
 
       if (circle) {
         circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
@@ -189,7 +190,7 @@ export default class WorldMap {
   }
 
   remove() {
-    this.circles = [];
+    this.circles = {};
     if (this.circlesLayer) this.removeCircles();
     if (this.legend) this.removeLegend();
     this.map.remove();
