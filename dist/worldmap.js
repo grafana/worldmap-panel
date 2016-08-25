@@ -239,7 +239,7 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         }, {
           key: 'setZoom',
           value: function setZoom(zoomFactor) {
-            this.map.setZoom(zoomFactor);
+            this.map.setZoom(parseInt(zoomFactor, 10));
           }
         }, {
           key: 'remove',
