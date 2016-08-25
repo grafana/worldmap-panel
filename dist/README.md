@@ -140,3 +140,7 @@ The threshold field also accepts 2 comma-separated values which represent 3 rang
 ##### v.0.0.13
 
 - New location data option -> table data. Location data can now come from data sources other than graphite and Elasticsearch (InfluxDb for example). See table data instructions above on how to use it.
+
+##### v.0.0.14
+
+- Various [bug](https://github.com/grafana/worldmap-panel/pull/31) [fixes](https://github.com/grafana/worldmap-panel/pull/32) provided by [linkslice](https://github.com/linkslice) (Thank you!)
