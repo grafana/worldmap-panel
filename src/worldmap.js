@@ -1,6 +1,7 @@
 import _ from 'lodash';
 /* eslint-disable id-length, no-unused-vars */
 import L from './leaflet';
+import './leaflet-heat';
 /* eslint-disable id-length, no-unused-vars */
 
 const tileServers = {
@@ -13,7 +14,8 @@ export default class WorldMap {
     this.ctrl = ctrl;
     this.mapContainer = mapContainer;
     this.createMap();
-    this.circles = [];
+    this.circles = {};
+    this.heatData = [];
   }
 
   createMap() {
@@ -56,11 +58,28 @@ export default class WorldMap {
     this.legend.addTo(this.map);
   }
 
+
+  drawOverlay() {
+    switch (this.ctrl.data.mapType) {
+      case "circle":
+        this.clearHeat();
+        this.drawCircles();
+        break;
+      case "heat":
+        this.clearCircles();
+        this.drawHeat();
+        break;
+      default:
+        break;
+    }
+  }
+
   needToRedrawCircles() {
-    if (this.circles.length === 0 && this.ctrl.data.length > 0) return true;
-    if (this.circles.length !== this.ctrl.data.length) return true;
-    const locations = _.map(_.map(this.circles, 'options'), 'location').sort();
-    const dataPoints = _.map(this.ctrl.data, 'key').sort();
+    let nCirc = _.size(this.circles);
+    if (nCirc === 0 && this.ctrl.data.length > 0) return true;
+    if (nCirc !== this.ctrl.data.length) return true;
+    const locations = new Set(_.map(_.map(this.circles, 'options'), 'location'));
+    const dataPoints = new Set(_.map(this.ctrl.data, 'key'));
     return !_.isEqual(locations, dataPoints);
   }
 
@@ -68,8 +87,15 @@ export default class WorldMap {
     if (this.circlesLayer) {
       this.circlesLayer.clearLayers();
       this.removeCircles(this.circlesLayer);
-      this.circles = [];
+      this.circles = {};
     }
+  }
+
+  clearHeat() {
+    if (this.heatLayer) {
+      this.map.removeLayer(this.heatLayer);
+    }
+    this.heatData = [];
   }
 
   drawCircles() {
@@ -82,12 +108,12 @@ export default class WorldMap {
   }
 
   createCircles() {
-    const circles = [];
+    const circles = {};
     this.ctrl.data.forEach(dataPoint => {
       if (!dataPoint.locationName) return;
-      circles.push(this.createCircle(dataPoint));
+      circles[dataPoint.key] = this.createCircle(dataPoint);
     });
-    this.circlesLayer = this.addCircles(circles);
+    this.circlesLayer = this.addCircles(_.values(circles));
     this.circles = circles;
   }
 
@@ -95,7 +121,7 @@ export default class WorldMap {
     this.ctrl.data.forEach(dataPoint => {
       if (!dataPoint.locationName) return;
 
-      const circle = _.find(this.circles, cir => { return cir.options.location === dataPoint.key; });
+      const circle = this.circles[dataPoint.key];
 
       if (circle) {
         circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
@@ -162,6 +188,47 @@ export default class WorldMap {
     return _.first(this.ctrl.panel.colors);
   }
 
+  rgb2hex(rgb){
+    rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+    return (rgb && rgb.length === 4) ? "#" +
+      ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+      ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+      ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+    }
+
+  drawHeat() {
+    this.clearHeat();
+    // build up the array to feed the heat layer
+    const heatData = [];
+    let minValue = _.min(_.map(this.ctrl.data, 'value'));
+    let maxValue = _.max(_.map(this.ctrl.data, 'value'));
+
+    this.ctrl.data.forEach(dataPoint => {
+      if (!dataPoint.locationName) return;
+      let normalizedValue = (dataPoint.value - minValue) / (maxValue - minValue);
+      // let heatPoint = [dataPoint.locationLatitude, dataPoint.locationLongitude, normalizedValue];
+      let heatPoint = [dataPoint.locationLatitude, dataPoint.locationLongitude, dataPoint.value];
+      heatData.push(heatPoint);
+    });
+
+    let maxGrad = _.max(this.ctrl.data.thresholds);
+    let minGrad = 0;//_.min(this.ctrl.data.thresholds);
+    let mapMaxVal = maxGrad;//_.max([maxGrad,maxValue]);
+    // gradient - color gradient config, e.g. {0.4: 'blue', 0.65: 'lime', 1: 'red'}
+    var gradientData = {};
+    gradientData[0] = this.rgb2hex(this.ctrl.panel.colors[0]);
+    for (let index = 0; index < this.ctrl.data.thresholds.length; index++) {
+      let thresh = (this.ctrl.data.thresholds[index] - minGrad) / (maxGrad - minGrad);
+      if (thresh > 1)      thresh = 1;
+      else if (thresh < 0) thresh = 0;
+      gradientData[thresh] = this.rgb2hex(this.ctrl.panel.colors[index+1]);
+    }
+    let radius = parseInt(this.ctrl.panel.heatSize), blur = parseInt(this.ctrl.panel.heatBlur);
+    let heatOpts = {radius:radius,blur:blur,max:mapMaxVal,gradient:gradientData};
+    this.heatLayer = window.L.heatLayer(heatData,heatOpts).addTo(this.map);
+    this.heatData = heatData;
+  }
+
   resize() {
     this.map.invalidateSize();
   }
@@ -189,7 +256,7 @@ export default class WorldMap {
   }
 
   remove() {
-    this.circles = [];
+    this.circles = {};
     if (this.circlesLayer) this.removeCircles();
     if (this.legend) this.removeLegend();
     this.map.remove();

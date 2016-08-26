@@ -14,8 +14,11 @@ const panelDefaults = {
   mapCenterLongitude: 0,
   initialZoom: 1,
   valueName: 'total',
+  mapType: 'circle', // or 'heat'
   circleMinSize: 2,
   circleMaxSize: 30,
+  heatSize: 25,
+  heatBlur: 15,
   locationData: 'countries',
   thresholds: '0,10',
   colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
@@ -135,7 +138,8 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.data = data;
 
     this.updateThresholdData();
-
+    this.data.mapType = this.panel.mapType;
+    
     this.render();
   }
 
@@ -260,6 +264,11 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
+  setNewMapType() {
+    this.data.mapType = this.panel.mapType;
+    this.render();
+  }
+
   setZoom() {
     this.map.setZoom(this.panel.initialZoom);
   }
@@ -281,6 +290,15 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     this.data.thresholds = this.panel.thresholds.split(',').map(strValue => {
       return Number(strValue.trim());
     });
+    while (_.size(this.panel.colors) > _.size(this.data.thresholds) + 1) {
+      // too many colors. remove the last one.
+      this.panel.colors.pop();
+    }
+    while (_.size(this.panel.colors) < _.size(this.data.thresholds) + 1) {
+      // not enough colors. add one.
+      let newColor = 'rgba(50, 172, 45, 0.97)';
+      this.panel.colors.push(newColor);
+    }
   }
 
   changeLocationData() {

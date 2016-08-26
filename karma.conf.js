@@ -14,6 +14,7 @@ module.exports = (config) => {
       'src/worldmap.js',
       'src/data_formatter.js',
       'src/leaflet.js',
+      'src/leaflet-heat.js',
       'test/*.js'
     ],
 
@@ -49,6 +50,7 @@ module.exports = (config) => {
         'src/worldmap.js',
         'src/data_formatter.js',
         'src/leaflet.js',
+        'src/leaflet-heat.js',
         'test/**/*.js'
       ],
 
