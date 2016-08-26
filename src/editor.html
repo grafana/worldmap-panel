@@ -15,13 +15,27 @@
 			<label class="gf-form-label width-10">Initial Zoom</label>
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.initialZoom" ng-change="ctrl.setZoom()" ng-model-onblur />
 		</div>
-    <div class="gf-form">
+		<div class="gf-form">
+			<label class="gf-form-label width-10">Map Type</label>
+      <div class="gf-form-select-wrapper max-width-10">
+				<select class="input-small gf-form-input" ng-model="ctrl.panel.mapType" ng-options="t for t in ['circle', 'heat']" ng-change="ctrl.setNewMapType()"></select>
+			</div>
+		</div>
+    <div class="gf-form" ng-show="ctrl.panel.mapType === 'circle'">
 			<label class="gf-form-label width-10">Min Circle Size</label>
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMinSize" ng-change="ctrl.render()" ng-model-onblur />
 		</div>
-    <div class="gf-form">
+    <div class="gf-form" ng-show="ctrl.panel.mapType === 'circle'">
 			<label class="gf-form-label width-10">Max Circle Size</label>
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMaxSize" ng-change="ctrl.render()" ng-model-onblur />
+		</div>
+		<div class="gf-form" ng-show="ctrl.panel.mapType === 'heat'">
+			<label class="gf-form-label width-10">Heat Radius</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.heatSize" ng-change="ctrl.render()" ng-model-onblur />
+		</div>
+		<div class="gf-form" ng-show="ctrl.panel.mapType === 'heat'">
+			<label class="gf-form-label width-10">Heat Blur</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.heatBlur" ng-change="ctrl.render()" ng-model-onblur />
 		</div>
 		<div class="gf-form">
 			<label class="gf-form-label width-10">Decimals</label>
