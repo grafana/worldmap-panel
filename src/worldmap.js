@@ -224,14 +224,9 @@ export default class WorldMap {
       gradientData[thresh] = this.rgb2hex(this.ctrl.panel.colors[index+1]);
     }
     let radius = parseInt(this.ctrl.panel.heatSize), blur = parseInt(this.ctrl.panel.heatBlur);
-    console.log(gradientData);
     let heatOpts = {radius:radius,blur:blur,max:mapMaxVal,gradient:gradientData};
     this.heatLayer = window.L.heatLayer(heatData,heatOpts).addTo(this.map);
     this.heatData = heatData;
-
-    console.log("options: ");
-    console.log(heatOpts);
-    console.log("point count: " + heatData.length);
   }
 
   resize() {
