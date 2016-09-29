@@ -4,8 +4,10 @@
   "description": "Worldmap Panel Plugin for Grafana",
   "main": "src/module.js",
   "scripts": {
+    "build": "grunt",
     "lint": "eslint --color .",
-    "test": "karma start"
+    "test": "karma start",
+    "test-single-run": "karma start --single-run"
   },
   "keywords": [
     "worldmap",

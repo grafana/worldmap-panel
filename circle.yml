@@ -1,0 +1,9 @@
+dependencies:
+  override:
+    - npm install
+    - npm run build
+    - npm run lint
+
+test:
+  override:
+    - npm run test-single-run
