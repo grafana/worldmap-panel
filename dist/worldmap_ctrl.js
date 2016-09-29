@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './data_formatter', './geohash', './css/worldmap-panel.css!'], function (_export, _context) {
+  "use strict";
+
   var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, DataFormatter, decodeGeoHash, _createClass, panelDefaults, mapCenters, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
@@ -100,7 +102,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         function WorldmapCtrl($scope, $injector, contextSrv) {
           _classCallCheck(this, WorldmapCtrl);
 
-          var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(WorldmapCtrl).call(this, $scope, $injector));
+          var _this = _possibleConstructorReturn(this, (WorldmapCtrl.__proto__ || Object.getPrototypeOf(WorldmapCtrl)).call(this, $scope, $injector));
 
           _this.setMapProvider(contextSrv);
           _.defaults(_this.panel, panelDefaults);
