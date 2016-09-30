@@ -46,7 +46,7 @@ export default class WorldMap {
       let legendHtml = '';
       legendHtml += '<i style="background:' + this.ctrl.panel.colors[0] + '"></i> ' +
           '&lt; ' + thresholds[0] + '<br>';
-      for (let index = 0; index < thresholds.length; index++) {
+      for (let index = 0; index < thresholds.length; index += 1) {
         legendHtml +=
           '<i style="background:' + this.getColor(thresholds[index] + 1) + '"></i> ' +
           thresholds[index] + (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '<br>' : '+');
@@ -83,7 +83,7 @@ export default class WorldMap {
 
   createCircles() {
     const circles = [];
-    this.ctrl.data.forEach(dataPoint => {
+    this.ctrl.data.forEach((dataPoint) => {
       if (!dataPoint.locationName) return;
       circles.push(this.createCircle(dataPoint));
     });
@@ -92,10 +92,10 @@ export default class WorldMap {
   }
 
   updateCircles() {
-    this.ctrl.data.forEach(dataPoint => {
+    this.ctrl.data.forEach((dataPoint) => {
       if (!dataPoint.locationName) return;
 
-      const circle = _.find(this.circles, cir => { return cir.options.location === dataPoint.key; });
+      const circle = _.find(this.circles, (cir) => { return cir.options.location === dataPoint.key; });
 
       if (circle) {
         circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
@@ -154,7 +154,7 @@ export default class WorldMap {
   }
 
   getColor(value) {
-    for (let index = this.ctrl.data.thresholds.length; index > 0; index--) {
+    for (let index = this.ctrl.data.thresholds.length; index > 0; index -= 1) {
       if (value >= this.ctrl.data.thresholds[index - 1]) {
         return this.ctrl.panel.colors[index];
       }

@@ -1,7 +1,7 @@
 /* global describe it beforeEach expect afterEach */
 
-import WorldMap from 'src/worldmap';
-import DataBuilder from 'test/data_builder';
+import WorldMap from '../src/worldmap';
+import DataBuilder from './data_builder';
 
 describe('Worldmap', () => {
   let worldMap;

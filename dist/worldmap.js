@@ -83,7 +83,7 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
               var thresholds = _this.ctrl.data.thresholds;
               var legendHtml = '';
               legendHtml += '<i style="background:' + _this.ctrl.panel.colors[0] + '"></i> ' + '&lt; ' + thresholds[0] + '<br>';
-              for (var index = 0; index < thresholds.length; index++) {
+              for (var index = 0; index < thresholds.length; index += 1) {
                 legendHtml += '<i style="background:' + _this.getColor(thresholds[index] + 1) + '"></i> ' + thresholds[index] + (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '<br>' : '+');
               }
               _this.legend._div.innerHTML = legendHtml;
@@ -204,7 +204,7 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         }, {
           key: 'getColor',
           value: function getColor(value) {
-            for (var index = this.ctrl.data.thresholds.length; index > 0; index--) {
+            for (var index = this.ctrl.data.thresholds.length; index > 0; index -= 1) {
               if (value >= this.ctrl.data.thresholds[index - 1]) {
                 return this.ctrl.panel.colors[index];
               }

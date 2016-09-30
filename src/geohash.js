@@ -10,18 +10,14 @@ export default function decodeGeoHash(geohash) {
   lat[1] = 90.0;
   lon[0] = -180.0;
   lon[1] = 180.0;
-  let latErr = 90.0;
-  let lonErr = 180.0;
   let base32Decoded;
 
   geohash.split('').forEach((item) => {
     base32Decoded = BASE32.indexOf(item);
     BITS.forEach((mask) => {
       if (isEven) {
-        lonErr /= 2;
         refineInterval(lon, base32Decoded, mask);
       } else {
-        latErr /= 2;
         refineInterval(lat, base32Decoded, mask);
       }
       isEven = !isEven;
@@ -34,6 +30,7 @@ export default function decodeGeoHash(geohash) {
 }
 
 function refineInterval(interval, base32Decoded, mask) {
+  /* eslint no-bitwise: 0 */
   if (base32Decoded & mask) {
     interval[0] = (interval[0] + interval[1]) / 2;
   } else {

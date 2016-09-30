@@ -1,3 +1,5 @@
+/* eslint import/no-extraneous-dependencies: 0 */
+
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
 

@@ -41,11 +41,12 @@
     "karma-mocha": "^1.2.0",
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-systemjs": "^0.15.0",
-    "load-grunt-tasks": "~3.5.0",
+    "load-grunt-tasks": "^3.5.2",
     "mocha": "^3.1.0"
   },
   "dependencies": {
     "es6-module-loader": "^0.17.11",
+    "grafana-sdk-test": "^1.0.0",
     "lodash": "~4.16.2"
   }
 }

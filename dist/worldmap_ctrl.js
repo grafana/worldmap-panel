@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core/utils/kbn', './map_renderer', './data_formatter', './geohash', './css/worldmap-panel.css!'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', 'lodash', './map_renderer', './data_formatter', './geohash', './css/worldmap-panel.css!'], function (_export, _context) {
   "use strict";
 
-  var MetricsPanelCtrl, _, TimeSeries, kbn, mapRenderer, DataFormatter, decodeGeoHash, _createClass, panelDefaults, mapCenters, WorldmapCtrl;
+  var MetricsPanelCtrl, TimeSeries, kbn, _, mapRenderer, DataFormatter, decodeGeoHash, _createClass, panelDefaults, mapCenters, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -37,13 +37,14 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
 
   return {
     setters: [function (_appPluginsSdk) {
+      /* eslint import/no-extraneous-dependencies: 0 */
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
-    }, function (_lodash) {
-      _ = _lodash.default;
     }, function (_appCoreTime_series) {
       TimeSeries = _appCoreTime_series.default;
     }, function (_appCoreUtilsKbn) {
       kbn = _appCoreUtilsKbn.default;
+    }, function (_lodash) {
+      _ = _lodash.default;
     }, function (_map_renderer) {
       mapRenderer = _map_renderer.default;
     }, function (_data_formatter) {
@@ -96,7 +97,7 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         'SE Asia': { mapCenterLatitude: 10, mapCenterLongitude: 106 }
       };
 
-      _export('WorldmapCtrl', WorldmapCtrl = function (_MetricsPanelCtrl) {
+      WorldmapCtrl = function (_MetricsPanelCtrl) {
         _inherits(WorldmapCtrl, _MetricsPanelCtrl);
 
         function WorldmapCtrl($scope, $injector, contextSrv) {
@@ -396,9 +397,9 @@ System.register(['app/plugins/sdk', 'lodash', 'app/core/time_series2', 'app/core
         }]);
 
         return WorldmapCtrl;
-      }(MetricsPanelCtrl));
+      }(MetricsPanelCtrl);
 
-      _export('WorldmapCtrl', WorldmapCtrl);
+      _export('default', WorldmapCtrl);
 
       WorldmapCtrl.templateUrl = 'module.html';
     }

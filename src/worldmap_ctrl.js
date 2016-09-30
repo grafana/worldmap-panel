@@ -1,7 +1,9 @@
+/* eslint import/no-extraneous-dependencies: 0 */
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
-import _ from 'lodash';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
+
+import _ from 'lodash';
 import mapRenderer from './map_renderer';
 import DataFormatter from './data_formatter';
 import decodeGeoHash from './geohash';
@@ -34,7 +36,7 @@ const mapCenters = {
   'SE Asia': {mapCenterLatitude: 10, mapCenterLongitude: 106}
 };
 
-export class WorldmapCtrl extends MetricsPanelCtrl {
+export default class WorldmapCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, contextSrv) {
     super($scope, $injector);
 
@@ -89,14 +91,15 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     } else if (this.panel.locationData === 'json endpoint') {
       if (!this.panel.jsonUrl) return;
 
-      window.$.getJSON(this.panel.jsonUrl).then(res => {
+      window.$.getJSON(this.panel.jsonUrl).then((res) => {
         this.locations = res;
         this.render();
       });
     } else if (this.panel.locationData === 'table') {
       // .. Do nothing
     } else if (this.panel.locationData !== 'geohash') {
-      window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
+      window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json')
+        .then(this.reloadLocations.bind(this));
     }
   }
 
@@ -150,7 +153,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.series[0].datapoints.forEach(datapoint => {
+      this.series[0].datapoints.forEach((datapoint) => {
         const encodedGeohash = datapoint[this.panel.esGeoPoint];
         const decodedGeohash = decodeGeoHash(encodedGeohash);
 
@@ -182,7 +185,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.series[0].datapoints.forEach(datapoint => {
+      this.series[0].datapoints.forEach((datapoint) => {
         if (!datapoint.geohash) {
           return;
         }
@@ -234,7 +237,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
         columnNames[columnIndex] = column.text;
       });
 
-      tableData.rows.forEach(row => {
+      tableData.rows.forEach((row) => {
         const datapoint = {};
 
         row.forEach((value, columnIndex) => {
@@ -278,7 +281,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   updateThresholdData() {
-    this.data.thresholds = this.panel.thresholds.split(',').map(strValue => {
+    this.data.thresholds = this.panel.thresholds.split(',').map((strValue) => {
       return Number(strValue.trim());
     });
   }
@@ -291,6 +294,7 @@ export class WorldmapCtrl extends MetricsPanelCtrl {
     }
   }
 
+/* eslint class-methods-use-this: 0 */
   link(scope, elem, attrs, ctrl) {
     mapRenderer(scope, elem, attrs, ctrl);
   }
