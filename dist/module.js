@@ -1,12 +1,15 @@
 'use strict';
 
-System.register(['./worldmap_ctrl', 'app/plugins/sdk'], function (_export, _context) {
-  var WorldmapCtrl, loadPluginCss;
+System.register(['app/plugins/sdk', './worldmap_ctrl'], function (_export, _context) {
+  "use strict";
+
+  var loadPluginCss, WorldmapCtrl;
   return {
-    setters: [function (_worldmap_ctrl) {
-      WorldmapCtrl = _worldmap_ctrl.WorldmapCtrl;
-    }, function (_appPluginsSdk) {
+    setters: [function (_appPluginsSdk) {
+      /* eslint import/no-extraneous-dependencies: 0 */
       loadPluginCss = _appPluginsSdk.loadPluginCss;
+    }, function (_worldmap_ctrl) {
+      WorldmapCtrl = _worldmap_ctrl.default;
     }],
     execute: function () {
 
@@ -14,6 +17,8 @@ System.register(['./worldmap_ctrl', 'app/plugins/sdk'], function (_export, _cont
         dark: 'plugins/grafana-worldmap-panel/css/worldmap.dark.css',
         light: 'plugins/grafana-worldmap-panel/css/worldmap.light.css'
       });
+
+      /* eslint import/prefer-default-export: 0 */
 
       _export('PanelCtrl', WorldmapCtrl);
     }

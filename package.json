@@ -4,8 +4,10 @@
   "description": "Worldmap Panel Plugin for Grafana",
   "main": "src/module.js",
   "scripts": {
+    "build": "grunt",
     "lint": "eslint --color .",
-    "test": "karma start"
+    "test": "karma start",
+    "test-single-run": "karma start --single-run"
   },
   "keywords": [
     "worldmap",
@@ -17,33 +19,34 @@
   "license": "MIT",
   "devDependencies": {
     "babel": "~6.5.1",
-    "babel-eslint": "^6.0.0",
+    "babel-eslint": "^7.0.0",
     "babel-plugin-transform-es2015-modules-systemjs": "^6.5.0",
     "babel-preset-es2015": "^6.5.0",
     "es6-shim": "^0.35.0",
-    "eslint": "^2.5.1",
-    "eslint-config-airbnb": "^7.0.0",
-    "eslint-plugin-import": "^1.4.0",
+    "eslint": "^3.6.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-import": "^2.0.0",
     "grunt": "~1.0.1",
     "grunt-babel": "~6.0.0",
     "grunt-contrib-clean": "~1.0.0",
     "grunt-contrib-copy": "~1.0.0",
-    "grunt-contrib-uglify": "~1.0.1",
+    "grunt-contrib-uglify": "~2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-execute": "~0.2.2",
     "grunt-systemjs-builder": "^0.2.5",
-    "karma": "^0.13.22",
+    "karma": "^1.3.0",
     "karma-babel-preprocessor": "^6.0.1",
-    "karma-chrome-launcher": "^0.2.3",
+    "karma-chrome-launcher": "^2.0.0",
     "karma-expect": "^1.1.2",
-    "karma-mocha": "^0.2.2",
+    "karma-mocha": "^1.2.0",
     "karma-phantomjs-launcher": "^1.0.0",
-    "karma-systemjs": "^0.13.0",
-    "load-grunt-tasks": "~3.5.0",
-    "mocha": "^2.4.5"
+    "karma-systemjs": "^0.15.0",
+    "load-grunt-tasks": "^3.5.2",
+    "mocha": "^3.1.0"
   },
   "dependencies": {
     "es6-module-loader": "^0.17.11",
-    "lodash": "~4.0.0"
+    "grafana-sdk-test": "^1.0.0",
+    "lodash": "~4.16.2"
   }
 }

@@ -1,6 +1,8 @@
 'use strict';
 
 System.register([], function (_export, _context) {
+  "use strict";
+
   function decodeGeoHash(geohash) {
     if (!geohash || geohash.length === 0) throw new Error('Missing geohash value');
 
@@ -13,18 +15,14 @@ System.register([], function (_export, _context) {
     lat[1] = 90.0;
     lon[0] = -180.0;
     lon[1] = 180.0;
-    var latErr = 90.0;
-    var lonErr = 180.0;
     var base32Decoded = void 0;
 
     geohash.split('').forEach(function (item) {
       base32Decoded = BASE32.indexOf(item);
       BITS.forEach(function (mask) {
         if (isEven) {
-          lonErr /= 2;
           refineInterval(lon, base32Decoded, mask);
         } else {
-          latErr /= 2;
           refineInterval(lat, base32Decoded, mask);
         }
         isEven = !isEven;
@@ -39,6 +37,7 @@ System.register([], function (_export, _context) {
   _export('default', decodeGeoHash);
 
   function refineInterval(interval, base32Decoded, mask) {
+    /* eslint no-bitwise: 0 */
     if (base32Decoded & mask) {
       interval[0] = (interval[0] + interval[1]) / 2;
     } else {
