@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', 'lodash', './map_renderer', './data_formatter', './geohash', './css/worldmap-panel.css!'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', 'lodash', './map_renderer', './data_formatter', './css/worldmap-panel.css!'], function (_export, _context) {
   "use strict";
 
-  var MetricsPanelCtrl, TimeSeries, kbn, _, mapRenderer, DataFormatter, decodeGeoHash, _createClass, panelDefaults, mapCenters, WorldmapCtrl;
+  var MetricsPanelCtrl, TimeSeries, kbn, _, mapRenderer, DataFormatter, _createClass, panelDefaults, mapCenters, WorldmapCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -49,8 +49,6 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
       mapRenderer = _map_renderer.default;
     }, function (_data_formatter) {
       DataFormatter = _data_formatter.default;
-    }, function (_geohash) {
-      decodeGeoHash = _geohash.default;
     }, function (_cssWorldmapPanelCss) {}],
     execute: function () {
       _createClass = function () {
@@ -201,11 +199,10 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
             var data = [];
 
             if (this.panel.locationData === 'geohash') {
-              this.series = dataList.map(this.seriesHandler.bind(this));
-              this.setGeohashValues(data);
+              this.dataFormatter.setGeohashValues(dataList, data);
             } else if (this.panel.locationData === 'table') {
-              this.series = dataList.map(this.tableHandler.bind(this));
-              this.setTableValues(data);
+              var tableData = dataList.map(DataFormatter.tableHandler.bind(this));
+              this.dataFormatter.setTableValues(tableData, data);
             } else {
               this.series = dataList.map(this.seriesHandler.bind(this));
               this.dataFormatter.setValues(data);
@@ -222,86 +219,6 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
             this.onDataReceived(snapshotData);
           }
         }, {
-          key: 'setGeohashValues',
-          value: function setGeohashValues(data) {
-            var _this3 = this;
-
-            if (!this.panel.esGeoPoint || !this.panel.esMetric) return;
-
-            if (this.series && this.series.length > 0) {
-              (function () {
-                var highestValue = 0;
-                var lowestValue = Number.MAX_VALUE;
-
-                _this3.series[0].datapoints.forEach(function (datapoint) {
-                  var encodedGeohash = datapoint[_this3.panel.esGeoPoint];
-                  var decodedGeohash = decodeGeoHash(encodedGeohash);
-
-                  var dataValue = {
-                    key: encodedGeohash,
-                    locationName: _this3.panel.esLocationName ? datapoint[_this3.panel.esLocationName] : encodedGeohash,
-                    locationLatitude: decodedGeohash.latitude,
-                    locationLongitude: decodedGeohash.longitude,
-                    value: datapoint[_this3.panel.esMetric],
-                    valueFormatted: datapoint[_this3.panel.esMetric],
-                    valueRounded: 0
-                  };
-
-                  if (dataValue.value > highestValue) highestValue = dataValue.value;
-                  if (dataValue.value < lowestValue) lowestValue = dataValue.value;
-
-                  dataValue.valueRounded = kbn.roundValue(dataValue.value, _this3.panel.decimals || 0);
-                  data.push(dataValue);
-                });
-
-                data.highestValue = highestValue;
-                data.lowestValue = lowestValue;
-                data.valueRange = highestValue - lowestValue;
-              })();
-            }
-          }
-        }, {
-          key: 'setTableValues',
-          value: function setTableValues(data) {
-            var _this4 = this;
-
-            if (this.series && this.series.length > 0) {
-              (function () {
-                var highestValue = 0;
-                var lowestValue = Number.MAX_VALUE;
-
-                _this4.series[0].datapoints.forEach(function (datapoint) {
-                  if (!datapoint.geohash) {
-                    return;
-                  }
-
-                  var encodedGeohash = datapoint.geohash;
-                  var decodedGeohash = decodeGeoHash(encodedGeohash);
-
-                  var dataValue = {
-                    key: encodedGeohash,
-                    locationName: datapoint[_this4.panel.tableLabel] || 'n/a',
-                    locationLatitude: decodedGeohash.latitude,
-                    locationLongitude: decodedGeohash.longitude,
-                    value: datapoint.metric,
-                    valueFormatted: datapoint.metric,
-                    valueRounded: 0
-                  };
-
-                  if (dataValue.value > highestValue) highestValue = dataValue.value;
-                  if (dataValue.value < lowestValue) lowestValue = dataValue.value;
-
-                  dataValue.valueRounded = kbn.roundValue(dataValue.value, _this4.panel.decimals || 0);
-                  data.push(dataValue);
-                });
-
-                data.highestValue = highestValue;
-                data.lowestValue = lowestValue;
-                data.valueRange = highestValue - lowestValue;
-              })();
-            }
-          }
-        }, {
           key: 'seriesHandler',
           value: function seriesHandler(seriesData) {
             var series = new TimeSeries({
@@ -309,37 +226,6 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
               alias: seriesData.target
             });
 
-            series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
-            return series;
-          }
-        }, {
-          key: 'tableHandler',
-          value: function tableHandler(tableData) {
-            var datapoints = [];
-            var alias = null;
-
-            if (tableData.type === 'table') {
-              (function () {
-                var columnNames = {};
-
-                tableData.columns.forEach(function (column, columnIndex) {
-                  columnNames[columnIndex] = column.text;
-                });
-
-                tableData.rows.forEach(function (row) {
-                  var datapoint = {};
-
-                  row.forEach(function (value, columnIndex) {
-                    var key = columnNames[columnIndex];
-                    datapoint[key] = value;
-                  });
-
-                  datapoints.push(datapoint);
-                });
-              })();
-            }
-
-            var series = new TimeSeries({ datapoints: datapoints, alias: alias });
             series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
             return series;
           }

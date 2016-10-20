@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import decodeGeoHash from './geohash';
 
 export default class DataFormatter {
   constructor(ctrl, kbn) {
@@ -37,6 +38,101 @@ export default class DataFormatter {
           dataValue.valueRounded = this.kbn.roundValue(dataValue.value, parseInt(this.ctrl.panel.decimals, 10) || 0);
           data.push(dataValue);
         }
+      });
+
+      data.highestValue = highestValue;
+      data.lowestValue = lowestValue;
+      data.valueRange = highestValue - lowestValue;
+    }
+  }
+
+  setGeohashValues(dataList, data) {
+    if (!this.ctrl.panel.esGeoPoint || !this.ctrl.panel.esMetric) return;
+
+    if (dataList && dataList.length > 0) {
+      let highestValue = 0;
+      let lowestValue = Number.MAX_VALUE;
+
+      dataList[0].datapoints.forEach((datapoint) => {
+        const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
+        const decodedGeohash = decodeGeoHash(encodedGeohash);
+
+        const dataValue = {
+          key: encodedGeohash,
+          locationName: this.ctrl.panel.esLocationName ? datapoint[this.ctrl.panel.esLocationName] : encodedGeohash,
+          locationLatitude: decodedGeohash.latitude,
+          locationLongitude: decodedGeohash.longitude,
+          value: datapoint[this.ctrl.panel.esMetric],
+          valueFormatted: datapoint[this.ctrl.panel.esMetric],
+          valueRounded: 0
+        };
+
+        if (dataValue.value > highestValue) highestValue = dataValue.value;
+        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+
+        dataValue.valueRounded = this.kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+        data.push(dataValue);
+      });
+
+      data.highestValue = highestValue;
+      data.lowestValue = lowestValue;
+      data.valueRange = highestValue - lowestValue;
+    }
+  }
+
+  static tableHandler(tableData) {
+    const datapoints = [];
+
+    if (tableData.type === 'table') {
+      const columnNames = {};
+
+      tableData.columns.forEach((column, columnIndex) => {
+        columnNames[columnIndex] = column.text;
+      });
+
+      tableData.rows.forEach((row) => {
+        const datapoint = {};
+
+        row.forEach((value, columnIndex) => {
+          const key = columnNames[columnIndex];
+          datapoint[key] = value;
+        });
+
+        datapoints.push(datapoint);
+      });
+    }
+
+    return datapoints;
+  }
+
+  setTableValues(tableData, data) {
+    if (tableData && tableData.length > 0) {
+      let highestValue = 0;
+      let lowestValue = Number.MAX_VALUE;
+
+      tableData[0].forEach((datapoint) => {
+        if (!datapoint.geohash) {
+          return;
+        }
+
+        const encodedGeohash = datapoint.geohash;
+        const decodedGeohash = decodeGeoHash(encodedGeohash);
+
+        const dataValue = {
+          key: encodedGeohash,
+          locationName: datapoint[this.ctrl.panel.tableLabel] || 'n/a',
+          locationLatitude: decodedGeohash.latitude,
+          locationLongitude: decodedGeohash.longitude,
+          value: datapoint.metric,
+          valueFormatted: datapoint.metric,
+          valueRounded: 0
+        };
+
+        if (dataValue.value > highestValue) highestValue = dataValue.value;
+        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+
+        dataValue.valueRounded = this.kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+        data.push(dataValue);
       });
 
       data.highestValue = highestValue;
