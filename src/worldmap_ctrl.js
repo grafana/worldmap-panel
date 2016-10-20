@@ -6,7 +6,6 @@ import kbn from 'app/core/utils/kbn';
 import _ from 'lodash';
 import mapRenderer from './map_renderer';
 import DataFormatter from './data_formatter';
-import decodeGeoHash from './geohash';
 import './css/worldmap-panel.css!';
 
 const panelDefaults = {
@@ -126,11 +125,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     const data = [];
 
     if (this.panel.locationData === 'geohash') {
-      this.series = dataList.map(this.seriesHandler.bind(this));
-      this.setGeohashValues(data);
+      this.dataFormatter.setGeohashValues(dataList, data);
     } else if (this.panel.locationData === 'table') {
-      this.series = dataList.map(this.tableHandler.bind(this));
-      this.setTableValues(data);
+      const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
+      this.dataFormatter.setTableValues(tableData, data);
     } else {
       this.series = dataList.map(this.seriesHandler.bind(this));
       this.dataFormatter.setValues(data);
@@ -146,110 +144,12 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.onDataReceived(snapshotData);
   }
 
-  setGeohashValues(data) {
-    if (!this.panel.esGeoPoint || !this.panel.esMetric) return;
-
-    if (this.series && this.series.length > 0) {
-      let highestValue = 0;
-      let lowestValue = Number.MAX_VALUE;
-
-      this.series[0].datapoints.forEach((datapoint) => {
-        const encodedGeohash = datapoint[this.panel.esGeoPoint];
-        const decodedGeohash = decodeGeoHash(encodedGeohash);
-
-        const dataValue = {
-          key: encodedGeohash,
-          locationName: this.panel.esLocationName ? datapoint[this.panel.esLocationName] : encodedGeohash,
-          locationLatitude: decodedGeohash.latitude,
-          locationLongitude: decodedGeohash.longitude,
-          value: datapoint[this.panel.esMetric],
-          valueFormatted: datapoint[this.panel.esMetric],
-          valueRounded: 0
-        };
-
-        if (dataValue.value > highestValue) highestValue = dataValue.value;
-        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
-
-        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.panel.decimals || 0);
-        data.push(dataValue);
-      });
-
-      data.highestValue = highestValue;
-      data.lowestValue = lowestValue;
-      data.valueRange = highestValue - lowestValue;
-    }
-  }
-
-  setTableValues(data) {
-    if (this.series && this.series.length > 0) {
-      let highestValue = 0;
-      let lowestValue = Number.MAX_VALUE;
-
-      this.series[0].datapoints.forEach((datapoint) => {
-        if (!datapoint.geohash) {
-          return;
-        }
-
-        const encodedGeohash = datapoint.geohash;
-        const decodedGeohash = decodeGeoHash(encodedGeohash);
-
-        const dataValue = {
-          key: encodedGeohash,
-          locationName: datapoint[this.panel.tableLabel] || 'n/a',
-          locationLatitude: decodedGeohash.latitude,
-          locationLongitude: decodedGeohash.longitude,
-          value: datapoint.metric,
-          valueFormatted: datapoint.metric,
-          valueRounded: 0
-        };
-
-        if (dataValue.value > highestValue) highestValue = dataValue.value;
-        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
-
-        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.panel.decimals || 0);
-        data.push(dataValue);
-      });
-
-      data.highestValue = highestValue;
-      data.lowestValue = lowestValue;
-      data.valueRange = highestValue - lowestValue;
-    }
-  }
-
   seriesHandler(seriesData) {
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
       alias: seriesData.target,
     });
 
-    series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
-    return series;
-  }
-
-  tableHandler(tableData) {
-    const datapoints = [];
-    const alias = null;
-
-    if (tableData.type === 'table') {
-      const columnNames = {};
-
-      tableData.columns.forEach((column, columnIndex) => {
-        columnNames[columnIndex] = column.text;
-      });
-
-      tableData.rows.forEach((row) => {
-        const datapoint = {};
-
-        row.forEach((value, columnIndex) => {
-          const key = columnNames[columnIndex];
-          datapoint[key] = value;
-        });
-
-        datapoints.push(datapoint);
-      });
-    }
-
-    const series = new TimeSeries({ datapoints, alias });
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     return series;
   }

@@ -13,6 +13,7 @@ module.exports = (config) => {
       'node_modules/lodash/lodash.js',
       'src/worldmap.js',
       'src/data_formatter.js',
+      'src/geohash.js',
       'src/leaflet.js',
       'test/*.js'
     ],
