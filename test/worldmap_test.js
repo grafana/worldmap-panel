@@ -258,6 +258,20 @@ describe('Worldmap', () => {
     });
   });
 
+  describe('when three thresholds are set', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withThresholdValues([2, 4, 6])
+        .build();
+      worldMap.createLegend();
+    });
+
+    it('should create a legend with four legend values', () => {
+      expect(worldMap.legend).not.to.be.empty();
+      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><i style="background:red"></i> &lt; 2<br><i style="background:blue"></i> 2–4<br><i style="background:green"></i> 4–6<br><i style="background:undefined"></i> 6+</div>');
+    });
+  });
+
   afterEach(() => {
     document.body.removeChild(document.getElementById('fixture'));
   });
