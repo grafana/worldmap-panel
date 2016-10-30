@@ -201,16 +201,19 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
           value: function createPopup(circle, locationName, value) {
             var unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
             var label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
-            circle.bindPopup(label, { 'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': false });
+            circle.bindPopup(label, { 'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': this.ctrl.panel.stickyLabels });
 
             circle.on('mouseover', function onMouseOver(evt) {
               var layer = evt.target;
               layer.bringToFront();
               this.openPopup();
             });
-            circle.on('mouseout', function onMouseOut() {
-              circle.closePopup();
-            });
+
+            if (!this.ctrl.panel.stickyLabels) {
+              circle.on('mouseout', function onMouseOut() {
+                circle.closePopup();
+              });
+            }
           }
         }, {
           key: 'getColor',

@@ -147,16 +147,19 @@ export default class WorldMap {
   createPopup(circle, locationName, value) {
     const unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
     const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
-    circle.bindPopup(label, {'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': false});
+    circle.bindPopup(label, {'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': this.ctrl.panel.stickyLabels});
 
     circle.on('mouseover', function onMouseOver(evt) {
       const layer = evt.target;
       layer.bringToFront();
       this.openPopup();
     });
-    circle.on('mouseout', function onMouseOut() {
-      circle.closePopup();
-    });
+
+    if (!this.ctrl.panel.stickyLabels) {
+      circle.on('mouseout', function onMouseOut() {
+        circle.closePopup();
+      });
+    }
   }
 
   getColor(value) {

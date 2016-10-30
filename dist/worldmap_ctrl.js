@@ -87,7 +87,8 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         esMetric: 'Count',
         decimals: 0,
         hideEmpty: false,
-        hideZero: false
+        hideZero: false,
+        stickyLabels: false
       };
       mapCenters = {
         '(0°, 0°)': { mapCenterLatitude: 0, mapCenterLongitude: 0 },
@@ -252,6 +253,12 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
             if (!this.panel.showLegend) {
               this.map.removeLegend();
             }
+            this.render();
+          }
+        }, {
+          key: 'toggleStickyLabels',
+          value: function toggleStickyLabels() {
+            this.map.clearCircles();
             this.render();
           }
         }, {

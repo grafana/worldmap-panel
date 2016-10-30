@@ -26,7 +26,8 @@ const panelDefaults = {
   esMetric: 'Count',
   decimals: 0,
   hideEmpty: false,
-  hideZero: false
+  hideZero: false,
+  stickyLabels: false
 };
 
 const mapCenters = {
@@ -173,6 +174,11 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     if (!this.panel.showLegend) {
       this.map.removeLegend();
     }
+    this.render();
+  }
+
+  toggleStickyLabels() {
+    this.map.clearCircles();
     this.render();
   }
 
