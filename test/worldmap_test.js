@@ -141,6 +141,42 @@ describe('Worldmap', () => {
     });
   });
 
+  describe('when the data has empty values and hideEmpty is true', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .withCountryAndValue('IE', 2)
+        .withCountryAndValue('US', null)
+        .withDataRange(1, 3, 2)
+        .withThresholdValues([2])
+        .build();
+      ctrl.panel.hideEmpty = true;
+      worldMap.drawCircles();
+    });
+
+    it('should draw three circles on the map', () => {
+      expect(worldMap.circles.length).to.be(2);
+    });
+  });
+
+  describe('when the data has empty values and hideEmpty is true', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .withCountryAndValue('IE', 2)
+        .withCountryAndValue('US', 0)
+        .withDataRange(1, 3, 2)
+        .withThresholdValues([2])
+        .build();
+      ctrl.panel.hideZero = true;
+      worldMap.drawCircles();
+    });
+
+    it('should draw three circles on the map', () => {
+      expect(worldMap.circles.length).to.be(2);
+    });
+  });
+
   describe('when the data is updated but not locations', () => {
     beforeEach(() => {
       ctrl.panel.circleMinSize = '2';

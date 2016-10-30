@@ -85,7 +85,9 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         unitPlural: '',
         showLegend: true,
         esMetric: 'Count',
-        decimals: 0
+        decimals: 0,
+        hideEmpty: false,
+        hideZero: false
       };
       mapCenters = {
         '(0°, 0°)': { mapCenterLatitude: 0, mapCenterLongitude: 0 },

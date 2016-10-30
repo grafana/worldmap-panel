@@ -56,12 +56,17 @@ export default class WorldMap {
     this.legend.addTo(this.map);
   }
 
-  needToRedrawCircles() {
-    if (this.circles.length === 0 && this.ctrl.data.length > 0) return true;
-    if (this.circles.length !== this.ctrl.data.length) return true;
+  needToRedrawCircles(data) {
+    if (this.circles.length === 0 && data.length > 0) return true;
+
+    if (this.circles.length !== data.length) return true;
     const locations = _.map(_.map(this.circles, 'options'), 'location').sort();
-    const dataPoints = _.map(this.ctrl.data, 'key').sort();
+    const dataPoints = _.map(data, 'key').sort();
     return !_.isEqual(locations, dataPoints);
+  }
+
+  filterEmptyAndZeroValues(data) {
+    return _.filter(data, (o) => { return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) && !(this.ctrl.panel.hideZero && o.value === 0); });
   }
 
   clearCircles() {
@@ -73,17 +78,18 @@ export default class WorldMap {
   }
 
   drawCircles() {
-    if (this.needToRedrawCircles()) {
+    const data = this.filterEmptyAndZeroValues(this.ctrl.data);
+    if (this.needToRedrawCircles(data)) {
       this.clearCircles();
-      this.createCircles();
+      this.createCircles(data);
     } else {
-      this.updateCircles();
+      this.updateCircles(data);
     }
   }
 
-  createCircles() {
+  createCircles(data) {
     const circles = [];
-    this.ctrl.data.forEach((dataPoint) => {
+    data.forEach((dataPoint) => {
       if (!dataPoint.locationName) return;
       circles.push(this.createCircle(dataPoint));
     });
@@ -91,8 +97,8 @@ export default class WorldMap {
     this.circles = circles;
   }
 
-  updateCircles() {
-    this.ctrl.data.forEach((dataPoint) => {
+  updateCircles(data) {
+    data.forEach((dataPoint) => {
       if (!dataPoint.locationName) return;
 
       const circle = _.find(this.circles, (cir) => { return cir.options.location === dataPoint.key; });
@@ -103,7 +109,7 @@ export default class WorldMap {
           color: this.getColor(dataPoint.value),
           fillColor: this.getColor(dataPoint.value),
           fillOpacity: 0.5,
-          location: dataPoint.key
+          location: dataPoint.key,
         });
         circle.unbindPopup();
         this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);

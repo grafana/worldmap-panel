@@ -24,7 +24,9 @@ const panelDefaults = {
   unitPlural: '',
   showLegend: true,
   esMetric: 'Count',
-  decimals: 0
+  decimals: 0,
+  hideEmpty: false,
+  hideZero: false
 };
 
 const mapCenters = {
