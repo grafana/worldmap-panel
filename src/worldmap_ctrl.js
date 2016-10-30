@@ -190,7 +190,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     }
     while (_.size(this.panel.colors) < _.size(this.data.thresholds) + 1) {
       // not enough colors. add one.
-      let newColor = 'rgba(50, 172, 45, 0.97)';
+      const newColor = 'rgba(50, 172, 45, 0.97)';
       this.panel.colors.push(newColor);
     }
   }
