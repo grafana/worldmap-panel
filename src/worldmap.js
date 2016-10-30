@@ -125,15 +125,15 @@ export default class WorldMap {
   }
 
   calcCircleSize(dataPointValue) {
-    const circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10);
-    const circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10);
+    const circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10) || 2;
+    const circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10) || 30;
 
     if (this.ctrl.data.valueRange === 0) {
       return circleMaxSize;
     }
 
     const dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
-    const circleSizeRange = this.ctrl.panel.circleMaxSize - circleMinSize;
+    const circleSizeRange = circleMaxSize - circleMinSize;
 
     return (circleSizeRange * dataFactor) + circleMinSize;
   }

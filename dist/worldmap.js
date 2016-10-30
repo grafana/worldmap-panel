@@ -173,15 +173,15 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         }, {
           key: 'calcCircleSize',
           value: function calcCircleSize(dataPointValue) {
-            var circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10);
-            var circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10);
+            var circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10) || 2;
+            var circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10) || 30;
 
             if (this.ctrl.data.valueRange === 0) {
               return circleMaxSize;
             }
 
             var dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
-            var circleSizeRange = this.ctrl.panel.circleMaxSize - circleMinSize;
+            var circleSizeRange = circleMaxSize - circleMinSize;
 
             return circleSizeRange * dataFactor + circleMinSize;
           }
