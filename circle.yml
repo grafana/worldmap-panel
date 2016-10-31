@@ -6,7 +6,6 @@ dependencies:
   override:
     - npm install
     - npm run build
-    - npm run lint
 
 test:
   override:

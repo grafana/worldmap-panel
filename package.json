@@ -7,7 +7,8 @@
     "build": "grunt",
     "lint": "eslint --color .",
     "test": "karma start",
-    "test-single-run": "karma start --single-run"
+    "test-single-run": "karma start --single-run",
+    "prebuild": "npm run lint"
   },
   "keywords": [
     "worldmap",

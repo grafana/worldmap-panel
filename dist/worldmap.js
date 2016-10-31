@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['lodash', './leaflet'], function (_export, _context) {
+System.register(['lodash', './libs/leaflet'], function (_export, _context) {
   "use strict";
 
   var _, L, _createClass, tileServers, WorldMap;
@@ -14,8 +14,8 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
   return {
     setters: [function (_lodash) {
       _ = _lodash.default;
-    }, function (_leaflet) {
-      L = _leaflet.default;
+    }, function (_libsLeaflet) {
+      L = _libsLeaflet.default;
     }],
     execute: function () {
       _createClass = function () {

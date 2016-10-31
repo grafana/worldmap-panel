@@ -1,6 +1,6 @@
 import _ from 'lodash';
 /* eslint-disable id-length, no-unused-vars */
-import L from './leaflet';
+import L from './libs/leaflet';
 /* eslint-disable id-length, no-unused-vars */
 
 const tileServers = {
