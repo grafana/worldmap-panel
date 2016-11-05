@@ -4,11 +4,14 @@
   "description": "Worldmap Panel Plugin for Grafana",
   "main": "src/module.js",
   "scripts": {
-    "build": "grunt",
+    "clean": "rm -r dist/*",
     "lint": "eslint --color .",
-    "test": "karma start",
-    "test-single-run": "karma start --single-run",
-    "prebuild": "npm run lint"
+    "lint:watch": "onchange 'src/**/*.js' -- npm run lint",
+    "build": "grunt",
+    "prebuild": "npm run lint && npm run clean",
+    "build:watch": "onchange 'src/**/*.js' 'plugin.json' -- npm run build",
+    "test:watch": "karma start",
+    "test": "karma start --single-run"
   },
   "keywords": [
     "worldmap",
@@ -43,7 +46,8 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-systemjs": "^0.15.0",
     "load-grunt-tasks": "^3.5.2",
-    "mocha": "^3.1.0"
+    "mocha": "^3.1.0",
+    "onchange": "^3.0.2"
   },
   "dependencies": {
     "es6-module-loader": "^0.17.11",
