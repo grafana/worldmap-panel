@@ -148,4 +148,4 @@ The threshold field also accepts 2 or more comma-separated values. For example, 
 
 ### CHANGELOG
 
-The latest changes can be found here: [CHANGELOG.md](https://github.com/grafana/worldmap-panel/raw/master/CHANGELOG.md)
+The latest changes can be found here: [CHANGELOG.md](https://github.com/grafana/worldmap-panel/blob/master/CHANGELOG.md)
