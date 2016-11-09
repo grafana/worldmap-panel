@@ -38,11 +38,21 @@ The Group By clause should be the country code and an alias is needed too. The a
 
 ![Influx Query for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/influx-query.png)
 
-#### Worldmap Options for Countries
+#### Map Data Options for Time Series Data
 
 Under the Worldmap tab, choose either the `countries` or `states` option.
 
 ![Worldmap Options for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/countries-option.png)
+
+Using a JSON endpoint to return a custom list of locations:
+
+![Worldmap Options for JSON](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/json-endpoint.png)
+
+The endpoint used here is for the demo version of worldPing - [https://worldping-demo.raintank.io/api/plugin-proxy/raintank-worldping-app/api/v2/probes/locations](https://worldping-demo.raintank.io/api/plugin-proxy/raintank-worldping-app/api/v2/probes/locations)
+
+Using a JSONP endpoint (if you need to wrap the JSON to get around CORS problems):
+
+![Worldmap Options for JSONP](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/jsonp-endpoint.png)
 
 ## Geohashes as the Data Source
 
