@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['lodash', './leaflet'], function (_export, _context) {
+System.register(['lodash', './libs/leaflet'], function (_export, _context) {
   "use strict";
 
   var _, L, _createClass, tileServers, WorldMap;
@@ -14,8 +14,8 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
   return {
     setters: [function (_lodash) {
       _ = _lodash.default;
-    }, function (_leaflet) {
-      L = _leaflet.default;
+    }, function (_libsLeaflet) {
+      L = _libsLeaflet.default;
     }],
     execute: function () {
       _createClass = function () {
@@ -92,12 +92,22 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
           }
         }, {
           key: 'needToRedrawCircles',
-          value: function needToRedrawCircles() {
-            if (this.circles.length === 0 && this.ctrl.data.length > 0) return true;
-            if (this.circles.length !== this.ctrl.data.length) return true;
+          value: function needToRedrawCircles(data) {
+            if (this.circles.length === 0 && data.length > 0) return true;
+
+            if (this.circles.length !== data.length) return true;
             var locations = _.map(_.map(this.circles, 'options'), 'location').sort();
-            var dataPoints = _.map(this.ctrl.data, 'key').sort();
+            var dataPoints = _.map(data, 'key').sort();
             return !_.isEqual(locations, dataPoints);
+          }
+        }, {
+          key: 'filterEmptyAndZeroValues',
+          value: function filterEmptyAndZeroValues(data) {
+            var _this2 = this;
+
+            return _.filter(data, function (o) {
+              return !(_this2.ctrl.panel.hideEmpty && _.isNil(o.value)) && !(_this2.ctrl.panel.hideZero && o.value === 0);
+            });
           }
         }, {
           key: 'clearCircles',
@@ -111,48 +121,49 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         }, {
           key: 'drawCircles',
           value: function drawCircles() {
-            if (this.needToRedrawCircles()) {
+            var data = this.filterEmptyAndZeroValues(this.ctrl.data);
+            if (this.needToRedrawCircles(data)) {
               this.clearCircles();
-              this.createCircles();
+              this.createCircles(data);
             } else {
-              this.updateCircles();
+              this.updateCircles(data);
             }
           }
         }, {
           key: 'createCircles',
-          value: function createCircles() {
-            var _this2 = this;
+          value: function createCircles(data) {
+            var _this3 = this;
 
             var circles = [];
-            this.ctrl.data.forEach(function (dataPoint) {
+            data.forEach(function (dataPoint) {
               if (!dataPoint.locationName) return;
-              circles.push(_this2.createCircle(dataPoint));
+              circles.push(_this3.createCircle(dataPoint));
             });
             this.circlesLayer = this.addCircles(circles);
             this.circles = circles;
           }
         }, {
           key: 'updateCircles',
-          value: function updateCircles() {
-            var _this3 = this;
+          value: function updateCircles(data) {
+            var _this4 = this;
 
-            this.ctrl.data.forEach(function (dataPoint) {
+            data.forEach(function (dataPoint) {
               if (!dataPoint.locationName) return;
 
-              var circle = _.find(_this3.circles, function (cir) {
+              var circle = _.find(_this4.circles, function (cir) {
                 return cir.options.location === dataPoint.key;
               });
 
               if (circle) {
-                circle.setRadius(_this3.calcCircleSize(dataPoint.value || 0));
+                circle.setRadius(_this4.calcCircleSize(dataPoint.value || 0));
                 circle.setStyle({
-                  color: _this3.getColor(dataPoint.value),
-                  fillColor: _this3.getColor(dataPoint.value),
+                  color: _this4.getColor(dataPoint.value),
+                  fillColor: _this4.getColor(dataPoint.value),
                   fillOpacity: 0.5,
                   location: dataPoint.key
                 });
                 circle.unbindPopup();
-                _this3.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
+                _this4.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
               }
             });
           }
@@ -173,15 +184,15 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
         }, {
           key: 'calcCircleSize',
           value: function calcCircleSize(dataPointValue) {
-            var circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10);
-            var circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10);
+            var circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10) || 2;
+            var circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10) || 30;
 
             if (this.ctrl.data.valueRange === 0) {
               return circleMaxSize;
             }
 
             var dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
-            var circleSizeRange = this.ctrl.panel.circleMaxSize - circleMinSize;
+            var circleSizeRange = circleMaxSize - circleMinSize;
 
             return circleSizeRange * dataFactor + circleMinSize;
           }
@@ -190,16 +201,19 @@ System.register(['lodash', './leaflet'], function (_export, _context) {
           value: function createPopup(circle, locationName, value) {
             var unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
             var label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
-            circle.bindPopup(label, { 'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': false });
+            circle.bindPopup(label, { 'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': this.ctrl.panel.stickyLabels });
 
             circle.on('mouseover', function onMouseOver(evt) {
               var layer = evt.target;
               layer.bringToFront();
               this.openPopup();
             });
-            circle.on('mouseout', function onMouseOut() {
-              circle.closePopup();
-            });
+
+            if (!this.ctrl.panel.stickyLabels) {
+              circle.on('mouseout', function onMouseOut() {
+                circle.closePopup();
+              });
+            }
           }
         }, {
           key: 'getColor',

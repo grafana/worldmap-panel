@@ -24,7 +24,10 @@ const panelDefaults = {
   unitPlural: '',
   showLegend: true,
   esMetric: 'Count',
-  decimals: 0
+  decimals: 0,
+  hideEmpty: false,
+  hideZero: false,
+  stickyLabels: false
 };
 
 const mapCenters = {
@@ -112,7 +115,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
-    this.addEditorTab('Worldmap', 'public/plugins/grafana-worldmap-panel/editor.html', 2);
+    this.addEditorTab('Worldmap', 'public/plugins/grafana-worldmap-panel/partials/editor.html', 2);
   }
 
   onDataReceived(dataList) {
@@ -164,13 +167,18 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   setZoom() {
-    this.map.setZoom(this.panel.initialZoom);
+    this.map.setZoom(this.panel.initialZoom || 1);
   }
 
   toggleLegend() {
     if (!this.panel.showLegend) {
       this.map.removeLegend();
     }
+    this.render();
+  }
+
+  toggleStickyLabels() {
+    this.map.clearCircles();
     this.render();
   }
 
@@ -190,7 +198,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     }
     while (_.size(this.panel.colors) < _.size(this.data.thresholds) + 1) {
       // not enough colors. add one.
-      let newColor = 'rgba(50, 172, 45, 0.97)';
+      const newColor = 'rgba(50, 172, 45, 0.97)';
       this.panel.colors.push(newColor);
     }
   }

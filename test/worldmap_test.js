@@ -141,6 +141,42 @@ describe('Worldmap', () => {
     });
   });
 
+  describe('when the data has empty values and hideEmpty is true', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .withCountryAndValue('IE', 2)
+        .withCountryAndValue('US', null)
+        .withDataRange(1, 3, 2)
+        .withThresholdValues([2])
+        .build();
+      ctrl.panel.hideEmpty = true;
+      worldMap.drawCircles();
+    });
+
+    it('should draw three circles on the map', () => {
+      expect(worldMap.circles.length).to.be(2);
+    });
+  });
+
+  describe('when the data has empty values and hideEmpty is true', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .withCountryAndValue('IE', 2)
+        .withCountryAndValue('US', 0)
+        .withDataRange(1, 3, 2)
+        .withThresholdValues([2])
+        .build();
+      ctrl.panel.hideZero = true;
+      worldMap.drawCircles();
+    });
+
+    it('should draw three circles on the map', () => {
+      expect(worldMap.circles.length).to.be(2);
+    });
+  });
+
   describe('when the data is updated but not locations', () => {
     beforeEach(() => {
       ctrl.panel.circleMinSize = '2';
@@ -255,6 +291,20 @@ describe('Worldmap', () => {
     it('should create a legend with three legend values', () => {
       expect(worldMap.legend).not.to.be.empty();
       expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><i style="background:red"></i> &lt; 2<br><i style="background:blue"></i> 2–4<br><i style="background:green"></i> 4+</div>');
+    });
+  });
+
+  describe('when three thresholds are set', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withThresholdValues([2, 4, 6])
+        .build();
+      worldMap.createLegend();
+    });
+
+    it('should create a legend with four legend values', () => {
+      expect(worldMap.legend).not.to.be.empty();
+      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><i style="background:red"></i> &lt; 2<br><i style="background:blue"></i> 2–4<br><i style="background:green"></i> 4–6<br><i style="background:undefined"></i> 6+</div>');
     });
   });
 

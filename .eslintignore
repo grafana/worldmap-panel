@@ -1,2 +1,2 @@
 dist/*
-src/leaflet.js
+src/libs/leaflet.js

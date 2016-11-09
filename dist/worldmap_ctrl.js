@@ -85,7 +85,10 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         unitPlural: '',
         showLegend: true,
         esMetric: 'Count',
-        decimals: 0
+        decimals: 0,
+        hideEmpty: false,
+        hideZero: false,
+        stickyLabels: false
       };
       mapCenters = {
         '(0°, 0°)': { mapCenterLatitude: 0, mapCenterLongitude: 0 },
@@ -185,7 +188,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         }, {
           key: 'onInitEditMode',
           value: function onInitEditMode() {
-            this.addEditorTab('Worldmap', 'public/plugins/grafana-worldmap-panel/editor.html', 2);
+            this.addEditorTab('Worldmap', 'public/plugins/grafana-worldmap-panel/partials/editor.html', 2);
           }
         }, {
           key: 'onDataReceived',
@@ -242,7 +245,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         }, {
           key: 'setZoom',
           value: function setZoom() {
-            this.map.setZoom(this.panel.initialZoom);
+            this.map.setZoom(this.panel.initialZoom || 1);
           }
         }, {
           key: 'toggleLegend',
@@ -250,6 +253,12 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
             if (!this.panel.showLegend) {
               this.map.removeLegend();
             }
+            this.render();
+          }
+        }, {
+          key: 'toggleStickyLabels',
+          value: function toggleStickyLabels() {
+            this.map.clearCircles();
             this.render();
           }
         }, {
@@ -265,6 +274,15 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
             this.data.thresholds = this.panel.thresholds.split(',').map(function (strValue) {
               return Number(strValue.trim());
             });
+            while (_.size(this.panel.colors) > _.size(this.data.thresholds) + 1) {
+              // too many colors. remove the last one.
+              this.panel.colors.pop();
+            }
+            while (_.size(this.panel.colors) < _.size(this.data.thresholds) + 1) {
+              // not enough colors. add one.
+              var newColor = 'rgba(50, 172, 45, 0.97)';
+              this.panel.colors.push(newColor);
+            }
           }
         }, {
           key: 'changeLocationData',
