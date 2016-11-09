@@ -1,35 +1,78 @@
 ## Worldmap Panel Plugin for Grafana
 
-The Worldmap Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics or with geohash data from Elasticsearch.
+The Worldmap Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or Table Data.
 
 ![Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-world.png)
 
 ## Time Series Data as the Data Source
 
-If you are using a database like graphite then country codes (like US or GB or FR) are matched to a node or a wildcard in a metric namespace e.g. apps.country.FR.requests.count or apps.country.*.requests.count. Use the aliasByNode function to point to the field containing the country code. See the image below for an example of a graphite query. See this [issue](https://github.com/grafana/worldmap-panel/issues/9#issuecomment-224861471) for an example of alias pattern in InfluxDB.
+Supported Databases:
 
-![Graphite Query for Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-timeseries-query.png)
+- Graphite
+- InfluxDB
+- OpenTSDB
+- Prometheus
 
-A circle is then drawn for every country code matched and the size of the circle depends on the value. Circle size is relative e.g. if you have 3 countries with values 1, 2 and 3 or 100, 200 and 300 then you will get one small circle, one medium circle and one large circle.
+Included location data:
 
-At the moment, only country codes are supported right now but support for uploading a custom location file with keys and coordinates is on the backlog.
+- Countries
+- US states
 
-## ElasticSearch as the Data Source
+This works by matching country codes (like US or GB or FR) or US state codes (TX or NY) to a node or a wildcard in a metric namespace. If there is a match in the list of countries or states then a circle will be drawn at the location.
+
+If you want to match to other data than countries or states, then you will have to provide custom location data. The current way to do that is via a JSON endpoint that returns a json file with location data (See Map Data Options)
+
+The size of the circle depends on the value of the matched metric. Circle size is relative e.g. if you have 3 countries with values 1, 2 and 3 or 100, 200 and 300 then you will get one small circle, one medium circle and one large circle.
+
+#### Query Examples
+
+#### Graphite Query for Countries
+
+Use the aliasByNode function to point to the field containing the country code. See the image below for an example of a graphite query.
+
+![Graphite Query for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/worldmap-timeseries-query.png)
+
+#### Influx Query for Countries
+
+The Group By clause should be the country code and an alias is needed too. The alias should be in the form `$tag_<field name>`.
+
+![Influx Query for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/influx-query.png)
+
+#### Worldmap Options for Countries
+
+Under the Worldmap tab, choose either the `countries` or `states` option.
+
+![Worldmap Options for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/countries-option.png)
+
+## Geohashes as the Data Source
+
+Supported Databases:
+
+- ElasticSearch
 
 The [Geo-point](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/geo-point.html) data type with geohash indexing in Elasticsearch can also be used as a datasource for the worldmap panel. Grafana has a new bucket aggregate for Elasticsearch queries - Geo Hash Grid that allows grouping of coordinates. The Geo Hash Grid has a precision option where 1 is the highest level and 7 is the lowest.
 
-![Elasticsearch Query for Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-geohash-query.png)
+![Elasticsearch Query for Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/worldmap-geohash-query.png)
 
 Three fields need to be provided by the ElasticSearch query:
-- A metric (Count, Average, Sum etc.)
+
+- A metric. This is free text and should match the aggregation used (Count, Average, Sum, Unique Count etc.)
 - Location Name (optional - geohash value will be shown if not chosen)
 - geo_point field that provides the geohash value.
 
+![Elasticsearch Query for Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/es-options.png)
+
+
 ## Table Data as the Data Source
+
+Supported Databases:
+
+- InfluxDB
 
 An example of Table Data would using InfluxDB and then formatting the data returned from the metric query as Table.
 
 Similar to the Elasticsearch query above, 3 fields are expected (2 of them are mandatory)
+
 - a field named *metric*
 - a geohash tag named *geohash*
 - an optional location name (shown in the mouse over). This location name has to be specified in the Worldmap settings tab too.
@@ -87,8 +130,12 @@ Three fields need to be provided by the ElasticSearch query. They are text field
 
 ### Threshold Options
 
-Thresholds control the color of the circles. A threshold can contain one or two values.
+Thresholds control the color of the circles.
 
 If one value is specified then two colors are used. For example, if the threshold is set to 10 then values under 10 get the first color and values that are 10 or more get the second color.
 
-The threshold field also accepts 2 comma-separated values which represent 3 ranges that correspond to the three colors. For example: if the thresholds are 70, 90 then the first color represents < 70, the second color represents between 70 and 90 and the third color represents > 90.
+The threshold field also accepts 2 or more comma-separated values. For example, if you have 2 values that represents 3 ranges that correspond to the three colors. For example: if the thresholds are 70, 90 then the first color represents < 70, the second color represents between 70 and 90 and the third color represents > 90.
+
+### CHANGELOG
+
+The latest changes can be found here: [CHANGELOG.md](https://github.com/grafana/worldmap-panel/raw/master/CHANGELOG.md)
