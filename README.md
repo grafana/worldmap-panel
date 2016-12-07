@@ -38,6 +38,25 @@ The Group By clause should be the country code and an alias is needed too. The a
 
 ![Influx Query for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/influx-query.png)
 
+#### Prometheus Query for Countries or States
+```
+sum(
+    someMetricWithACountryIsoTag {
+        ... insert your filters here ...
+    }
+) by (countryIso)
+```
+
+When you query Prometheus directly to test your query, the resulting data set should resemble:
+| Element | Value |
+| --- | --- |
+| `{countryIso="US"}` | `123456` |
+| `{countryIso="CA"}` | `987654` |
+
+* You can similarly query for states by summing on a different tag.
+* You don't need to use `countryIso` exactly.  Use whatever tags are on your data, containing the ISO codes.
+* When configuring your query for the panel in Grafana, set your `Legend format` to something like `{{countryIso}}`, corresponding to the name of the tag you're using in the `sum()`.
+
 #### Map Data Options for Time Series Data
 
 Under the Worldmap tab, choose either the `countries` or `states` option.
@@ -59,6 +78,9 @@ Using a JSONP endpoint (if you need to wrap the JSON to get around CORS problems
 Supported Databases:
 
 - ElasticSearch
+- Prometheus
+
+### Query Configuration for Geohashes in ElasticSearch
 
 The [Geo-point](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/geo-point.html) data type with geohash indexing in Elasticsearch can also be used as a datasource for the worldmap panel. Grafana has a new bucket aggregate for Elasticsearch queries - Geo Hash Grid that allows grouping of coordinates. The Geo Hash Grid has a precision option where 1 is the highest level and 7 is the lowest.
 
@@ -72,8 +94,25 @@ Three fields need to be provided by the ElasticSearch query:
 
 ![Elasticsearch Query for Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/es-options.png)
 
+### Query Configuration for Geohashes in Prometheus
+```
+sum(
+    someMetricWithAGeohashTag {
+        ... insert your filters here ...
+    }
+) by (geohash)
+```
 
-## Table Data as the Data Source
+When you query Prometheus directly to test your query, the resulting data set should resemble:
+| Element | Value |
+| --- | --- |
+| `{geohash="9muqgny7v0dz"}` | `123456` |
+| `{geohash="dr5r8ptq9ucg"}` | `987654` |
+
+* Note that only the most recent value in the time series is used, for each geohash.  
+* There is no support currently for different aggregation operators.
+
+## Table Data as the Data Source for Geohashes
 
 Supported Databases:
 
@@ -122,7 +161,7 @@ Shows/hide the legend on the bottom left that shows the threshold ranges and the
 There are four ways to provide data for the worldmap panel:
  - *countries*: This is a list of all the countries in the world. It works by matching a country code (US, FR, AU) to a node alias in a time series query.
  - *states*: Similar to countries but for the states in USA e.g. CA for California
- - *geohash*: An ElasticSearch query that returns geohashes.
+ - *geohash*: A query that returns geohashes (ElasticSearch or Prometheus).
  - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/grafana/worldmap-panel/blob/master/src/data/countries.json) or [this list of cities](https://github.com/grafana/worldmap-panel/blob/master/src/data/probes.json).
  - *jsonp*: A jsonp endpoint that returns custom json wrapped as jsonp. Use this if you are having problems with CORS.
  - *table*: This expects the metric query to return data points with a field named geohash. This field should contain a string in the [geohash form](https://www.elastic.co/guide/en/elasticsearch/guide/current/geohashes.html). For example: London -> "gcpvh3zgu992".
