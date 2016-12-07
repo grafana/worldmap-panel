@@ -50,33 +50,78 @@ export default class DataFormatter {
     if (!this.ctrl.panel.esGeoPoint || !this.ctrl.panel.esMetric) return;
 
     if (dataList && dataList.length > 0) {
-      let highestValue = 0;
-      let lowestValue = Number.MAX_VALUE;
+      //Prometheus' returned results have a different structure than ElasticSearch.
+      //The shape is approximately: 
+      //dataList = [ 
+      //             { 
+      //               target="someGeoHash", 
+      //               datapoints = [ 
+      //                               [0=metric, 1=ticks],
+      //                               ...
+      //                            ] 
+      //             } 
+      //           ]
+      //For now, just take the latest datapoint for each geohash, since we aren't displaying
+      //the full time series on the map, and we just want the current value.
+      let isPrometheus = this.ctrl.panel.datasource == "prometheus";
+      if(isPrometheus) {
+        let highestValue = 0;
+        let lowestValue = Number.MAX_VALUE;
 
-      dataList[0].datapoints.forEach((datapoint) => {
-        const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
-        const decodedGeohash = decodeGeoHash(encodedGeohash);
+        dataList.forEach((datapoint) => {
+          const encodedGeohash = datapoint.target;
+          const decodedGeohash = decodedGeohash(encodedGeohash);
+          const metricValue = datapoint.datapoints.last()[0];
 
-        const dataValue = {
-          key: encodedGeohash,
-          locationName: this.ctrl.panel.esLocationName ? datapoint[this.ctrl.panel.esLocationName] : encodedGeohash,
-          locationLatitude: decodedGeohash.latitude,
-          locationLongitude: decodedGeohash.longitude,
-          value: datapoint[this.ctrl.panel.esMetric],
-          valueFormatted: datapoint[this.ctrl.panel.esMetric],
-          valueRounded: 0
-        };
+          const dataValue = {
+            key: encodedGeohash,
+            locationName: encodedGeohash,
+            locationLatitude: decodedGeohash.latitude,
+            locationLongitude: decodedGeohash.longitude,
+            value: metricValue,//0 is the actual metric value
+            valueFormatted: metricValue + (metricValue == 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural),
+            valueRounded: this.kbn.roundValue(metricValue, this.ctrl.panel.decimals || 0)
+          };
 
-        if (dataValue.value > highestValue) highestValue = dataValue.value;
-        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+          if (dataValue.value > highestValue) highestValue = dataValue.value;
+          if (dataValue.value < lowestValue) lowestValue = dataValue.value;
 
-        dataValue.valueRounded = this.kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
-        data.push(dataValue);
-      });
+          data.push(dataValue);
+        });
 
-      data.highestValue = highestValue;
-      data.lowestValue = lowestValue;
-      data.valueRange = highestValue - lowestValue;
+        data.highestValue = highestValue;
+        data.lowestValue = lowestValue;
+        data.valueRange = highestValue - lowestValue;
+      }
+      else {//Not Prometheus; proceed as normal.
+        let highestValue = 0;
+        let lowestValue = Number.MAX_VALUE;
+
+        dataList[0].datapoints.forEach((datapoint) => {
+          const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
+          const decodedGeohash = decodeGeoHash(encodedGeohash);
+
+          const dataValue = {
+            key: encodedGeohash,
+            locationName: this.ctrl.panel.esLocationName ? datapoint[this.ctrl.panel.esLocationName] : encodedGeohash,
+            locationLatitude: decodedGeohash.latitude,
+            locationLongitude: decodedGeohash.longitude,
+            value: datapoint[this.ctrl.panel.esMetric],
+            valueFormatted: datapoint[this.ctrl.panel.esMetric],
+            valueRounded: 0
+          };
+
+          if (dataValue.value > highestValue) highestValue = dataValue.value;
+          if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+
+          dataValue.valueRounded = this.kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+          data.push(dataValue);
+        });
+
+        data.highestValue = highestValue;
+        data.lowestValue = lowestValue;
+        data.valueRange = highestValue - lowestValue;
+      }
     }
   }
 
