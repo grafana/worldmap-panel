@@ -48,7 +48,7 @@ Using a JSON endpoint to return a custom list of locations:
 
 ![Worldmap Options for JSON](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/json-endpoint.png)
 
-The endpoint used here is for the demo version of worldPing - [https://worldping-demo.raintank.io/api/plugin-proxy/raintank-worldping-app/api/v2/probes/locations](https://worldping-demo.raintank.io/api/plugin-proxy/raintank-worldping-app/api/v2/probes/locations)
+The endpoint used here is for the demo version of worldPing - [https://worldpingdemo.grafana.net/api/plugin-proxy/raintank-worldping-app/api/v2/probes/locations](https://worldpingdemo.grafana.net/api/plugin-proxy/raintank-worldping-app/api/v2/probes/locations)
 
 Using a JSONP endpoint (if you need to wrap the JSON to get around CORS problems):
 
