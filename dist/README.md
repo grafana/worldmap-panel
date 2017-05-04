@@ -4,6 +4,8 @@ The Worldmap Panel is a tile map of the world that can be overlaid with circles 
 
 ![Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-world.png)
 
+There are currently two ways to connect data with points on a map. Either by matching a tag or series name to a country code/state code (e.g. SE for Sweden, TX for Texas) or by using geohashes to map against geographic coordinates.
+
 ## Time Series Data as the Data Source
 
 Supported Databases:
@@ -15,7 +17,8 @@ Supported Databases:
 
 Included location data:
 
-- Countries
+- Countries (2 letter codes)
+- Countries (3 letter codes)
 - US states
 
 This works by matching country codes (like US or GB or FR) or US state codes (TX or NY) to a node or a wildcard in a metric namespace. If there is a match in the list of countries or states then a circle will be drawn at the location.
