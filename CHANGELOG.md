@@ -69,3 +69,7 @@
 
 - Validation and default values for option fields. Fixes https://github.com/grafana/worldmap-panel/issues/29
 
+## v.0.0.17
+
+- Adds Country data with 3-letter country codes.
+
