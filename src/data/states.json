@@ -1,5 +1,65 @@
 [
   {
+        "key": "ON",
+        "latitude": 44.247780,
+        "longitude": -79.091860,
+        "name": "Ontario"
+  },
+  {
+        "key": "QC",
+        "latitude": 46.810811,
+        "longitude": -71.215439,
+        "name": "Quebec"
+  },
+  {
+        "key": "NS",
+        "latitude": 45.000150,
+        "longitude": -62.998650,
+        "name": "Nova Scotia"
+  },
+  {
+        "key": "NB",
+        "latitude": 46.500100,
+        "longitude": -65.998780,
+        "name": "New Brunswick"
+  },
+  {
+        "key": "MB",
+        "latitude": 55.000190,
+        "longitude": -97.000490,
+        "name": "Manitoba"
+  },
+  {
+        "key": "BC",
+        "latitude": 53.7266683,
+        "longitude": -127.6476206,
+        "name": "British Colombia"
+  },
+  {
+        "key": "PE",
+        "latitude": 46.486400,
+        "longitude": -63.313600,
+        "name": "Prince Edward Island"
+  },
+  {
+        "key": "SK",
+        "latitude": 52.138546,
+        "longitude": -117.193222,
+        "name": "Saskatchewan"
+  },
+  {
+        "key": "AB",
+        "latitude": 53.933271,
+        "longitude": -116.576504,
+        "name": "Alberta"
+  },
+  {
+        "key": "NL",
+        "latitude": 52.000000,
+        "longitude": ,-56.000000
+        "name": "Newfoundland and Labrador"
+  },
+  {
         "key": "AK",
         "latitude": 61.3850,
         "longitude": -152.2683,
