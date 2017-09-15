@@ -6,7 +6,6 @@ import kbn from 'app/core/utils/kbn';
 import _ from 'lodash';
 import mapRenderer from './map_renderer';
 import DataFormatter from './data_formatter';
-import decodeGeoHash from './geohash';
 import './css/worldmap-panel.css!';
 
 const panelDefaults = {
@@ -143,7 +142,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.updateThresholdData();
 
     if (this.data.length && this.panel.mapCenter === 'Last GeoHash') {
-      centerOnLastGeoHash();
+      this.centerOnLastGeoHash();
     } else {
       this.render();
     }
