@@ -96,7 +96,8 @@ Similar to the Elasticsearch query above, 3 fields are expected (2 of them are m
 
 **Center**
 
-This settings configures the default center of the map. There are 5 centers to choose from or you can choose a custom center..For a custom center there are two fields: latitude and longitude. Examples of values are 37.09024, -95.712891 for the center of the US or 55.378051, -3.435973 for Great Britain.
+This settings configures the default center of the map. There are 5 centers to choose from or you can choose a custom center or last GeoHash center..For a custom center there are two fields: latitude and longitude. Examples of values are 37.09024, -95.712891 for the center of the US or 55.378051, -3.435973 for Great Britain. Last GeoHash center will centered the map on the last GeoHash received from the data.
+
 
 **Initial Zoom**
 
@@ -136,11 +137,11 @@ If you chose *countries* or *table* as the source of the location data then you 
 
 For Graphite, be aware that the default value for Max Data Points is 1. This is to aggregate data points per country to one value in the most accurate way. This will by default, consolidate by average. To change the consolidation, use the consolidateBy function like so:
 
-<img src="/uploads/grafana/original/1X/1a3fb5eb12370dcc5d82c007563537785d435de1.png" width="690" height="62">
+![Graphite Consolidate By](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/graphite-consolidateby.png)
 
 Or just remove the 1 from the Max Data Point field and use the consolidation functions in Map Data Options (though depending on the timerange and amount of data points, this will be usually less accurate due to Graphite consolidation).
 
-<img src="/uploads/grafana/original/1X/e021c76c0d2a416dc5cb40223aaf878c1ceca482.png" width="224" height="47">
+![Graphite Max Data Points](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/graphite-maxdatapoints.png)
 
 **ES Metric/Location Name/geo_point Field**
 

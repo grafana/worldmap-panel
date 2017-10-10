@@ -73,3 +73,7 @@
 
 - Adds Country data with 3-letter country codes.
 
+## v0.0.18
+
+- Fixes some coordinates in the country location data.
+- Last Geohash as center for the map - it centers the map on the last geohash position received. Useful for real time tracking (with auto refresh on in Grafana).
