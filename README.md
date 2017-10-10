@@ -96,7 +96,8 @@ Similar to the Elasticsearch query above, 3 fields are expected (2 of them are m
 
 **Center**
 
-This settings configures the default center of the map. There are 5 centers to choose from or you can choose a custom center..For a custom center there are two fields: latitude and longitude. Examples of values are 37.09024, -95.712891 for the center of the US or 55.378051, -3.435973 for Great Britain.
+This settings configures the default center of the map. There are 5 centers to choose from or you can choose a custom center or last GeoHash center..For a custom center there are two fields: latitude and longitude. Examples of values are 37.09024, -95.712891 for the center of the US or 55.378051, -3.435973 for Great Britain. Last GeoHash center will centered the map on the last GeoHash received from the data.
+
 
 **Initial Zoom**
 

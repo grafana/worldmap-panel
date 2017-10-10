@@ -35,7 +35,8 @@ const mapCenters = {
   'North America': {mapCenterLatitude: 40, mapCenterLongitude: -100},
   'Europe': {mapCenterLatitude: 46, mapCenterLongitude: 14},
   'West Asia': {mapCenterLatitude: 26, mapCenterLongitude: 53},
-  'SE Asia': {mapCenterLatitude: 10, mapCenterLongitude: 106}
+  'SE Asia': {mapCenterLatitude: 10, mapCenterLongitude: 106},
+  'Last GeoHash': {mapCenterLatitude: 0, mapCenterLongitude: 0}
 };
 
 export default class WorldmapCtrl extends MetricsPanelCtrl {
@@ -140,7 +141,17 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
     this.updateThresholdData();
 
-    this.render();
+    if (this.data.length && this.panel.mapCenter === 'Last GeoHash') {
+      this.centerOnLastGeoHash();
+    } else {
+      this.render();
+    }
+  }
+
+  centerOnLastGeoHash() {
+    mapCenters[this.panel.mapCenter].mapCenterLatitude = _.last(this.data).locationLatitude;
+    mapCenters[this.panel.mapCenter].mapCenterLongitude = _.last(this.data).locationLongitude;
+    this.setNewMapCenter();
   }
 
   onDataSnapshotLoad(snapshotData) {
