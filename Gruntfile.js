@@ -12,19 +12,20 @@ module.exports = (grunt) => {
       src_to_dist: {
         cwd: 'src',
         expand: true,
-        src: ['**/*', '!**/*.js', '!**/*.scss'],
+        src: ['**/*.css', '**/*.html', '**/*.json', '!**/*.js', '!**/*.scss'],
         dest: 'dist'
       },
       pluginDef: {
         expand: true,
-        src: [ 'plugin.json', 'README.md', 'CHANGELOG.md' ],
+        src: [ 'README.md', 'CHANGELOG.md' ],
         dest: 'dist',
       },
       img_to_dist: {
-        cwd: 'src',
+        cwd: 'src/images',
         expand: true,
-        src: ['images/**/*'],
-        dest: 'dist/src/'
+        flatten: true,
+        src: ['*.*'],
+        dest: 'dist/images/'
       },
     },
 
