@@ -134,6 +134,14 @@ There are four ways to provide data for the worldmap panel:
 
 If you chose *countries* or *table* as the source of the location data then you can choose an aggregation here: avg, total etc.
 
+For Graphite, be aware that the default value for Max Data Points is 1. This is to aggregate data points per country to one value in the most accurate way. This will by default, consolidate by average. To change the consolidation, use the consolidateBy function like so:
+
+![Graphite Consolidate By](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/graphite-consolidateby.png)
+
+Or just remove the 1 from the Max Data Point field and use the consolidation functions in Map Data Options (though depending on the timerange and amount of data points, this will be usually less accurate due to Graphite consolidation).
+
+![Graphite Max Data Points](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/graphite-maxdatapoints.png)
+
 **ES Metric/Location Name/geo_point Field**
 
 Three fields need to be provided by the ElasticSearch query. They are text fields and should be the field names from the query under the Metrics tab.

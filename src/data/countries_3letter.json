@@ -217,8 +217,8 @@
   },
   {
     "key": "CAN",
-    "latitude": 60,
-    "longitude": -95,
+    "latitude": 56.130366,
+    "longitude":-106.346771,
     "name": "Canada"
   },
   {
@@ -613,8 +613,8 @@
   },
   {
     "key": "IRL",
-    "latitude": 53,
-    "longitude": -8,
+    "latitude": 53.41291,
+    "longitude": -8.24389,
     "name": "Ireland"
   },
   {
@@ -1213,8 +1213,8 @@
   },
   {
     "key": "LKA",
-    "latitude": 7,
-    "longitude": 81,
+    "latitude": 7.873054,
+    "longitude": 80.771797,
     "name": "Sri Lanka"
   },
   {
