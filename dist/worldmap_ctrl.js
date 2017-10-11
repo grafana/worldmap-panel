@@ -37,7 +37,6 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
 
   return {
     setters: [function (_appPluginsSdk) {
-      /* eslint import/no-extraneous-dependencies: 0 */
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
     }, function (_appCoreTime_series) {
       TimeSeries = _appCoreTime_series.default;
@@ -171,9 +170,9 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
               });
             } else if (this.panel.locationData === 'table') {
               // .. Do nothing
-            } else if (this.panel.locationData !== 'geohash') {
-                window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
-              }
+            } else if (this.panel.locationData !== 'geohash' && this.panel.locationData !== 'json result') {
+              window.$.getJSON('public/plugins/grafana-worldmap-panel/data/' + this.panel.locationData + '.json').then(this.reloadLocations.bind(this));
+            }
           }
         }, {
           key: 'reloadLocations',
@@ -207,6 +206,9 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
             } else if (this.panel.locationData === 'table') {
               var tableData = dataList.map(DataFormatter.tableHandler.bind(this));
               this.dataFormatter.setTableValues(tableData, data);
+            } else if (this.panel.locationData === 'dynamic json') {
+              this.series = dataList;
+              this.dataFormatter.setJsonValues(data);
             } else {
               this.series = dataList.map(this.seriesHandler.bind(this));
               this.dataFormatter.setValues(data);

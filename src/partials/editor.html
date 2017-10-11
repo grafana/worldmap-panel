@@ -45,7 +45,7 @@
 		<div class="gf-form">
 			<label class="gf-form-label width-12">Location Data</label>
 			<div class="gf-form-select-wrapper max-width-10">
-				<select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'countries_3letter', 'states', 'probes', 'geohash', 'json endpoint', 'jsonp endpoint', 'table']" ng-change="ctrl.changeLocationData()"></select>
+				<select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'countries_3letter', 'states', 'probes', 'geohash', 'json endpoint', 'jsonp endpoint', 'json result', 'table']" ng-change="ctrl.changeLocationData()"></select>
 			</div>
 		</div>
 		<div class="gf-form" ng-show="ctrl.panel.locationData !== 'geohash'">
