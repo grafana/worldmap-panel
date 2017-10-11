@@ -91,6 +91,22 @@ System.register(['lodash', './geohash'], function (_export, _context) {
             }
           }
         }, {
+          key: 'createDataValue',
+          value: function createDataValue(encodedGeohash, decodedGeohash, locationName, value, highestValue, lowestValue) {
+            var dataValue = {
+              key: encodedGeohash,
+              locationName: locationName,
+              locationLatitude: decodedGeohash.latitude,
+              locationLongitude: decodedGeohash.longitude,
+              value: value,
+              valueFormatted: value,
+              valueRounded: 0
+            };
+
+            dataValue.valueRounded = this.kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+            return dataValue;
+          }
+        }, {
           key: 'setGeohashValues',
           value: function setGeohashValues(dataList, data) {
             var _this2 = this;
@@ -102,30 +118,49 @@ System.register(['lodash', './geohash'], function (_export, _context) {
                 var highestValue = 0;
                 var lowestValue = Number.MAX_VALUE;
 
-                dataList[0].datapoints.forEach(function (datapoint) {
-                  var encodedGeohash = datapoint[_this2.ctrl.panel.esGeoPoint];
-                  var decodedGeohash = decodeGeoHash(encodedGeohash);
+                dataList.forEach(function (result) {
+                  if (result.type === 'table') {
+                    (function () {
+                      var columnNames = {};
 
-                  var dataValue = {
-                    key: encodedGeohash,
-                    locationName: _this2.ctrl.panel.esLocationName ? datapoint[_this2.ctrl.panel.esLocationName] : encodedGeohash,
-                    locationLatitude: decodedGeohash.latitude,
-                    locationLongitude: decodedGeohash.longitude,
-                    value: datapoint[_this2.ctrl.panel.esMetric],
-                    valueFormatted: datapoint[_this2.ctrl.panel.esMetric],
-                    valueRounded: 0
-                  };
+                      result.columns.forEach(function (column, columnIndex) {
+                        columnNames[column.text] = columnIndex;
+                      });
 
-                  if (dataValue.value > highestValue) highestValue = dataValue.value;
-                  if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+                      result.rows.forEach(function (row) {
+                        var encodedGeohash = row[columnNames[_this2.ctrl.panel.esGeoPoint]];
+                        var decodedGeohash = decodeGeoHash(encodedGeohash);
+                        var locationName = _this2.ctrl.panel.esLocationName ? row[columnNames[_this2.ctrl.panel.esLocationName]] : encodedGeohash;
+                        var value = row[columnNames[_this2.ctrl.panel.esMetric]];
 
-                  dataValue.valueRounded = _this2.kbn.roundValue(dataValue.value, _this2.ctrl.panel.decimals || 0);
-                  data.push(dataValue);
+                        var dataValue = _this2.createDataValue(encodedGeohash, decodedGeohash, locationName, value, highestValue, lowestValue);
+                        if (dataValue.value > highestValue) highestValue = dataValue.value;
+                        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+                        data.push(dataValue);
+                      });
+
+                      data.highestValue = highestValue;
+                      data.lowestValue = lowestValue;
+                      data.valueRange = highestValue - lowestValue;
+                    })();
+                  } else {
+                    result.forEach(function (datapoint) {
+                      var encodedGeohash = datapoint[_this2.ctrl.panel.esGeoPoint];
+                      var decodedGeohash = decodeGeoHash(encodedGeohash);
+                      var locationName = _this2.ctrl.panel.esLocationName ? datapoint[_this2.ctrl.panel.esLocationName] : encodedGeohash;
+                      var value = datapoint[_this2.ctrl.panel.esMetric];
+
+                      var dataValue = _this2.createDataValue(encodedGeohash, decodedGeohash, locationName, value, highestValue, lowestValue);
+                      if (dataValue.value > highestValue) highestValue = dataValue.value;
+                      if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+                      data.push(dataValue);
+                    });
+
+                    data.highestValue = highestValue;
+                    data.lowestValue = lowestValue;
+                    data.valueRange = highestValue - lowestValue;
+                  }
                 });
-
-                data.highestValue = highestValue;
-                data.lowestValue = lowestValue;
-                data.valueRange = highestValue - lowestValue;
               })();
             }
           }
