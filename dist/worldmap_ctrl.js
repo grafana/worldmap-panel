@@ -206,7 +206,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
             } else if (this.panel.locationData === 'table') {
               var tableData = dataList.map(DataFormatter.tableHandler.bind(this));
               this.dataFormatter.setTableValues(tableData, data);
-            } else if (this.panel.locationData === 'dynamic json') {
+            } else if (this.panel.locationData === 'json result') {
               this.series = dataList;
               this.dataFormatter.setJsonValues(data);
             } else {

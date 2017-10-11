@@ -92,6 +92,15 @@ Similar to the Elasticsearch query above, 3 fields are expected (2 of them are m
 
 ![Example influxdb query](https://cloud.githubusercontent.com/assets/434655/16535977/8cd520be-3fec-11e6-8dc9-2ecf7b16ad5f.png)
 
+## JSON result as the Data Source
+
+
+Supported Databases: 
+
+- Warp&nbsp;10 via [grafana-warp10-datasource](https://github.com/cityzendata/grafana-warp10) plugin  
+
+It supports any datasource capable of generating a JSON response with a  a custom list of locations (the same format that for the JSON enpoint).
+
 ### Map Visual Option Settings
 
 **Center**

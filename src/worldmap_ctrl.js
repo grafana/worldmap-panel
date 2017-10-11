@@ -133,7 +133,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     } else if (this.panel.locationData === 'table') {
       const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
       this.dataFormatter.setTableValues(tableData, data);
-    } else if (this.panel.locationData === 'dynamic json') {
+    } else if (this.panel.locationData === 'json result') {
       this.series = dataList;
       this.dataFormatter.setJsonValues(data);
     } else {
