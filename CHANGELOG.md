@@ -77,3 +77,7 @@
 
 - Fixes some coordinates in the country location data.
 - Last Geohash as center for the map - it centers the map on the last geohash position received. Useful for real time tracking (with auto refresh on in Grafana).
+
+## v0.0.19
+
+Fix for Elasticsearch geohash maps after breaking change in Grafana 4.5.
