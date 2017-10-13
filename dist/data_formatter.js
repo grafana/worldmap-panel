@@ -144,7 +144,7 @@ System.register(['lodash', './geohash'], function (_export, _context) {
                       data.valueRange = highestValue - lowestValue;
                     })();
                   } else {
-                    result.forEach(function (datapoint) {
+                    result.datapoints.forEach(function (datapoint) {
                       var encodedGeohash = datapoint[_this2.ctrl.panel.esGeoPoint];
                       var decodedGeohash = decodeGeoHash(encodedGeohash);
                       var locationName = _this2.ctrl.panel.esLocationName ? datapoint[_this2.ctrl.panel.esLocationName] : encodedGeohash;
