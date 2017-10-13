@@ -92,7 +92,7 @@ export default class DataFormatter {
           data.lowestValue = lowestValue;
           data.valueRange = highestValue - lowestValue;
         } else {
-          result.forEach((datapoint) => {
+          result.datapoints.forEach((datapoint) => {
             const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
             const decodedGeohash = decodeGeoHash(encodedGeohash);
             const locationName = this.ctrl.panel.esLocationName ? datapoint[this.ctrl.panel.esLocationName] : encodedGeohash;
