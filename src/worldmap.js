@@ -48,7 +48,7 @@ export default class WorldMap {
           '&lt; ' + thresholds[0] + '<br>';
       for (let index = 0; index < thresholds.length; index += 1) {
         legendHtml +=
-          '<i style="background:' + this.getColor(thresholds[index] + 1) + '"></i> ' +
+          '<i style="background:' + this.ctrl.panel.colors[index+1] + '"></i> ' +
           thresholds[index] + (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '<br>' : '+');
       }
       this.legend._div.innerHTML = legendHtml;
