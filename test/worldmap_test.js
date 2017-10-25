@@ -262,7 +262,7 @@ describe('Worldmap', () => {
 
     it('should create a legend with two legend values', () => {
       expect(worldMap.legend).not.to.be.empty();
-      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><i style="background:red"></i> &lt; 2<br><i style="background:blue"></i> 2+</div>');
+      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><div class="legend-item"><i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2+</div></div>');
     });
   });
 
@@ -290,7 +290,7 @@ describe('Worldmap', () => {
 
     it('should create a legend with three legend values', () => {
       expect(worldMap.legend).not.to.be.empty();
-      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><i style="background:red"></i> &lt; 2<br><i style="background:blue"></i> 2–4<br><i style="background:green"></i> 4+</div>');
+      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><div class="legend-item"><i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div><div class="legend-item"><i style="background:green"></i> 4+</div></div>');
     });
   });
 
@@ -304,7 +304,7 @@ describe('Worldmap', () => {
 
     it('should create a legend with four legend values', () => {
       expect(worldMap.legend).not.to.be.empty();
-      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><i style="background:red"></i> &lt; 2<br><i style="background:blue"></i> 2–4<br><i style="background:green"></i> 4–6<br><i style="background:undefined"></i> 6+</div>');
+      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><div class="legend-item"><i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div><div class="legend-item"><i style="background:green"></i> 4–6</div><div class="legend-item"><i style="background:undefined"></i> 6+</div></div>');
     });
   });
 

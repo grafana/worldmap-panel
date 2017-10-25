@@ -46,7 +46,7 @@ export default class DataFormatter {
     }
   }
 
-  createDataValue(encodedGeohash, decodedGeohash, locationName, value, highestValue, lowestValue) {
+  createDataValue(encodedGeohash, decodedGeohash, locationName, value) {
     const dataValue = {
       key: encodedGeohash,
       locationName: locationName,
@@ -96,7 +96,7 @@ export default class DataFormatter {
             const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
             const decodedGeohash = decodeGeoHash(encodedGeohash);
             const locationName = this.ctrl.panel.esLocationName ? datapoint[this.ctrl.panel.esLocationName] : encodedGeohash;
-            const value =  datapoint[this.ctrl.panel.esMetric];
+            const value = datapoint[this.ctrl.panel.esMetric];
 
             const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, highestValue, lowestValue);
             if (dataValue.value > highestValue) highestValue = dataValue.value;

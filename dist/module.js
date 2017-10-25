@@ -6,13 +6,12 @@ System.register(['app/plugins/sdk', './worldmap_ctrl'], function (_export, _cont
   var loadPluginCss, WorldmapCtrl;
   return {
     setters: [function (_appPluginsSdk) {
-      /* eslint import/no-extraneous-dependencies: 0 */
       loadPluginCss = _appPluginsSdk.loadPluginCss;
     }, function (_worldmap_ctrl) {
       WorldmapCtrl = _worldmap_ctrl.default;
     }],
     execute: function () {
-
+      /* eslint import/no-extraneous-dependencies: 0 */
       loadPluginCss({
         dark: 'plugins/grafana-worldmap-panel/css/worldmap.dark.css',
         light: 'plugins/grafana-worldmap-panel/css/worldmap.light.css'

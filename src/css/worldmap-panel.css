@@ -14,6 +14,12 @@
 .legend {
   line-height: 18px;
   color: #555;
+  display: flex;
+  flex-direction: column;
+}
+
+.legend-item {
+  white-space: nowrap;
 }
 .legend i {
   width: 18px;

@@ -9,7 +9,7 @@
     "lint:watch": "onchange 'src/**/*.js' -- npm run lint",
     "build": "grunt",
     "prebuild": "npm run lint && npm run clean",
-    "build:watch": "onchange 'src/**/*.js' 'plugin.json' -- npm run build",
+    "build:watch": "onchange './src/**/*.js' './src/plugin.json' -- npm run build",
     "test:watch": "karma start",
     "test": "karma start --single-run"
   },
@@ -47,7 +47,7 @@
     "karma-systemjs": "^0.15.0",
     "load-grunt-tasks": "^3.5.2",
     "mocha": "^3.1.0",
-    "onchange": "^3.0.2",
+    "onchange": "^3.2.1",
     "systemjs": "^0.19.24"
   },
   "dependencies": {
