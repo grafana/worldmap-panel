@@ -197,6 +197,32 @@ System.register(['lodash', './geohash'], function (_export, _context) {
               data.valueRange = highestValue - lowestValue;
             }
           }
+        }, {
+          key: 'setJsonValues',
+          value: function setJsonValues(data) {
+            if (this.ctrl.series && this.ctrl.series.length > 0) {
+              var highestValue = 0;
+              var lowestValue = Number.MAX_VALUE;
+
+              this.ctrl.series.forEach(function (point) {
+                var dataValue = {
+                  key: point.key,
+                  locationName: point.name,
+                  locationLatitude: point.latitude,
+                  locationLongitude: point.longitude,
+                  value: point.value !== undefined ? point.value : 1,
+                  valueRounded: 0
+                };
+                if (dataValue.value > highestValue) highestValue = dataValue.value;
+                if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+                dataValue.valueRounded = Math.round(dataValue.value);
+                data.push(dataValue);
+              });
+              data.highestValue = highestValue;
+              data.lowestValue = lowestValue;
+              data.valueRange = highestValue - lowestValue;
+            }
+          }
         }], [{
           key: 'tableHandler',
           value: function tableHandler(tableData) {
