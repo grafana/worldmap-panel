@@ -19,7 +19,7 @@
     "plugin",
     "panel"
   ],
-  "author": "Raintank",
+  "author": "Grafana Labs",
   "license": "MIT",
   "devDependencies": {
     "babel": "~6.5.1",
@@ -47,7 +47,8 @@
     "karma-systemjs": "^0.15.0",
     "load-grunt-tasks": "^3.5.2",
     "mocha": "^3.1.0",
-    "onchange": "^3.0.2"
+    "onchange": "^3.0.2",
+    "systemjs": "^0.19.24"
   },
   "dependencies": {
     "es6-module-loader": "^0.17.11",
