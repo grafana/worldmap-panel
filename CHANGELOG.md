@@ -92,3 +92,4 @@ Small fixes.
  - Fix for using floats in thresholds [#79](https://github.com/grafana/worldmap-panel/issues/79), thanks [@fabienpomerol](https://github.com/fabienpomerol)
  - Fix for newly created Worldmap panels overflowing their boundaries.
  - Fix for legend css
+ - Turned off mouse wheel zoom
