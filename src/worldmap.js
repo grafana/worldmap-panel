@@ -12,8 +12,9 @@ export default class WorldMap {
   constructor(ctrl, mapContainer) {
     this.ctrl = ctrl;
     this.mapContainer = mapContainer;
-    this.createMap();
     this.circles = [];
+
+    return this.createMap();
   }
 
   createMap() {

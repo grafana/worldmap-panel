@@ -9,7 +9,7 @@
     "lint:watch": "onchange 'src/**/*.js' -- npm run lint",
     "build": "grunt",
     "prebuild": "npm run lint && npm run clean",
-    "build:watch": "onchange './src/**/*.js' './src/plugin.json' -- npm run build",
+    "build:watch": "onchange './src/**/*.js' './src/**/*.css' './src/**/*.html' './src/plugin.json' -- npm run build",
     "test:watch": "karma start",
     "test": "karma start --single-run"
   },

@@ -47,8 +47,9 @@ System.register(['lodash', './libs/leaflet'], function (_export, _context) {
 
           this.ctrl = ctrl;
           this.mapContainer = mapContainer;
-          this.createMap();
           this.circles = [];
+
+          return this.createMap();
         }
 
         _createClass(WorldMap, [{
