@@ -143,11 +143,11 @@ export default class DataFormatter {
       let lowestValue = Number.MAX_VALUE;
 
       tableData[0].forEach((datapoint) => {
-        if (!datapoint.geohash) {
+        if (!datapoint[this.ctrl.panel.tableGeohash]) {
           return;
         }
 
-        const encodedGeohash = datapoint.geohash;
+        const encodedGeohash = datapoint[this.ctrl.panel.tableGeohash];
         const decodedGeohash = decodeGeoHash(encodedGeohash);
 
         const dataValue = {
