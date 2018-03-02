@@ -58,6 +58,10 @@
 			<label class="gf-form-label width-12">Table Label Field</label>
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableLabel" ng-change="ctrl.refresh()" ng-model-onblur />
 		</div>
+		<div class="gf-form" ng-show="ctrl.panel.locationData === 'table'">
+			<label class="gf-form-label width-12">Geohash Field</label>
+			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableGeohash" ng-change="ctrl.refresh()" ng-model-onblur />
+		</div>
 		<div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
 			<label class="gf-form-label width-12">ES Metric Field</label>
 			<input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esMetric" ng-change="ctrl.refresh()" ng-model-onblur />

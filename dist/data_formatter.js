@@ -168,11 +168,11 @@ System.register(['lodash', './geohash'], function (_export, _context) {
               var lowestValue = Number.MAX_VALUE;
 
               tableData[0].forEach(function (datapoint) {
-                if (!datapoint.geohash) {
+                if (!datapoint[_this3.ctrl.panel.tableGeohash]) {
                   return;
                 }
 
-                var encodedGeohash = datapoint.geohash;
+                var encodedGeohash = datapoint[_this3.ctrl.panel.tableGeohash];
                 var decodedGeohash = decodeGeoHash(encodedGeohash);
 
                 var dataValue = {

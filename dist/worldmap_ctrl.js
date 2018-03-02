@@ -87,7 +87,8 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         decimals: 0,
         hideEmpty: false,
         hideZero: false,
-        stickyLabels: false
+        stickyLabels: false,
+        tableGeohash: 'geohash'
       };
       mapCenters = {
         '(0°, 0°)': { mapCenterLatitude: 0, mapCenterLongitude: 0 },
