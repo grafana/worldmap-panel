@@ -165,6 +165,7 @@ export default class WorldMap {
           location: dataPoint.key,
         });
         circle.unbindPopup();
+        this.createClickthrough(circle, dataPoint.key);
         this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
       }
     });
@@ -179,6 +180,7 @@ export default class WorldMap {
       location: dataPoint.key,
     });
 
+    this.createClickthrough(circle, dataPoint.key);
     this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
     return circle;
   }
@@ -217,6 +219,15 @@ export default class WorldMap {
     if (!this.ctrl.panel.stickyLabels) {
       circle.on('mouseout', function onMouseOut() {
         circle.closePopup();
+      });
+    }
+  }
+
+  createClickthrough(circle, key) {
+    if (this.ctrl.panel.clickthroughURL) {
+      const newURL = this.ctrl.panel.clickthroughURL.replace('$country', key);
+      circle.on('click', function onClick(evt) {
+        window.location.assign(newURL);
       });
     }
   }
