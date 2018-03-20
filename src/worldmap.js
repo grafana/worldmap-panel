@@ -183,7 +183,7 @@ export default class WorldMap {
   }
 
   removeLegend() {
-    this.legend.removeFrom(this.map);
+    this.legend.remove(this.map);
     this.legend = null;
   }
 
