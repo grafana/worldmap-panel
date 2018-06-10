@@ -5,6 +5,63 @@ describe('DataFormatter', () => {
   let dataFormatter;
   let formattedData = [];
 
+  describe('when latitude and longitude are given in table data', () => {
+    beforeEach(() => {
+      const ctrl = {
+        panel: {}
+      };
+      dataFormatter = new DataFormatter(ctrl, {roundValue: () => {}});
+    });
+
+    it('should use latitude and longitude if no geohash is given', () => {
+      const tableData = [
+        [
+          {
+            latitude: 1,
+            longitude: 2
+          },
+          {
+            latitude: 3,
+            longitude: 4
+          }
+        ]
+      ];
+      const data = [];
+
+      dataFormatter.setTableValues(tableData, data);
+
+      expect(data[0].locationLatitude).to.equal(1);
+      expect(data[0].locationLongitude).to.equal(2);
+      expect(data[1].locationLatitude).to.equal(3);
+      expect(data[1].locationLongitude).to.equal(4);
+    });
+
+    it('should prefer geohash if given', () => {
+      const tableData = [
+        [
+          {
+            latitude: 1,
+            longitude: 2,
+            geohash: 'stq4s3x' // 29.9796, 31.1345
+          },
+          {
+            latitude: 3,
+            longitude: 4,
+            geohash: 'p05010r' // -89.997, 139.273
+          }
+        ]
+      ];
+      const data = [];
+
+      dataFormatter.setTableValues(tableData, data);
+
+      expect(data[0].locationLatitude).to.be.within(29.9796, 29.9797);
+      expect(data[0].locationLongitude).to.be.within(31.1345, 31.1346);
+      expect(data[1].locationLatitude).to.be.within(-89.998, -89.997);
+      expect(data[1].locationLongitude).to.be.within(139.272, 139.273);
+    });
+  });
+
   describe('when the time series data matches the location', () => {
     beforeEach(() => {
       const ctrl = {
