@@ -36,3 +36,7 @@
 .leaflet-top.leaflet-left, .leaflet-bottom.leaflet-left, .leaflet-bottom.leaflet-right {
   z-index: 1000;
 }
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  color: #d8d9da !important;
+}
