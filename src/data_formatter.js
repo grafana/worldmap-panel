@@ -143,18 +143,25 @@ export default class DataFormatter {
       let lowestValue = Number.MAX_VALUE;
 
       tableData[0].forEach((datapoint) => {
-        if (!datapoint.geohash) {
-          return;
+        let latitude = datapoint.latitude;
+        let longitude = datapoint.longitude;
+        let key = `${latitude}_${longitude}`;
+
+        if (datapoint.geohash) {
+          const encodedGeohash = datapoint.geohash;
+          const decodedGeohash = decodeGeoHash(encodedGeohash);
+
+          latitude = decodedGeohash.latitude;
+          longitude = decodedGeohash.longitude;
+
+          key = encodedGeohash;
         }
 
-        const encodedGeohash = datapoint.geohash;
-        const decodedGeohash = decodeGeoHash(encodedGeohash);
-
         const dataValue = {
-          key: encodedGeohash,
+          key: key,
           locationName: datapoint[this.ctrl.panel.tableLabel] || 'n/a',
-          locationLatitude: decodedGeohash.latitude,
-          locationLongitude: decodedGeohash.longitude,
+          locationLatitude: latitude,
+          locationLongitude: longitude,
           value: datapoint.metric,
           valueFormatted: datapoint.metric,
           valueRounded: 0
@@ -198,4 +205,3 @@ export default class DataFormatter {
     }
   }
 }
-
