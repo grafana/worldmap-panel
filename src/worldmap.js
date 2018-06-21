@@ -23,7 +23,7 @@ export default class WorldMap {
       .fitWorld()
       .zoomIn(parseInt(this.ctrl.panel.initialZoom, 10));
     this.map.panTo(mapCenter);
-    this.map.scrollWheelZoom.disable();
+    this.setMouseWheelZoom();
 
     const selectedTileServer = tileServers[this.ctrl.tileServer];
     window.L.tileLayer(selectedTileServer.url, {
@@ -185,6 +185,14 @@ export default class WorldMap {
   removeLegend() {
     this.legend.removeFrom(this.map);
     this.legend = null;
+  }
+
+  setMouseWheelZoom() {
+    if (!this.ctrl.panel.mouseWheelZoom) {
+      this.map.scrollWheelZoom.disable();
+    } else {
+      this.map.scrollWheelZoom.enable();
+    }
   }
 
   addCircles(circles) {
