@@ -34,5 +34,5 @@
 }
 
 .leaflet-top.leaflet-left, .leaflet-bottom.leaflet-left, .leaflet-bottom.leaflet-right {
-  z-index: 100;
+  z-index: 1000;
 }
