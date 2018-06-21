@@ -168,18 +168,25 @@ System.register(['lodash', './geohash'], function (_export, _context) {
               var lowestValue = Number.MAX_VALUE;
 
               tableData[0].forEach(function (datapoint) {
-                if (!datapoint.geohash) {
-                  return;
+                var latitude = datapoint.latitude;
+                var longitude = datapoint.longitude;
+                var key = latitude + '_' + longitude;
+
+                if (datapoint.geohash) {
+                  var encodedGeohash = datapoint.geohash;
+                  var decodedGeohash = decodeGeoHash(encodedGeohash);
+
+                  latitude = decodedGeohash.latitude;
+                  longitude = decodedGeohash.longitude;
+
+                  key = encodedGeohash;
                 }
 
-                var encodedGeohash = datapoint.geohash;
-                var decodedGeohash = decodeGeoHash(encodedGeohash);
-
                 var dataValue = {
-                  key: encodedGeohash,
+                  key: key,
                   locationName: datapoint[_this3.ctrl.panel.tableLabel] || 'n/a',
-                  locationLatitude: decodedGeohash.latitude,
-                  locationLongitude: decodedGeohash.longitude,
+                  locationLatitude: latitude,
+                  locationLongitude: longitude,
                   value: datapoint.metric,
                   valueFormatted: datapoint.metric,
                   valueRounded: 0
