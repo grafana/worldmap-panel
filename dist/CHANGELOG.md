@@ -88,8 +88,13 @@ Small fixes.
 
 ## v0.0.21
 
- - Support for new data source integration, the Dynamic JSON endpoint [#103](https://github.com/grafana/worldmap-panel/issues/103), thanks [@LostInBrittany](https://github.com/LostInBrittany)
- - Fix for using floats in thresholds [#79](https://github.com/grafana/worldmap-panel/issues/79), thanks [@fabienpomerol](https://github.com/fabienpomerol)
- - Fix for newly created Worldmap panels overflowing their boundaries.
- - Fix for legend css
- - Turned off mouse wheel zoom
+- Support for new data source integration, the Dynamic JSON endpoint [#103](https://github.com/grafana/worldmap-panel/issues/103), thanks [@LostInBrittany](https://github.com/LostInBrittany)
+- Fix for using floats in thresholds [#79](https://github.com/grafana/worldmap-panel/issues/79), thanks [@fabienpomerol](https://github.com/fabienpomerol)
+- Fix for newly created Worldmap panels overflowing their boundaries.
+- Fix for legend css
+- Turned off mouse wheel zoom
+
+## v0.1.0
+
+- Configuration option for turning mouse wheel zoom on or off. [#140](https://github.com/grafana/worldmap-panel/issues/140) Thanks [@Perlovka](https://github.com/Perlovka)
+- Upgrade to Leaflet JS [#132](https://github.com/grafana/worldmap-panel/pull/132) Thanks [@cbarbier](https://github.com/cbarbier)  
