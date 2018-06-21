@@ -23,7 +23,7 @@ const panelDefaults = {
   unitSingle: '',
   unitPlural: '',
   showLegend: true,
-  mouseWheelZoom: true,
+  mouseWheelZoom: false,
   esMetric: 'Count',
   decimals: 0,
   hideEmpty: false,
