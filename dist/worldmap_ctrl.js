@@ -83,6 +83,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         unitSingle: '',
         unitPlural: '',
         showLegend: true,
+        mouseWheelZoom: true,
         esMetric: 'Count',
         decimals: 0,
         hideEmpty: false,
@@ -267,6 +268,12 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
             if (!this.panel.showLegend) {
               this.map.removeLegend();
             }
+            this.render();
+          }
+        }, {
+          key: 'toggleMouseWheelZoom',
+          value: function toggleMouseWheelZoom() {
+            this.map.setMouseWheelZoom();
             this.render();
           }
         }, {
