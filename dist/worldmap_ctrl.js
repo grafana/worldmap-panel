@@ -83,7 +83,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         unitSingle: '',
         unitPlural: '',
         showLegend: true,
-        mouseWheelZoom: true,
+        mouseWheelZoom: false,
         esMetric: 'Count',
         decimals: 0,
         hideEmpty: false,
