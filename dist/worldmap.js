@@ -241,7 +241,7 @@ System.register(['lodash', './libs/leaflet'], function (_export, _context) {
         }, {
           key: 'removeLegend',
           value: function removeLegend() {
-            this.legend.removeFrom(this.map);
+            this.legend.remove(this.map);
             this.legend = null;
           }
         }, {
