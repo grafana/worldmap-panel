@@ -1,10 +1,85 @@
-## Worldmap Panel Plugin for Grafana
+# Worldmap Panel Plugin for Grafana
 
-The Worldmap Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or Table Data.
+The Worldmap Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or data in the Table format.
 
 ![Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-world.png)
 
-There are currently two ways to connect data with points on a map. Either by matching a tag or series name to a country code/state code (e.g. SE for Sweden, TX for Texas) or by using geohashes to map against geographic coordinates.
+## How The Worldmap Works (Theory and Examples)
+
+The Worldmap panel needs two sources of data:
+
+- a location (latitude and longitude)
+- data that has a link to a location
+
+The data comes from a database query: Prometheus, InfluxDB, Graphite, Elasticsearch, MySQL etc. It can be in the Time Series format or in the Table format.
+
+### Time Series Format
+
+If it is in the **Time Series format** then the metric name needs to match a key from a list of locations. That key is usually a country code or city name. The list of locations can come from a file or an HTTP endpoint.
+
+The list of locations can be provided in several ways:
+
+- json files with locations and their coordinates (the plugin includes list for countries and US states)
+- json endpoints that return a list of locations and their coordinates
+
+Time Series data contains a timestamp, a metric name and a numeric value. In other words, a typical query for a time series database. Here is some time series data from Graphite:
+
+```json
+[
+  {"target": "SE", "datapoints": [[183255.0, 1529755200]]},
+  {"target": "US", "datapoints": [[192224.0, 1529755200]]}
+]
+```
+
+Location data should be in the JSON format and should be an array of JSON objects with four properties:
+
+```json
+[
+  {
+    "key": "SE",
+    "latitude": 60.128161,
+    "longitude": 18.643501,
+    "name": "Sweden"
+  },
+  {
+    "key": "US",
+    "latitude": 37.09024,
+    "longitude": -95.712891,
+    "name": "United States"
+  }
+]
+```
+
+The Worldmap will then match the metric name (target in the example data) with a key field from the location data. With this example data there will be two circles drawn on the map, one for Sweden and one for the United States with values 183255 and 192224.
+
+### Table Format
+
+If the data is in the **Table format** then it should have a column that is a geohash or two columns that contain the latitude and longitude (together with the columns for the data).
+
+Table data is tabular data with columns and rows. Here is an example of Table data from InfluxDB:
+
+```json
+"series": [
+  {
+    "name": "logins.count",
+    "tags": {
+      "geohash": "9wvfgzurfzb"
+    },
+    "columns": [
+      "time",
+      "metric"
+    ],
+    "values": [
+      [
+        1529762933815,
+        75.654324173059
+      ]
+    ]
+  }
+]
+```
+
+This query contains both data (the value `75.654324173059`) and a location (the geohash `9wvfgzurfzb` which is in Colorado). So using these, the Worldmap panel will draw one circle in Colorado, USA with the value 75.654324173059.
 
 ## Time Series Data as the Data Source
 
@@ -14,29 +89,41 @@ Supported Databases:
 - InfluxDB
 - OpenTSDB
 - Prometheus
+- MySQL
+- Postgres
+- MSSQL
 - Elasticsearch
 
-Included location data:
+The following location files are included in the plugin:
 
 - Countries (2 letter codes)
 - Countries (3 letter codes)
 - US states
 
-This works by matching country codes (like US or GB or FR) or US state codes (TX or NY) to a node or a wildcard in a metric namespace. If there is a match in the list of countries or states then a circle will be drawn at the location.
+Alternatively, you can provide your own location lists by using:
+
+- A JSON endpoint that returns a list of locations
+- A JSONP endpoint that returns a list of locations
+
+This works by matching country codes (like US or GB or FR) or US state codes (TX or NY) to a metric name. If a metric name matches a country in the list of countries then a circle will be drawn at that location.
 
 If you want to match to other data than countries or states, then you will have to provide custom location data. The current way to do that is via a JSON endpoint that returns a json file with location data (See Map Data Options)
 
 The size of the circle depends on the value of the matched metric. Circle size is relative e.g. if you have 3 countries with values 1, 2 and 3 or 100, 200 and 300 then you will get one small circle, one medium circle and one large circle.
 
-#### Query Examples
+### Time Series - Graphite and InfluxDB
 
-#### Graphite Query for Countries
+Here are some examples of Time Series Queries
+
+#### Graphite Query
 
 Use the aliasByNode function to point to the field containing the country code. See the image below for an example of a graphite query.
 
 ![Graphite Query for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/worldmap-timeseries-query.png)
 
-#### Influx Query for Countries
+Example dashboard for Worldmap with Graphite queries on [the Grafana play site](http://localhost:3000/d/000000003/worldmap-panels?panelId=8&fullscreen&edit&orgId=1).
+
+#### InfluxDB Query
 
 The Group By clause should be the country code and an alias is needed too. The alias should be in the form `$tag_<field name>`.
 
@@ -52,7 +139,7 @@ Use a Group By clause on the field containing the country code and a Then by cla
 
 Under the Worldmap tab, choose either the `countries` or `states` option.
 
-![Worldmap Options for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/countries-option.png)
+![Worldmap Options for Countries](/src/images/countries-option.png)
 
 Using a JSON endpoint to return a custom list of locations:
 
@@ -84,7 +171,6 @@ Three fields need to be provided by the ElasticSearch query:
 
 ![Elasticsearch Query for Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/es-options.png)
 
-
 ## Table Data as the Data Source
 
 Supported Databases:
@@ -103,39 +189,11 @@ Similar to the Elasticsearch query above, 3 fields are expected (2 of them are m
 
 ## JSON result as the Data Source
 
-
-Supported Databases: 
+Supported Databases:
 
 - Warp&nbsp;10 via [grafana-warp10-datasource](https://github.com/cityzendata/grafana-warp10) plugin  
 
 It supports any datasource capable of generating a JSON response with a  a custom list of locations (the same format that for the JSON enpoint).
-
-### Map Visual Option Settings
-
-**Center**
-
-This settings configures the default center of the map. There are 5 centers to choose from or you can choose a custom center or last GeoHash center..For a custom center there are two fields: latitude and longitude. Examples of values are 37.09024, -95.712891 for the center of the US or 55.378051, -3.435973 for Great Britain. Last GeoHash center will centered the map on the last GeoHash received from the data.
-
-
-**Initial Zoom**
-
-The initial zoom factor for the map. This is a value between 1 and 18 where 1 is the most zoomed out.
-
-**Min Circle Size**
-
-This is minimum size for a circle in pixels.
-
-**Max Circle Size**
-
-This is the maximum size for a circle in pixels. Depending on the zoom level you might want a larger or smaller max circle size to avoid overlapping.
-
-**Unit**
-
-The Unit is shown in the popover when you hover over a circle. There are two fields the singular form and the plural form. E.g. visit/visits or error/errors
-
-**Show Legend**
-
-Shows/hide the legend on the bottom left that shows the threshold ranges and their associated colors.
 
 ### Map Data Options
 
@@ -167,6 +225,32 @@ Three fields need to be provided by the ElasticSearch query. They are text field
 - Metric is one of Count, Average, Sum etc.
 - Location Name is the field that gives the circle a name. If it is blank, then the geohash value is shown in the popover instead of the location.
 - geo_point is the GeoHashGrid field that provides the geohash value.
+
+### Map Visual Option Settings
+
+**Center**
+
+This settings configures the default center of the map. There are 5 centers to choose from or you can choose a custom center or last GeoHash center..For a custom center there are two fields: latitude and longitude. Examples of values are 37.09024, -95.712891 for the center of the US or 55.378051, -3.435973 for Great Britain. Last GeoHash center will centered the map on the last GeoHash received from the data.
+
+**Initial Zoom**
+
+The initial zoom factor for the map. This is a value between 1 and 18 where 1 is the most zoomed out.
+
+**Min Circle Size**
+
+This is minimum size for a circle in pixels.
+
+**Max Circle Size**
+
+This is the maximum size for a circle in pixels. Depending on the zoom level you might want a larger or smaller max circle size to avoid overlapping.
+
+**Unit**
+
+The Unit is shown in the popover when you hover over a circle. There are two fields the singular form and the plural form. E.g. visit/visits or error/errors
+
+**Show Legend**
+
+Shows/hide the legend on the bottom left that shows the threshold ranges and their associated colors.
 
 ### Threshold Options
 
