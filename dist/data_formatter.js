@@ -172,8 +172,8 @@ System.register(['lodash', './geohash'], function (_export, _context) {
                 var longitude = datapoint.longitude;
                 var key = latitude + '_' + longitude;
 
-                if (datapoint.geohash) {
-                  var encodedGeohash = datapoint.geohash;
+                if (datapoint[_this3.ctrl.panel.tableGeohash]) {
+                  var encodedGeohash = datapoint[_this3.ctrl.panel.tableGeohash];
                   var decodedGeohash = decodeGeoHash(encodedGeohash);
 
                   latitude = decodedGeohash.latitude;

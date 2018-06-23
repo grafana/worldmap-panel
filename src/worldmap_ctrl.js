@@ -28,7 +28,8 @@ const panelDefaults = {
   decimals: 0,
   hideEmpty: false,
   hideZero: false,
-  stickyLabels: false
+  stickyLabels: false,
+  tableGeohash: 'geohash'
 };
 
 const mapCenters = {

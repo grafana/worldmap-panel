@@ -147,8 +147,8 @@ export default class DataFormatter {
         let longitude = datapoint.longitude;
         let key = `${latitude}_${longitude}`;
 
-        if (datapoint.geohash) {
-          const encodedGeohash = datapoint.geohash;
+        if (datapoint[this.ctrl.panel.tableGeohash]) {
+          const encodedGeohash = datapoint[this.ctrl.panel.tableGeohash];
           const decodedGeohash = decodeGeoHash(encodedGeohash);
 
           latitude = decodedGeohash.latitude;
@@ -156,6 +156,7 @@ export default class DataFormatter {
 
           key = encodedGeohash;
         }
+
 
         const dataValue = {
           key: key,
