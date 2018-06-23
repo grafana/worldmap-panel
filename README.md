@@ -14,6 +14,7 @@ Supported Databases:
 - InfluxDB
 - OpenTSDB
 - Prometheus
+- Elasticsearch
 
 Included location data:
 
@@ -40,6 +41,12 @@ Use the aliasByNode function to point to the field containing the country code. 
 The Group By clause should be the country code and an alias is needed too. The alias should be in the form `$tag_<field name>`.
 
 ![Influx Query for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/influx-query.png)
+
+#### Elasticseach Query for Countries
+
+Use a Group By clause on the field containing the country code and a Then by clause with Date Histogram by `@timestamp` (or corresponding date field).
+
+![Elasticsearch Query for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/elasticsearch-query.png)
 
 #### Map Data Options for Time Series Data
 
