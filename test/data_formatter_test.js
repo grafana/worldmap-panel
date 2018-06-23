@@ -8,7 +8,9 @@ describe('DataFormatter', () => {
   describe('when latitude and longitude are given in table data', () => {
     beforeEach(() => {
       const ctrl = {
-        panel: {}
+        panel: {
+          tableGeohash: 'geohash'
+        }
       };
       dataFormatter = new DataFormatter(ctrl, {roundValue: () => {}});
     });
