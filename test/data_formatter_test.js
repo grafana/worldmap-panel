@@ -5,17 +5,21 @@ describe('DataFormatter', () => {
   let dataFormatter;
   let formattedData = [];
 
-  describe('when latitude and longitude are given in table data', () => {
+  describe('when latitude and longitude are given in table data and query type is coordinates', () => {
     beforeEach(() => {
       const ctrl = {
         panel: {
-          tableGeohash: 'geohash'
+          tableQueryOptions: {
+            queryType: 'coordinates',
+            latitudeField: 'latitude',
+            longitudeField: 'longitude'
+          }
         }
       };
       dataFormatter = new DataFormatter(ctrl, {roundValue: () => {}});
     });
 
-    it('should use latitude and longitude if no geohash is given', () => {
+    it('should use latitude and longitude coordinates', () => {
       const tableData = [
         [
           {
@@ -38,7 +42,22 @@ describe('DataFormatter', () => {
       expect(data[1].locationLongitude).to.equal(4);
     });
 
-    it('should prefer geohash if given', () => {
+  });
+  describe('when geohash in table data and query type is geohash', () => {
+
+    beforeEach(() => {
+      const ctrl = {
+        panel: {
+          tableQueryOptions: {
+            queryType: 'geohash',
+            geohashField: 'geohash',
+          }
+        }
+      };
+      dataFormatter = new DataFormatter(ctrl, {roundValue: () => {}});
+    });
+
+    it('should use the geohash field for the query', () => {
       const tableData = [
         [
           {

@@ -168,27 +168,30 @@ System.register(['lodash', './geohash'], function (_export, _context) {
               var lowestValue = Number.MAX_VALUE;
 
               tableData[0].forEach(function (datapoint) {
-                var latitude = datapoint.latitude;
-                var longitude = datapoint.longitude;
-                var key = latitude + '_' + longitude;
+                var key = void 0;
+                var longitude = void 0;
+                var latitude = void 0;
 
-                if (datapoint[_this3.ctrl.panel.tableGeohash]) {
-                  var encodedGeohash = datapoint[_this3.ctrl.panel.tableGeohash];
+                if (_this3.ctrl.panel.tableQueryOptions.queryType === 'geohash') {
+                  var encodedGeohash = datapoint[_this3.ctrl.panel.tableQueryOptions.geohashField];
                   var decodedGeohash = decodeGeoHash(encodedGeohash);
 
                   latitude = decodedGeohash.latitude;
                   longitude = decodedGeohash.longitude;
-
                   key = encodedGeohash;
+                } else {
+                  latitude = datapoint[_this3.ctrl.panel.tableQueryOptions.latitudeField];
+                  longitude = datapoint[_this3.ctrl.panel.tableQueryOptions.longitudeField];
+                  key = latitude + '_' + longitude;
                 }
 
                 var dataValue = {
                   key: key,
-                  locationName: datapoint[_this3.ctrl.panel.tableLabel] || 'n/a',
+                  locationName: datapoint[_this3.ctrl.panel.tableQueryOptions.labelField] || 'n/a',
                   locationLatitude: latitude,
                   locationLongitude: longitude,
-                  value: datapoint.metric,
-                  valueFormatted: datapoint.metric,
+                  value: datapoint[_this3.ctrl.panel.tableQueryOptions.metricField],
+                  valueFormatted: datapoint[_this3.ctrl.panel.tableQueryOptions.metricField],
                   valueRounded: 0
                 };
 

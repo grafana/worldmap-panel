@@ -29,7 +29,14 @@ const panelDefaults = {
   hideEmpty: false,
   hideZero: false,
   stickyLabels: false,
-  tableGeohash: 'geohash'
+  tableQueryOptions: {
+    queryType: 'geohash',
+    geohashField: 'geohash',
+    latitudeField: 'latitude',
+    longitudeField: 'longitude',
+    metricField: 'metric'
+  }
+
 };
 
 const mapCenters = {
@@ -111,6 +118,14 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   reloadLocations(res) {
     this.locations = res;
     this.refresh();
+  }
+
+  showTableGeohashOptions() {
+    return this.panel.locationData === 'table' && this.panel.tableQueryOptions.queryType === 'geohash';
+  }
+
+  showTableCoordinateOptions() {
+    return this.panel.locationData === 'table' && this.panel.tableQueryOptions.queryType === 'coordinates';
   }
 
   onPanelTeardown() {
