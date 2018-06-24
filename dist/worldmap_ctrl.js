@@ -89,7 +89,14 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         hideEmpty: false,
         hideZero: false,
         stickyLabels: false,
-        tableGeohash: 'geohash'
+        tableQueryOptions: {
+          queryType: 'geohash',
+          geohashField: 'geohash',
+          latitudeField: 'latitude',
+          longitudeField: 'longitude',
+          metricField: 'metric'
+        }
+
       };
       mapCenters = {
         '(0°, 0°)': { mapCenterLatitude: 0, mapCenterLongitude: 0 },
@@ -181,6 +188,16 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
           value: function reloadLocations(res) {
             this.locations = res;
             this.refresh();
+          }
+        }, {
+          key: 'showTableGeohashOptions',
+          value: function showTableGeohashOptions() {
+            return this.panel.locationData === 'table' && this.panel.tableQueryOptions.queryType === 'geohash';
+          }
+        }, {
+          key: 'showTableCoordinateOptions',
+          value: function showTableCoordinateOptions() {
+            return this.panel.locationData === 'table' && this.panel.tableQueryOptions.queryType === 'coordinates';
           }
         }, {
           key: 'onPanelTeardown',

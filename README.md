@@ -129,7 +129,7 @@ The Group By clause should be the country code and an alias is needed too. The a
 
 ![Influx Query for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/influx-query.png)
 
-#### Elasticseach Query for Countries
+#### Elasticsearch Query for Countries
 
 Use a Group By clause on the field containing the country code and a Then by clause with Date Histogram by `@timestamp` (or corresponding date field).
 
@@ -139,7 +139,7 @@ Use a Group By clause on the field containing the country code and a Then by cla
 
 Under the Worldmap tab, choose either the `countries` or `states` option.
 
-![Worldmap Options for Countries](/src/images/countries-option.png)
+![Worldmap Options for Countries](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/countries-option.png)
 
 Using a JSON endpoint to return a custom list of locations:
 
@@ -176,16 +176,31 @@ Three fields need to be provided by the ElasticSearch query:
 Supported Databases:
 
 - InfluxDB
+- Elasticsearch
+- MySQL, Postgres, MSSQL
+- Any database that can return data in Table Format
 
-An example of Table Data would using InfluxDB and then formatting the data returned from the metric query as Table.
+If a datasource can return Table Data then on the Metrics tab in Grafana choose the `FORMAT AS` Table option.
+
+### Table Data with a Geohash Column
 
 Similar to the Elasticsearch query above, 3 fields are expected (2 of them are mandatory)
 
-- a field named *metric*
-- a geohash tag named *geohash*
-- an optional location name (shown in the mouse over). This location name has to be specified in the Worldmap settings tab too.
+- A *metric* field. This is used to give the circle a value and determines how large the circle is.
+- A *geohash* field. This is used to calculate where the circle should be drawn.
+- an optional location name field (shown in the mouse over). Used to label each circle on the map. If it is empty then the geohash value is used as the label.
+
+The field mappings have to be specified on the Worldmap settings tab.
 
 ![Example influxdb query](https://cloud.githubusercontent.com/assets/434655/16535977/8cd520be-3fec-11e6-8dc9-2ecf7b16ad5f.png)
+
+### Table Data with Latitude and Longitude Columns
+
+The Table Data format also works with two columns for latitude and longitude instead of a geohash column.
+
+- A *metric* field. This is used to give the circle a value and determines how large the circle is.
+- Latitude/Longitude Fields. These are used to calculate where the circle should be drawn.
+- an optional location name field (shown in the mouse over). Used to label each circle on the map. If it is empty then the geohash value is used as the label.
 
 ## JSON result as the Data Source
 
@@ -197,17 +212,18 @@ It supports any datasource capable of generating a JSON response with a  a custo
 
 ### Map Data Options
 
-**Location Data**
+#### Location Data
 
 There are four ways to provide data for the worldmap panel:
+
  - *countries*: This is a list of all the countries in the world. It works by matching a country code (US, FR, AU) to a node alias in a time series query.
  - *states*: Similar to countries but for the states in USA e.g. CA for California
  - *geohash*: An ElasticSearch query that returns geohashes.
  - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/grafana/worldmap-panel/blob/master/src/data/countries.json) or [this list of cities](https://github.com/grafana/worldmap-panel/blob/master/src/data/probes.json).
  - *jsonp*: A jsonp endpoint that returns custom json wrapped as jsonp. Use this if you are having problems with CORS.
- - *table*: This expects the metric query to return data points with a field named geohash. This field should contain a string in the [geohash form](https://www.elastic.co/guide/en/elasticsearch/guide/current/geohashes.html). For example: London -> "gcpvh3zgu992".
+ - *table*: This expects the metric query to return data points with a field named geohash or two fields/columns named `latitude` and `longitude`. This field should contain a string in the [geohash form](https://www.elastic.co/guide/en/elasticsearch/guide/current/geohashes.html). For example: London -> "gcpvh3zgu992".
 
-**Aggregation**
+#### Aggregation
 
 If you chose *countries* or *table* as the source of the location data then you can choose an aggregation here: avg, total etc.
 
@@ -219,10 +235,11 @@ Or just remove the 1 from the Max Data Point field and use the consolidation fun
 
 ![Graphite Max Data Points](https://raw.githubusercontent.com/grafana/worldmap-panel/master/src/images/graphite-maxdatapoints.png)
 
-**ES Metric/Location Name/geo_point Field**
+#### ES Metric/Location Name/geo_point Field
 
 Three fields need to be provided by the ElasticSearch query. They are text fields and should be the field names from the query under the Metrics tab.
-- Metric is one of Count, Average, Sum etc.
+
+- The Metric in Elasticsearch is one of `Count`, `Average`, `Sum` etc.
 - Location Name is the field that gives the circle a name. If it is blank, then the geohash value is shown in the popover instead of the location.
 - geo_point is the GeoHashGrid field that provides the geohash value.
 
