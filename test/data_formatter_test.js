@@ -41,10 +41,9 @@ describe('DataFormatter', () => {
       expect(data[1].locationLatitude).to.equal(3);
       expect(data[1].locationLongitude).to.equal(4);
     });
-
   });
-  describe('when geohash in table data and query type is geohash', () => {
 
+  describe('when geohash in table data and query type is geohash', () => {
     beforeEach(() => {
       const ctrl = {
         panel: {
