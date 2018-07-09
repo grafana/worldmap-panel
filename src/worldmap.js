@@ -19,10 +19,7 @@ export default class WorldMap {
 
   createMap() {
     const mapCenter = window.L.latLng(parseFloat(this.ctrl.panel.mapCenterLatitude), parseFloat(this.ctrl.panel.mapCenterLongitude));
-    this.map = window.L.map(this.mapContainer, {worldCopyJump: true, center: mapCenter})
-      .fitWorld()
-      .zoomIn(parseInt(this.ctrl.panel.initialZoom, 10));
-    this.map.panTo(mapCenter);
+    this.map = window.L.map(this.mapContainer, { worldCopyJump: true, center: mapCenter, zoom: (this.panel.initialZoom || 1) });
     this.setMouseWheelZoom();
 
     const selectedTileServer = tileServers[this.ctrl.tileServer];
