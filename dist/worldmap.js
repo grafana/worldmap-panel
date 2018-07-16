@@ -56,8 +56,7 @@ System.register(['lodash', './libs/leaflet'], function (_export, _context) {
           key: 'createMap',
           value: function createMap() {
             var mapCenter = window.L.latLng(parseFloat(this.ctrl.panel.mapCenterLatitude), parseFloat(this.ctrl.panel.mapCenterLongitude));
-            this.map = window.L.map(this.mapContainer, { worldCopyJump: true, center: mapCenter }).fitWorld().zoomIn(parseInt(this.ctrl.panel.initialZoom, 10));
-            this.map.panTo(mapCenter);
+            this.map = window.L.map(this.mapContainer, { worldCopyJump: true, center: mapCenter, zoom: parseInt(this.ctrl.panel.initialZoom, 10) || 1 });
             this.setMouseWheelZoom();
 
             var selectedTileServer = tileServers[this.ctrl.tileServer];
