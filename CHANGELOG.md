@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.2
+
+- Map centering ignores configured location [#149](https://github.com/grafana/worldmap-panel/issues/149) Thanks [@clompsy](https://github.com/clompsy)
+
 ## v0.1.1
 
 - New mapping option for table data that contains latitude and longitude columns. [#144](https://github.com/grafana/worldmap-panel/pull/144) Thanks [@kylios](https://github.com/kylios)
