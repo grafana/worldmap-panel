@@ -62,6 +62,7 @@ const mapCenters = {
   "SE Asia": { mapCenterLatitude: 10, mapCenterLongitude: 106, initialZoom: 4 },
   "Sweden": { mapCenterLatitude: 62.91154, mapCenterLongitude: 17.38539, initialZoom: 4 },
   "West Asia": { mapCenterLatitude: 26, mapCenterLongitude: 53, initialZoom: 4 },
+  "First GeoHash": { mapCenterLatitude: 0, mapCenterLongitude: 0 },
   "Last GeoHash": { mapCenterLatitude: 0, mapCenterLongitude: 0 },
 };
 
@@ -229,7 +230,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
     this.updateThresholdData();
 
-    if (this.data.length && this.settings.mapCenter === "Last GeoHash") {
+    if (this.data.length && (this.settings.mapCenter === "First GeoHash" || this.settings.mapCenter === "Last GeoHash")) {
       this.setNewMapCenter();
     } else {
       this.render();
@@ -264,6 +265,14 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       center = {
         mapCenterLatitude: this.settings.mapCenterLatitude,
         mapCenterLongitude: this.settings.mapCenterLongitude,
+        zoom: this.settings.initialZoom || 1,
+      }
+    } else if (this.settings.mapCenter == "First GeoHash") {
+      const first: any = _.first(this.data);
+      center = {
+        mapCenterLatitude: first.locationLatitude,
+        mapCenterLongitude: first.locationLongitude,
+        // TODO: Compute optimal zoom level here.
         zoom: this.settings.initialZoom || 1,
       }
     } else if (this.settings.mapCenter == "Last GeoHash") {
