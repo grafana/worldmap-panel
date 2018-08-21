@@ -48,6 +48,7 @@ const mapCenters = {
   Europe: { mapCenterLatitude: 46, mapCenterLongitude: 14 },
   "West Asia": { mapCenterLatitude: 26, mapCenterLongitude: 53 },
   "SE Asia": { mapCenterLatitude: 10, mapCenterLongitude: 106 },
+  'First GeoHash': {mapCenterLatitude: 0, mapCenterLongitude: 0},
   "Last GeoHash": { mapCenterLatitude: 0, mapCenterLongitude: 0 }
 };
 
@@ -206,9 +207,17 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
     if (this.data.length && this.panel.mapCenter === "Last GeoHash") {
       this.centerOnLastGeoHash();
+    } else if (this.data.length && this.panel.mapCenter === 'First GeoHash') {
+      this.centerOnFirstGeoHash();
     } else {
       this.render();
     }
+  }
+
+  centerOnFirstGeoHash() {
+    mapCenters[this.panel.mapCenter].mapCenterLatitude = _.first(this.data).locationLatitude;
+    mapCenters[this.panel.mapCenter].mapCenterLongitude = _.first(this.data).locationLongitude;
+    this.setNewMapCenter();
   }
 
   centerOnLastGeoHash() {

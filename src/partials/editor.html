@@ -4,7 +4,7 @@
     <div class="gf-form">
       <label class="gf-form-label width-10">Center</label>
       <div class="gf-form-select-wrapper max-width-10">
-        <select class="input-small gf-form-input" ng-model="ctrl.panel.mapCenter" ng-options="t for t in ['(0°, 0°)', 'North America', 'Europe', 'West Asia', 'SE Asia', 'custom', 'Last GeoHash']"
+          <select class="input-small gf-form-input" ng-model="ctrl.panel.mapCenter" ng-options="t for t in ['(0°, 0°)', 'North America', 'Europe', 'West Asia', 'SE Asia', 'custom', 'First GeoHash', 'Last GeoHash']"
           ng-change="ctrl.setNewMapCenter()"></select>
       </div>
       <div class="gf-form" ng-show="ctrl.panel.mapCenter === 'custom'">
