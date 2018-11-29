@@ -1,7 +1,6 @@
-/* global describe it beforeEach expect afterEach */
-
-import WorldMap from '../src/worldmap';
-import DataBuilder from './data_builder';
+import WorldMap from './worldmap';
+import DataBuilder from '../test/data_builder';
+import * as _ from 'lodash';
 
 describe('Worldmap', () => {
   let worldMap;
@@ -13,7 +12,7 @@ describe('Worldmap', () => {
 
   describe('when a Worldmap is created', () => {
     it('should add Leaflet to the map div', () => {
-      expect(document.getElementsByClassName('leaflet-container')[0]).to.not.be(null);
+      expect(document.getElementsByClassName('leaflet-container')[0]).not.toBe(null);
     });
   });
 
@@ -28,17 +27,17 @@ describe('Worldmap', () => {
     });
 
     it('should draw one circle on the map', () => {
-      expect(worldMap.circles.length).to.be(1);
-      expect(worldMap.circles[0]._latlng.lat).to.be(60);
-      expect(worldMap.circles[0]._latlng.lng).to.be(18);
+      expect(worldMap.circles.length).toBe(1);
+      expect(worldMap.circles[0]._latlng.lat).toBe(60);
+      expect(worldMap.circles[0]._latlng.lng).toBe(18);
     });
 
     it('should create a circle with max circle size', () => {
-      expect(worldMap.circles[0].options.radius).to.be(10);
+      expect(worldMap.circles[0].options.radius).toBe(10);
     });
 
     it('should create a circle popup with the data point value', () => {
-      expect(worldMap.circles[0]._popup._content).to.be('Sweden: 1');
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden: 1');
     });
   });
 
@@ -55,20 +54,20 @@ describe('Worldmap', () => {
     });
 
     it('should draw two circles on the map', () => {
-      expect(worldMap.circles.length).to.be(2);
+      expect(worldMap.circles.length).toBe(2);
     });
 
     it('should create a circle with min circle size for smallest value size', () => {
-      expect(worldMap.circles[0].options.radius).to.be(2);
+      expect(worldMap.circles[0].options.radius).toBe(2);
     });
 
     it('should create a circle with max circle size for largest value size', () => {
-      expect(worldMap.circles[1].options.radius).to.be(10);
+      expect(worldMap.circles[1].options.radius).toBe(10);
     });
 
     it('should create two circle popups with the data point values', () => {
-      expect(worldMap.circles[0]._popup._content).to.be('Sweden: 1');
-      expect(worldMap.circles[1]._popup._content).to.be('Ireland: 2');
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden: 1');
+      expect(worldMap.circles[1]._popup._content).toBe('Ireland: 2');
     });
   });
 
@@ -87,11 +86,11 @@ describe('Worldmap', () => {
     });
 
     it('should create a circle popup using the singular unit in the label', () => {
-      expect(worldMap.circles[0]._popup._content).to.be('Sweden: 1 error');
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden: 1 error');
     });
 
     it('should create a circle popup using the plural unit in the label', () => {
-      expect(worldMap.circles[1]._popup._content).to.be('Ireland: 2 errors');
+      expect(worldMap.circles[1]._popup._content).toBe('Ireland: 2 errors');
     });
   });
 
@@ -110,34 +109,34 @@ describe('Worldmap', () => {
     });
 
     it('should draw three circles on the map', () => {
-      expect(worldMap.circles.length).to.be(3);
+      expect(worldMap.circles.length).toBe(3);
     });
 
     it('should create a circle with min circle size for smallest value size', () => {
-      expect(worldMap.circles[0].options.radius).to.be(2);
+      expect(worldMap.circles[0].options.radius).toBe(2);
     });
 
     it('should create a circle with circle size 6 for mid value size', () => {
-      expect(worldMap.circles[1].options.radius).to.be(6);
+      expect(worldMap.circles[1].options.radius).toBe(6);
     });
 
     it('should create a circle with max circle size for largest value size', () => {
-      expect(worldMap.circles[2].options.radius).to.be(10);
+      expect(worldMap.circles[2].options.radius).toBe(10);
     });
 
     it('should set red color on values under threshold', () => {
-      expect(worldMap.circles[0].options.color).to.be('red');
+      expect(worldMap.circles[0].options.color).toBe('red');
     });
 
     it('should set blue color on values equal to or over threshold', () => {
-      expect(worldMap.circles[1].options.color).to.be('blue');
-      expect(worldMap.circles[2].options.color).to.be('blue');
+      expect(worldMap.circles[1].options.color).toBe('blue');
+      expect(worldMap.circles[2].options.color).toBe('blue');
     });
 
     it('should create three circle popups with the data point values', () => {
-      expect(worldMap.circles[0]._popup._content).to.be('Sweden: 1');
-      expect(worldMap.circles[1]._popup._content).to.be('Ireland: 2');
-      expect(worldMap.circles[2]._popup._content).to.be('United States: 3');
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden: 1');
+      expect(worldMap.circles[1]._popup._content).toBe('Ireland: 2');
+      expect(worldMap.circles[2]._popup._content).toBe('United States: 3');
     });
   });
 
@@ -155,7 +154,7 @@ describe('Worldmap', () => {
     });
 
     it('should draw three circles on the map', () => {
-      expect(worldMap.circles.length).to.be(2);
+      expect(worldMap.circles.length).toBe(2);
     });
   });
 
@@ -173,7 +172,7 @@ describe('Worldmap', () => {
     });
 
     it('should draw three circles on the map', () => {
-      expect(worldMap.circles.length).to.be(2);
+      expect(worldMap.circles.length).toBe(2);
     });
   });
 
@@ -204,18 +203,18 @@ describe('Worldmap', () => {
     });
 
     it('should create three circle popups with updated data', () => {
-      expect(worldMap.circles[0]._popup._content).to.be('Sweden: 3');
-      expect(worldMap.circles[1]._popup._content).to.be('Ireland: 2');
-      expect(worldMap.circles[2]._popup._content).to.be('United States: 1');
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden: 3');
+      expect(worldMap.circles[1]._popup._content).toBe('Ireland: 2');
+      expect(worldMap.circles[2]._popup._content).toBe('United States: 1');
     });
 
     it('should set red color on values under threshold', () => {
-      expect(worldMap.circles[2].options.color).to.be('red');
+      expect(worldMap.circles[2].options.color).toBe('red');
     });
 
     it('should set blue color on values equal to or over threshold', () => {
-      expect(worldMap.circles[0].options.color).to.be('blue');
-      expect(worldMap.circles[1].options.color).to.be('blue');
+      expect(worldMap.circles[0].options.color).toBe('blue');
+      expect(worldMap.circles[1].options.color).toBe('blue');
     });
   });
 
@@ -244,72 +243,79 @@ describe('Worldmap', () => {
     });
 
     it('should create one circle popups with updated data', () => {
-      expect(worldMap.circles[0]._popup._content).to.be('Sweden: 2');
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden: 2');
     });
 
     it('should set blue color on values equal to or over threshold', () => {
-      expect(worldMap.circles[0].options.color).to.be('blue');
+      expect(worldMap.circles[0].options.color).toBe('blue');
     });
   });
 
   describe('when one threshold is set', () => {
     beforeEach(() => {
-      ctrl.data = new DataBuilder()
-        .withThresholdValues([2])
-        .build();
+      ctrl.data = new DataBuilder().withThresholdValues([2]).build();
       worldMap.createLegend();
     });
 
     it('should create a legend with two legend values', () => {
-      expect(worldMap.legend).not.to.be.empty();
-      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><div class="legend-item"><i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2+</div></div>');
+      expect(worldMap.legend).toBeDefined();
+      expect(worldMap.legend._div.outerHTML).toBe(
+        '<div class="info legend leaflet-control">' +
+        '<div class="legend-item">' +
+        '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2+</div>' +
+        '</div>'
+      );
     });
   });
 
   describe('when legend removed', () => {
     beforeEach(() => {
-      ctrl.data = new DataBuilder()
-        .withThresholdValues([2])
-        .build();
+      ctrl.data = new DataBuilder().withThresholdValues([2]).build();
       worldMap.createLegend();
       worldMap.removeLegend();
     });
 
     it('should remove the legend from the worldmap', () => {
-      expect(worldMap.legend).to.be(null);
+      expect(worldMap.legend).toBe(null);
     });
   });
 
   describe('when two thresholds are set', () => {
     beforeEach(() => {
-      ctrl.data = new DataBuilder()
-        .withThresholdValues([2, 4])
-        .build();
+      ctrl.data = new DataBuilder().withThresholdValues([2, 4]).build();
       worldMap.createLegend();
     });
 
     it('should create a legend with three legend values', () => {
-      expect(worldMap.legend).not.to.be.empty();
-      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><div class="legend-item"><i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div><div class="legend-item"><i style="background:green"></i> 4+</div></div>');
+      expect(worldMap.legend).toBeDefined();
+      expect(worldMap.legend._div.outerHTML).toBe(
+        '<div class="info legend leaflet-control"><div class="legend-item">' +
+        '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
+        '<div class="legend-item"><i style="background:green"></i> 4+</div></div>'
+      );
     });
   });
 
   describe('when three thresholds are set', () => {
     beforeEach(() => {
-      ctrl.data = new DataBuilder()
-        .withThresholdValues([2, 4, 6])
-        .build();
+      ctrl.data = new DataBuilder().withThresholdValues([2, 4, 6]).build();
       worldMap.createLegend();
     });
 
     it('should create a legend with four legend values', () => {
-      expect(worldMap.legend).not.to.be.empty();
-      expect(worldMap.legend._div.outerHTML).to.be('<div class="info legend leaflet-control"><div class="legend-item"><i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div><div class="legend-item"><i style="background:green"></i> 4–6</div><div class="legend-item"><i style="background:undefined"></i> 6+</div></div>');
+      expect(worldMap.legend).toBeDefined();
+      expect(worldMap.legend._div.outerHTML).toBe(
+        '<div class="info legend leaflet-control"><div class="legend-item">' +
+        '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
+        '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
+        '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
+      );
     });
   });
 
   afterEach(() => {
-    document.body.removeChild(document.getElementById('fixture'));
+    const fixture: HTMLElement = document.getElementById('fixture')!;
+    document.body.removeChild(fixture);
   });
 
   function setupWorldmapFixture() {
@@ -321,10 +327,11 @@ describe('Worldmap', () => {
         mapCenterLatitude: 0,
         mapCenterLongitude: 0,
         initialZoom: 1,
-        colors: ['red', 'blue', 'green']
+        colors: ['red', 'blue', 'green'],
       },
-      tileServer: 'CartoDB Positron'
+      tileServer: 'CartoDB Positron',
     };
     worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
+    worldMap.createMap();
   }
 });

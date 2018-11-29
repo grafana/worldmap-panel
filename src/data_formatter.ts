@@ -1,26 +1,28 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import decodeGeoHash from './geohash';
+import kbn from 'grafana/app/core/utils/kbn';
 
 export default class DataFormatter {
-  constructor(ctrl, kbn) {
-    this.ctrl = ctrl;
-    this.kbn = kbn;
-  }
+  constructor(private ctrl) {}
 
   setValues(data) {
     if (this.ctrl.series && this.ctrl.series.length > 0) {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.ctrl.series.forEach((serie) => {
+      this.ctrl.series.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
-        const location = _.find(this.ctrl.locations, (loc) => { return loc.key.toUpperCase() === serie.alias.toUpperCase(); });
+        const location = _.find(this.ctrl.locations, loc => {
+          return loc.key.toUpperCase() === serie.alias.toUpperCase();
+        });
 
-        if (!location) return;
+        if (!location) {
+          return;
+        }
 
         if (_.isString(lastValue)) {
-          data.push({key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0});
+          data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
         } else {
           const dataValue = {
             key: serie.alias,
@@ -29,13 +31,18 @@ export default class DataFormatter {
             locationLongitude: location.longitude,
             value: serie.stats[this.ctrl.panel.valueName],
             valueFormatted: lastValue,
-            valueRounded: 0
+            valueRounded: 0,
           };
 
-          if (dataValue.value > highestValue) highestValue = dataValue.value;
-          if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+          if (dataValue.value > highestValue) {
+            highestValue = dataValue.value;
+          }
 
-          dataValue.valueRounded = this.kbn.roundValue(dataValue.value, parseInt(this.ctrl.panel.decimals, 10) || 0);
+          if (dataValue.value < lowestValue) {
+            lowestValue = dataValue.value;
+          }
+
+          dataValue.valueRounded = kbn.roundValue(dataValue.value, parseInt(this.ctrl.panel.decimals, 10) || 0);
           data.push(dataValue);
         }
       });
@@ -54,21 +61,23 @@ export default class DataFormatter {
       locationLongitude: decodedGeohash.longitude,
       value: value,
       valueFormatted: value,
-      valueRounded: 0
+      valueRounded: 0,
     };
 
-    dataValue.valueRounded = this.kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+    dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
     return dataValue;
   }
 
   setGeohashValues(dataList, data) {
-    if (!this.ctrl.panel.esGeoPoint || !this.ctrl.panel.esMetric) return;
+    if (!this.ctrl.panel.esGeoPoint || !this.ctrl.panel.esMetric) {
+      return;
+    }
 
     if (dataList && dataList.length > 0) {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      dataList.forEach((result) => {
+      dataList.forEach(result => {
         if (result.type === 'table') {
           const columnNames = {};
 
@@ -76,15 +85,23 @@ export default class DataFormatter {
             columnNames[column.text] = columnIndex;
           });
 
-          result.rows.forEach((row) => {
+          result.rows.forEach(row => {
             const encodedGeohash = row[columnNames[this.ctrl.panel.esGeoPoint]];
             const decodedGeohash = decodeGeoHash(encodedGeohash);
-            const locationName = this.ctrl.panel.esLocationName ? row[columnNames[this.ctrl.panel.esLocationName]] : encodedGeohash;
+            const locationName = this.ctrl.panel.esLocationName
+              ? row[columnNames[this.ctrl.panel.esLocationName]]
+              : encodedGeohash;
             const value = row[columnNames[this.ctrl.panel.esMetric]];
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, highestValue, lowestValue);
-            if (dataValue.value > highestValue) highestValue = dataValue.value;
-            if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            if (dataValue.value > highestValue) {
+              highestValue = dataValue.value;
+            }
+
+            if (dataValue.value < lowestValue) {
+              lowestValue = dataValue.value;
+            }
+
             data.push(dataValue);
           });
 
@@ -92,15 +109,21 @@ export default class DataFormatter {
           data.lowestValue = lowestValue;
           data.valueRange = highestValue - lowestValue;
         } else {
-          result.datapoints.forEach((datapoint) => {
+          result.datapoints.forEach(datapoint => {
             const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
             const decodedGeohash = decodeGeoHash(encodedGeohash);
-            const locationName = this.ctrl.panel.esLocationName ? datapoint[this.ctrl.panel.esLocationName] : encodedGeohash;
+            const locationName = this.ctrl.panel.esLocationName
+              ? datapoint[this.ctrl.panel.esLocationName]
+              : encodedGeohash;
             const value = datapoint[this.ctrl.panel.esMetric];
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, highestValue, lowestValue);
-            if (dataValue.value > highestValue) highestValue = dataValue.value;
-            if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            if (dataValue.value > highestValue) {
+              highestValue = dataValue.value;
+            }
+            if (dataValue.value < lowestValue) {
+              lowestValue = dataValue.value;
+            }
             data.push(dataValue);
           });
 
@@ -113,7 +136,7 @@ export default class DataFormatter {
   }
 
   static tableHandler(tableData) {
-    const datapoints = [];
+    const datapoints: any[] = [];
 
     if (tableData.type === 'table') {
       const columnNames = {};
@@ -122,7 +145,7 @@ export default class DataFormatter {
         columnNames[columnIndex] = column.text;
       });
 
-      tableData.rows.forEach((row) => {
+      tableData.rows.forEach(row => {
         const datapoint = {};
 
         row.forEach((value, columnIndex) => {
@@ -142,7 +165,7 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      tableData[0].forEach((datapoint) => {
+      tableData[0].forEach(datapoint => {
         let key;
         let longitude;
         let latitude;
@@ -167,13 +190,18 @@ export default class DataFormatter {
           locationLongitude: longitude,
           value: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
           valueFormatted: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
-          valueRounded: 0
+          valueRounded: 0,
         };
 
-        if (dataValue.value > highestValue) highestValue = dataValue.value;
-        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+        if (dataValue.value > highestValue) {
+          highestValue = dataValue.value;
+        }
 
-        dataValue.valueRounded = this.kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+        if (dataValue.value < lowestValue) {
+          lowestValue = dataValue.value;
+        }
+
+        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
         data.push(dataValue);
       });
 
@@ -188,17 +216,21 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.ctrl.series.forEach((point) => {
+      this.ctrl.series.forEach(point => {
         const dataValue = {
           key: point.key,
           locationName: point.name,
           locationLatitude: point.latitude,
           locationLongitude: point.longitude,
-          value: (point.value !== undefined) ? point.value : 1,
-          valueRounded: 0
+          value: point.value !== undefined ? point.value : 1,
+          valueRounded: 0,
         };
-        if (dataValue.value > highestValue) highestValue = dataValue.value;
-        if (dataValue.value < lowestValue) lowestValue = dataValue.value;
+        if (dataValue.value > highestValue) {
+          highestValue = dataValue.value;
+        }
+        if (dataValue.value < lowestValue) {
+          lowestValue = dataValue.value;
+        }
         dataValue.valueRounded = Math.round(dataValue.value);
         data.push(dataValue);
       });

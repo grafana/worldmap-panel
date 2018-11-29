@@ -1,11 +1,12 @@
 export default function decodeGeoHash(geohash) {
-  if (!geohash || geohash.length === 0) throw new Error('Missing geohash value');
-
+  if (!geohash || geohash.length === 0) {
+    throw new Error('Missing geohash value');
+  }
   const BITS = [16, 8, 4, 2, 1];
   const BASE32 = '0123456789bcdefghjkmnpqrstuvwxyz';
-  let isEven = 1;
-  const lat = [];
-  const lon = [];
+  let isEven = true;
+  const lat: number[] = [];
+  const lon: number[] = [];
   lat[0] = -90.0;
   lat[1] = 90.0;
   lon[0] = -180.0;
@@ -30,7 +31,7 @@ export default function decodeGeoHash(geohash) {
 }
 
 function refineInterval(interval, base32Decoded, mask) {
-  /* eslint no-bitwise: 0 */
+  /* tslint:disable no-bitwise*/
   if (base32Decoded & mask) {
     interval[0] = (interval[0] + interval[1]) / 2;
   } else {
