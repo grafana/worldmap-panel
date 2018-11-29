@@ -1,41 +1,65 @@
-import _ from 'lodash';
-/* eslint-disable id-length, no-unused-vars */
-import L from './libs/leaflet';
-/* eslint-disable id-length, no-unused-vars */
+import * as _ from 'lodash';
+import * as L from './libs/leaflet';
+import WorldmapCtrl from './worldmap_ctrl';
 
 const tileServers = {
-  'CartoDB Positron': { url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'},
-  'CartoDB Dark': {url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>', subdomains: 'abcd'}
+  'CartoDB Positron': {
+    url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+    subdomains: 'abcd',
+  },
+  'CartoDB Dark': {
+    url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+    subdomains: 'abcd',
+  },
 };
 
 export default class WorldMap {
+  ctrl: WorldmapCtrl;
+  mapContainer: any;
+  circles: any[];
+  map: any;
+  legend: any;
+  circlesLayer: any;
+
   constructor(ctrl, mapContainer) {
     this.ctrl = ctrl;
     this.mapContainer = mapContainer;
     this.circles = [];
-
-    return this.createMap();
   }
 
   createMap() {
-    const mapCenter = window.L.latLng(parseFloat(this.ctrl.panel.mapCenterLatitude), parseFloat(this.ctrl.panel.mapCenterLongitude));
-    this.map = window.L.map(this.mapContainer, { worldCopyJump: true, center: mapCenter, zoom: parseInt(this.ctrl.panel.initialZoom, 10) || 1 });
+    const mapCenter = (<any>window).L.latLng(
+      parseFloat(this.ctrl.panel.mapCenterLatitude),
+      parseFloat(this.ctrl.panel.mapCenterLongitude)
+    );
+    this.map = L.map(this.mapContainer, {
+      worldCopyJump: true,
+      preferCanvas: true,
+      center: mapCenter,
+      zoom: parseInt(this.ctrl.panel.initialZoom, 10) || 1,
+    });
     this.setMouseWheelZoom();
 
     const selectedTileServer = tileServers[this.ctrl.tileServer];
-    window.L.tileLayer(selectedTileServer.url, {
+    (<any>window).L.tileLayer(selectedTileServer.url, {
       maxZoom: 18,
       subdomains: selectedTileServer.subdomains,
       reuseTiles: true,
       detectRetina: true,
-      attribution: selectedTileServer.attribution
+      attribution: selectedTileServer.attribution,
     }).addTo(this.map);
   }
 
   createLegend() {
-    this.legend = window.L.control({position: 'bottomleft'});
+    this.legend = (<any>window).L.control({ position: 'bottomleft' });
     this.legend.onAdd = () => {
-      this.legend._div = window.L.DomUtil.create('div', 'info legend');
+      this.legend._div = (<any>window).L.DomUtil.create('div', 'info legend');
       this.legend.update();
       return this.legend._div;
     };
@@ -43,12 +67,20 @@ export default class WorldMap {
     this.legend.update = () => {
       const thresholds = this.ctrl.data.thresholds;
       let legendHtml = '';
-      legendHtml += '<div class="legend-item"><i style="background:' + this.ctrl.panel.colors[0] + '"></i> ' +
-          '&lt; ' + thresholds[0] + '</div>';
+      legendHtml +=
+        '<div class="legend-item"><i style="background:' +
+        this.ctrl.panel.colors[0] +
+        '"></i> ' +
+        '&lt; ' +
+        thresholds[0] +
+        '</div>';
       for (let index = 0; index < thresholds.length; index += 1) {
         legendHtml +=
-          '<div class="legend-item"><i style="background:' + this.ctrl.panel.colors[index + 1] + '"></i> ' +
-          thresholds[index] + (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '</div>' : '+');
+          '<div class="legend-item"><i style="background:' +
+          this.ctrl.panel.colors[index + 1] +
+          '"></i> ' +
+          thresholds[index] +
+          (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '</div>' : '+');
       }
       this.legend._div.innerHTML = legendHtml;
     };
@@ -56,22 +88,29 @@ export default class WorldMap {
   }
 
   needToRedrawCircles(data) {
-    if (this.circles.length === 0 && data.length > 0) return true;
+    if (this.circles.length === 0 && data.length > 0) {
+      return true;
+    }
 
-    if (this.circles.length !== data.length) return true;
+    if (this.circles.length !== data.length) {
+      return true;
+    }
+
     const locations = _.map(_.map(this.circles, 'options'), 'location').sort();
     const dataPoints = _.map(data, 'key').sort();
     return !_.isEqual(locations, dataPoints);
   }
 
   filterEmptyAndZeroValues(data) {
-    return _.filter(data, (o) => { return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) && !(this.ctrl.panel.hideZero && o.value === 0); });
+    return _.filter(data, o => {
+      return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) && !(this.ctrl.panel.hideZero && o.value === 0);
+    });
   }
 
   clearCircles() {
     if (this.circlesLayer) {
       this.circlesLayer.clearLayers();
-      this.removeCircles(this.circlesLayer);
+      this.removeCircles();
       this.circles = [];
     }
   }
@@ -87,9 +126,11 @@ export default class WorldMap {
   }
 
   createCircles(data) {
-    const circles = [];
-    data.forEach((dataPoint) => {
-      if (!dataPoint.locationName) return;
+    const circles: any[] = [];
+    data.forEach(dataPoint => {
+      if (!dataPoint.locationName) {
+        return;
+      }
       circles.push(this.createCircle(dataPoint));
     });
     this.circlesLayer = this.addCircles(circles);
@@ -97,10 +138,14 @@ export default class WorldMap {
   }
 
   updateCircles(data) {
-    data.forEach((dataPoint) => {
-      if (!dataPoint.locationName) return;
+    data.forEach(dataPoint => {
+      if (!dataPoint.locationName) {
+        return;
+      }
 
-      const circle = _.find(this.circles, (cir) => { return cir.options.location === dataPoint.key; });
+      const circle = _.find(this.circles, cir => {
+        return cir.options.location === dataPoint.key;
+      });
 
       if (circle) {
         circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
@@ -117,12 +162,12 @@ export default class WorldMap {
   }
 
   createCircle(dataPoint) {
-    const circle = window.L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
+    const circle = (<any>window).L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
       radius: this.calcCircleSize(dataPoint.value || 0),
       color: this.getColor(dataPoint.value),
       fillColor: this.getColor(dataPoint.value),
       fillOpacity: 0.5,
-      location: dataPoint.key
+      location: dataPoint.key,
     });
 
     this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
@@ -140,13 +185,17 @@ export default class WorldMap {
     const dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
     const circleSizeRange = circleMaxSize - circleMinSize;
 
-    return (circleSizeRange * dataFactor) + circleMinSize;
+    return circleSizeRange * dataFactor + circleMinSize;
   }
 
   createPopup(circle, locationName, value) {
     const unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
     const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
-    circle.bindPopup(label, {'offset': window.L.point(0, -2), 'className': 'worldmap-popup', 'closeButton': this.ctrl.panel.stickyLabels});
+    circle.bindPopup(label, {
+      offset: (<any>window).L.point(0, -2),
+      className: 'worldmap-popup',
+      closeButton: this.ctrl.panel.stickyLabels,
+    });
 
     circle.on('mouseover', function onMouseOver(evt) {
       const layer = evt.target;
@@ -193,7 +242,7 @@ export default class WorldMap {
   }
 
   addCircles(circles) {
-    return window.L.layerGroup(circles).addTo(this.map);
+    return (<any>window).L.layerGroup(circles).addTo(this.map);
   }
 
   removeCircles() {
@@ -206,8 +255,12 @@ export default class WorldMap {
 
   remove() {
     this.circles = [];
-    if (this.circlesLayer) this.removeCircles();
-    if (this.legend) this.removeLegend();
+    if (this.circlesLayer) {
+      this.removeCircles();
+    }
+    if (this.legend) {
+      this.removeLegend();
+    }
     this.map.remove();
   }
 }
