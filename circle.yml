@@ -1,12 +1,12 @@
 machine:
   node:
-    version: 6.4.0
+    version: 10.12.0
 
 dependencies:
   override:
-    - npm install
-    - npm run build
+    - yarn install --pure-lockfile
+    - yarn run build
 
 test:
   override:
-    - npm run test
+    - yarn run test
