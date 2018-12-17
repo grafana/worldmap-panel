@@ -52,7 +52,7 @@
       <div class="gf-form">
         <label class="gf-form-label width-12">Location Data</label>
         <div class="gf-form-select-wrapper max-width-10">
-          <select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'countries_3letter', 'states', 'probes', 'geohash', 'json endpoint', 'jsonp endpoint', 'json result', 'table']"
+          <select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'countries_3letter', 'states', 'probes', 'geohash', 'json endpoint', 'jsonp endpoint', 'json result', 'table', 'table+json', 'table+jsonp']"
             ng-change="ctrl.changeLocationData()"></select>
         </div>
       </div>
@@ -63,17 +63,17 @@
             ng-change="ctrl.refresh()"></select>
         </div>
       </div>
-      <div class="gf-form" ng-show="ctrl.panel.locationData === 'json endpoint'">
+      <div class="gf-form" ng-show="ctrl.panel.locationData === 'json endpoint' || ctrl.panel.locationData === 'table+json'">
         <label class="gf-form-label width-12">Endpoint url</label>
         <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.jsonUrl" ng-change="ctrl.refresh()" ng-model-onblur
         />
       </div>
-      <div class="gf-form" ng-show="ctrl.panel.locationData === 'jsonp endpoint'">
+      <div class="gf-form" ng-show="ctrl.panel.locationData === 'jsonp endpoint' || ctrl.panel.locationData === 'table+jsonp'">
         <label class="gf-form-label width-12">Endpoint url</label>
         <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.jsonpUrl" ng-change="ctrl.refresh()" ng-model-onblur
         />
       </div>
-      <div class="gf-form" ng-show="ctrl.panel.locationData === 'jsonp endpoint'">
+      <div class="gf-form" ng-show="ctrl.panel.locationData === 'jsonp endpoint' || ctrl.panel.locationData === 'table+jsonp'">
         <label class="gf-form-label width-12">Jsonp Callback</label>
         <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.jsonpCallback" ng-change="ctrl.refresh()"
           ng-model-onblur />
@@ -138,20 +138,20 @@
           how large the circle is.</li>
       </ul>
     </div>
-    <h6 ng-show="ctrl.panel.locationData === 'table' || ctrl.panel.locationData === 'geohash'">Field Mapping</h6>
-    <div class="gf-form" ng-show="ctrl.panel.locationData === 'table'">
+    <h6 ng-show="ctrl.showTableOptions() || ctrl.panel.locationData === 'geohash'">Field Mapping</h6>
+    <div class="gf-form" ng-show="ctrl.showTableOptions()">
       <label class="gf-form-label width-12">Table Query Format</label>
       <div class="gf-form-select-wrapper max-width-10">
         <select class="input-small gf-form-input" ng-model="ctrl.panel.tableQueryOptions.queryType" ng-options="t for t in ['geohash', 'coordinates']"
           ng-change="ctrl.refresh()"></select>
       </div>
     </div>
-    <div class="gf-form" ng-show="ctrl.panel.locationData === 'table'">
+    <div class="gf-form" ng-show="ctrl.showTableOptions()">
       <label class="gf-form-label width-12">Location Name Field</label>
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.labelField" ng-change="ctrl.refresh()"
         ng-model-onblur />
     </div>
-    <div class="gf-form" ng-show="ctrl.panel.locationData === 'table'">
+    <div class="gf-form" ng-show="ctrl.showTableOptions()">
       <label class="gf-form-label width-12">Metric Field</label>
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.metricField" ng-change="ctrl.refresh()"
         ng-model-onblur />
