@@ -183,9 +183,25 @@ export default class DataFormatter {
           key = `${latitude}_${longitude}`;
         }
 
+        // Attempt to resolve value from table's "labelField" against key from JSON/JSONP result.
+        let locationKey = datapoint[this.ctrl.panel.tableQueryOptions.labelField];
+        let location = _.find(this.ctrl.locations, function (loc) {
+            return loc.key === locationKey;
+        });
+
+        // Compute effective location name.
+        let locationNameFromTable = locationKey;
+        let locationNameFromJson  = location ? location.name : undefined;
+        let locationNameEffective = locationNameFromJson || locationNameFromTable || 'n/a';
+
+        // Add suffix
+        if (locationNameFromJson && locationNameFromTable != locationNameFromJson) {
+            locationNameEffective += ' (' + locationNameFromTable + ')';
+        }
+
         const dataValue = {
           key: key,
-          locationName: datapoint[this.ctrl.panel.tableQueryOptions.labelField] || 'n/a',
+          locationName: locationNameEffective,
           locationLatitude: latitude,
           locationLongitude: longitude,
           value: datapoint[this.ctrl.panel.tableQueryOptions.metricField],

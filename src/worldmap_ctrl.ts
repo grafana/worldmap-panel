@@ -105,7 +105,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       return;
     }
 
-    if (this.panel.locationData === "jsonp endpoint") {
+    if (this.panel.locationData === "jsonp endpoint" || this.panel.locationData === "table+jsonp") {
       if (!this.panel.jsonpUrl || !this.panel.jsonpCallback) {
         return;
       }
@@ -121,7 +121,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
           this.render();
         }
       });
-    } else if (this.panel.locationData === "json endpoint") {
+    } else if (this.panel.locationData === "json endpoint" || this.panel.locationData === "table+json") {
       if (!this.panel.jsonUrl) {
         return;
       }
@@ -190,7 +190,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
     if (this.panel.locationData === "geohash") {
       this.dataFormatter.setGeohashValues(dataList, data);
-    } else if (this.panel.locationData === "table") {
+    } else if (_.startsWith(this.panel.locationData, "table")) {
       const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
       this.dataFormatter.setTableValues(tableData, data);
     } else if (this.panel.locationData === "json result") {
