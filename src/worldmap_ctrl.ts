@@ -38,7 +38,8 @@ const panelDefaults = {
     geohashField: "geohash",
     latitudeField: "latitude",
     longitudeField: "longitude",
-    metricField: "metric"
+    metricField: "metric",
+    linkField: "link"
   }
 };
 
