@@ -154,6 +154,8 @@
       </ul>
     </div>
     <h6 ng-show="ctrl.showTableOptions() || ctrl.panel.locationData === 'geohash'">Field Mapping</h6>
+
+    <!-- table options -->
     <div class="gf-form" ng-show="ctrl.showTableOptions()">
       <label class="gf-form-label width-12">Table Query Format</label>
       <div class="gf-form-select-wrapper max-width-10">
@@ -186,6 +188,13 @@
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.longitudeField" ng-change="ctrl.refresh()"
         ng-model-onblur />
     </div>
+    <div class="gf-form" ng-show="ctrl.showTableOptions()">
+      <label class="gf-form-label width-12">Link Field</label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.linkField" ng-change="ctrl.refresh()"
+        ng-model-onblur />
+    </div>
+
+    <!-- geohash options -->
     <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
       <label class="gf-form-label width-12">Location Name Field</label>
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLocationName" ng-change="ctrl.refresh()"
@@ -199,6 +208,11 @@
     <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
       <label class="gf-form-label width-12">Metric Field</label>
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esMetric" ng-change="ctrl.refresh()" ng-model-onblur
+      />
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
+      <label class="gf-form-label width-12">Link Field</label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLink" ng-change="ctrl.refresh()" ng-model-onblur
       />
     </div>
   </div>

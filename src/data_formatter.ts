@@ -53,7 +53,7 @@ export default class DataFormatter {
     }
   }
 
-  createDataValue(encodedGeohash, decodedGeohash, locationName, value) {
+  createDataValue(encodedGeohash, decodedGeohash, locationName, value, link) {
     const dataValue = {
       key: encodedGeohash,
       locationName: locationName,
@@ -62,6 +62,7 @@ export default class DataFormatter {
       value: value,
       valueFormatted: value,
       valueRounded: 0,
+      link: link
     };
 
     dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
@@ -92,8 +93,11 @@ export default class DataFormatter {
               ? row[columnNames[this.ctrl.panel.esLocationName]]
               : encodedGeohash;
             const value = row[columnNames[this.ctrl.panel.esMetric]];
+            const link = this.ctrl.panel.esLink
+              ? row[columnNames[this.ctrl.panel.esLink]]
+              : null;
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }
@@ -116,8 +120,11 @@ export default class DataFormatter {
               ? datapoint[this.ctrl.panel.esLocationName]
               : encodedGeohash;
             const value = datapoint[this.ctrl.panel.esMetric];
+            const link = this.ctrl.panel.esLink
+              ? datapoint[this.ctrl.panel.esLink]
+              : null;
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }
@@ -207,6 +214,7 @@ export default class DataFormatter {
           value: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
           valueFormatted: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
           valueRounded: 0,
+          link: datapoint[this.ctrl.panel.tableQueryOptions.linkField] || null
         };
 
         if (dataValue.value > highestValue) {
