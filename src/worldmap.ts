@@ -156,6 +156,7 @@ export default class WorldMap {
           location: dataPoint.key,
         });
         circle.unbindPopup();
+        this.createClickthrough(circle, dataPoint.link);
         this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
       }
     });
@@ -170,6 +171,7 @@ export default class WorldMap {
       location: dataPoint.key,
     });
 
+    this.createClickthrough(circle, dataPoint.link);
     this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
     return circle;
   }
@@ -186,6 +188,15 @@ export default class WorldMap {
     const circleSizeRange = circleMaxSize - circleMinSize;
 
     return circleSizeRange * dataFactor + circleMinSize;
+  }
+
+  createClickthrough(circle, linkUrl) {
+    circle.off('click');
+    if (linkUrl) {
+      circle.on('click', function onClick(evt) {
+        window.location.assign(linkUrl);
+      });
+    }
   }
 
   createPopup(circle, locationName, value) {
