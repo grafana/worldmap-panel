@@ -9467,7 +9467,7 @@ var Popup = DivOverlay.extend({
 		// @option autoPan: Boolean = true
 		// Set it to `false` if you don't want the map to do panning animation
 		// to fit the opened popup.
-		autoPan: true,
+		autoPan: false,
 
 		// @option autoPanPaddingTopLeft: Point = null
 		// The margin between the popup and the top left corner of the map
