@@ -27,6 +27,7 @@ const panelDefaults = {
   unitSingle: "",
   unitPlural: "",
   showLegend: true,
+  legendContainerSelector: null,
   showZoomControl: true,
   showAttribution: true,
   mouseWheelZoom: false,
@@ -265,6 +266,11 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     if (!this.panel.showLegend) {
       this.map.removeLegend();
     }
+    this.render();
+  }
+
+  toggleLegendContainer() {
+    this.teardownMap();
     this.render();
   }
 
