@@ -1,6 +1,7 @@
 import WorldMap from './worldmap';
 import DataBuilder from '../test/data_builder';
 import * as _ from 'lodash';
+import $ from "jquery";
 
 describe('Worldmap', () => {
   let worldMap;
@@ -313,6 +314,38 @@ describe('Worldmap', () => {
     });
   });
 
+  describe('when the legend should be displayed out-of-band', () => {
+    /*
+     * Optimizations for small maps
+     *
+     * In order to test the `createMap()` method,
+     * we need to pass a half-configured `WorldMap`
+     * instance into the test cases.
+     *
+     * We are testing the "legendContainerSelector" and "showAttribution"
+     * options here to proof they actually toggle the visibility
+     * of the respective control elements.
+     *
+     * See also https://community.hiveeyes.org/t/grafana-worldmap-panel-0-3-0-dev-series/1824/3
+     */
+    beforeEach(() => {
+      ctrl.data = new DataBuilder().withThresholdValues([2, 4, 6]).build();
+      ctrl.panel.legendContainerSelector = '.shared-map-legend';
+      document.body.insertAdjacentHTML('afterbegin', '<div class="shared-map-legend"></div>');
+      worldMap.createLegend();
+    });
+
+    it('we should find the respective element at the appropriate place in the DOM', () => {
+      expect(worldMap.legend).toBeDefined();
+      expect($('.shared-map-legend')[0].innerHTML).toBe(
+          '<div class="info legend leaflet-control"><div class="legend-item">' +
+          '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
+          '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
+          '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
+      );
+    });
+  });
+
   afterEach(() => {
     const fixture: HTMLElement = document.getElementById('fixture')!;
     document.body.removeChild(fixture);
@@ -334,4 +367,87 @@ describe('Worldmap', () => {
     worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
     worldMap.createMap();
   }
+});
+
+
+describe('WorldmapFoundation', () => {
+  /*
+   * Optimizations for small maps
+   *
+   * In order to test the `createMap()` method,
+   * we need to pass a half-configured `WorldMap`
+   * instance into the test cases.
+   *
+   * We are testing the "showZoomControl" and "showAttribution"
+   * options here to proof they actually toggle the visibility
+   * of the respective control elements.
+   *
+   * See also https://community.hiveeyes.org/t/grafana-worldmap-panel-0-3-0-dev-series/1824/3
+   */
+
+  let worldMap;
+  let ctrl;
+
+  beforeEach(() => {
+    setupWorldmapHalfFixture();
+  });
+
+  describe('when a Worldmap is created with default parameters', () => {
+    beforeEach(() => {
+      worldMap.createMap();
+    });
+
+    it('all control elements should be present', () => {
+      expect(document.getElementsByClassName('leaflet-container')[0]).toBeDefined();
+      expect(document.getElementsByClassName('leaflet-control-zoom')[0]).toBeDefined();
+      expect(document.getElementsByClassName('leaflet-control-attribution')[0]).toBeDefined();
+
+    });
+  });
+
+  describe('when a Worldmap is created with showZoomControl disabled', () => {
+    beforeEach(() => {
+      ctrl.panel.showZoomControl = false;
+      worldMap.createMap();
+    });
+
+    it('the element should not be present in DOM', () => {
+      expect(document.getElementsByClassName('leaflet-control-zoom')[0]).toBeUndefined();
+    });
+  });
+
+  describe('when a Worldmap is created with showAttribution disabled', () => {
+    beforeEach(() => {
+      ctrl.panel.showAttribution = false;
+      worldMap.createMap();
+    });
+
+    it('the element should not be present in DOM', () => {
+      expect(document.getElementsByClassName('leaflet-control-attribution')[0]).toBeUndefined();
+    });
+  });
+
+  afterEach(() => {
+    const fixture: HTMLElement = document.getElementById('fixture')!;
+    document.body.removeChild(fixture);
+  });
+
+  function setupWorldmapHalfFixture() {
+    const fixture = '<div id="fixture" class="mapcontainer"></div>';
+    document.body.insertAdjacentHTML('afterbegin', fixture);
+
+    ctrl = {
+      panel: {
+        mapCenterLatitude: 0,
+        mapCenterLongitude: 0,
+        initialZoom: 1,
+        colors: ['red', 'blue', 'green'],
+        showZoomControl: true,
+        showAttribution: true,
+      },
+      tileServer: 'CartoDB Positron',
+    };
+    worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
+  }
+
 });

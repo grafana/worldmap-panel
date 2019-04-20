@@ -82,6 +82,77 @@ describe('DataFormatter', () => {
     });
   });
 
+  describe('when location information is from table+json and labelField and geohashField are in table data', () => {
+    /*
+     * Hybrid "table+json(p)" Location Data
+     *
+     * We are testing the "table+json" and "table+jsonp" location data
+     * sources here. They are used when basic location information is
+     * coming from table data but humanized labels are resolved from a
+     * JSON/JSONP data source by appropriate field name mapping.
+     *
+     * See also:
+     * - https://github.com/grafana/worldmap-panel/pull/177
+     * - https://community.hiveeyes.org/t/erneuerung-der-luftdatenpumpe/1199
+     * - https://community.hiveeyes.org/t/ldi-data-plane-v2/1412
+     * - https://community.hiveeyes.org/t/grafana-worldmap-panel-0-3-0-dev-series/1824/2
+     */
+    beforeEach(() => {
+      const ctrl = {
+        panel: {
+          locationData: 'table+json',
+          tableQueryOptions: {
+            queryType: 'geohash',
+            labelField: 'station_id',
+            geohashField: 'geohash',
+          }
+        },
+        // Location enrichment data is ingested from a JSON(P) response.
+        locations: [
+          {
+            "key": "28",
+            "name": "Ulmer Stra\u00dfe, Wangen, Stuttgart, Baden-W\u00fcrttemberg, DE"
+          },
+          {
+            "key": "1071",
+            "name": "Gerichtstra\u00dfe, Gesundbrunnen, Mitte, Berlin, DE"
+          },
+        ]
+      };
+      dataFormatter = new DataFormatter(ctrl);
+    });
+
+    it('should use the value from table\'s labelField as a key to lookup the designated locationName from the JSON/JSONP result', () => {
+      // Main Location Data is coming from table data.
+      // However, the humanized string is resolved by mapping e.g.
+      // "station_id == 28" to "key == 28", in turn yielding the
+      // designated "name" for display. Easy, isn't it?
+      const tableData = [
+        [
+          {
+            station_id: '28',
+            geohash: 'u0wt6pv2qqhz'
+          },
+          {
+            station_id: '1071',
+            geohash: 'u33dbm6duz90'
+          },
+        ]
+      ];
+      const data: any[] = [];
+
+      dataFormatter.setTableValues(tableData, data);
+
+      expect(data[0].locationLatitude).toBeCloseTo(48.7779);
+      expect(data[0].locationLongitude).toBeCloseTo(9.23600);
+      expect(data[0].locationName).toEqual('Ulmer Straße, Wangen, Stuttgart, Baden-Württemberg, DE (28)');
+
+      expect(data[1].locationLatitude).toBeCloseTo(52.544);
+      expect(data[1].locationLongitude).toBeCloseTo(13.374);
+      expect(data[1].locationName).toEqual('Gerichtstraße, Gesundbrunnen, Mitte, Berlin, DE (1071)');
+    });
+  });
+
   describe('when the time series data matches the location', () => {
     beforeEach(() => {
       const ctrl = {
