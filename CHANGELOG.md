@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.3.0-dev2
+
+- Add new mapping options "table+json" and "table+jsonp" to retrieve
+  location information from JSON endpoint, even for table data.
+  The lookup key is the value from the obtained "labelField".
+- Add "autoPanLabels" and "autoWidthLabels" to visual option settings.
+- Add "zoomControl" and "attributionControl" to visual option settings.
+- Optionally display legend in different DOM element.
+- Increase form field width for JSON endpoint url settings.
+- Fix conditional table options display in settings editor.
+- Add "showTableOptions()" conditional for signalling any type of table source.
+- Add software tests for options
+    - locationData: "table+json(p)"
+    - showZoomControl: false
+    - showAttribution: false
+    - legendContainerSelector: ".shared-map-legend"
+- Add Makefile for macOS/Homebrew.
+
+## v0.2.0
+
+- Convert to TypeScript, webpack and Jest
+- Use Yarn on CircleCI
+- Add missing dev dependencies
+- Tweak for incorrect height on render
+  which occurs more frequently in Grafana 6.0
+
 ## v0.1.2
 
 - Map centering ignores configured location [#149](https://github.com/grafana/worldmap-panel/issues/149) Thanks [@clompsy](https://github.com/clompsy)
