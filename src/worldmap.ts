@@ -43,6 +43,8 @@ export default class WorldMap {
       preferCanvas: true,
       center: mapCenter,
       zoom: parseInt(this.ctrl.panel.initialZoom, 10) || 1,
+      zoomControl: this.ctrl.panel.showZoomControl,
+      attributionControl: this.ctrl.panel.showAttribution,
     });
     this.setMouseWheelZoom();
 

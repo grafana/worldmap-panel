@@ -27,6 +27,8 @@ const panelDefaults = {
   unitSingle: "",
   unitPlural: "",
   showLegend: true,
+  showZoomControl: true,
+  showAttribution: true,
   mouseWheelZoom: false,
   esMetric: "Count",
   decimals: 0,
@@ -170,9 +172,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   onPanelTeardown() {
-    if (this.map) {
-      this.map.remove();
-    }
+    this.teardownMap();
   }
 
   onInitEditMode() {
@@ -254,10 +254,27 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.map.setZoom(this.panel.initialZoom || 1);
   }
 
+  teardownMap() {
+    if (this.map) {
+      this.map.remove();
+      this.map = null;
+    }
+  }
+
   toggleLegend() {
     if (!this.panel.showLegend) {
       this.map.removeLegend();
     }
+    this.render();
+  }
+
+  toggleZoomControl() {
+    this.teardownMap();
+    this.render();
+  }
+
+  toggleAttribution() {
+    this.teardownMap();
     this.render();
   }
 
