@@ -31,6 +31,10 @@
     </div>
     <gf-form-switch class="gf-form" label="Sticky Labels" label-class="width-10" checked="ctrl.panel.stickyLabels" on-change="ctrl.toggleStickyLabels()">
     </gf-form-switch>
+    <gf-form-switch class="gf-form" label="Auto-pan Labels" label-class="width-10" checked="ctrl.panel.autoPanLabels" on-change="ctrl.render()">
+    </gf-form-switch>
+    <gf-form-switch class="gf-form" label="Auto-width Labels" label-class="width-10" checked="ctrl.panel.autoWidthLabels" on-change="ctrl.render()">
+    </gf-form-switch>
     <div class="gf-form">
       <label class="gf-form-label width-10">Decimals</label>
       <input type="number" class="input-small gf-form-input width-10" ng-model="ctrl.panel.decimals" ng-change="ctrl.refresh()"

@@ -9451,6 +9451,12 @@ var Popup = DivOverlay.extend({
 	// @section
 	// @aka Popup options
 	options: {
+
+		// @option autoWidth: Boolean = true
+		// Set it to `false` if you don't want to compute
+		// and set the width of a opened popup automatically.
+		autoWidth: true,
+
 		// @option maxWidth: Number = 300
 		// Max width of the popup, in pixels.
 		maxWidth: 300,
@@ -9467,7 +9473,7 @@ var Popup = DivOverlay.extend({
 		// @option autoPan: Boolean = true
 		// Set it to `false` if you don't want the map to do panning animation
 		// to fit the opened popup.
-		autoPan: false,
+		autoPan: true,
 
 		// @option autoPanPaddingTopLeft: Point = null
 		// The margin between the popup and the top left corner of the map
@@ -9612,15 +9618,17 @@ var Popup = DivOverlay.extend({
 		var container = this._contentNode,
 		    style = container.style;
 
-		style.width = '';
-		style.whiteSpace = 'nowrap';
+		if (this.options.autoWidth) {
+			style.width = '';
+			style.whiteSpace = 'nowrap';
 
-		var width = container.offsetWidth;
-		width = Math.min(width, this.options.maxWidth);
-		width = Math.max(width, this.options.minWidth);
+			var width = container.offsetWidth;
+			width = Math.min(width, this.options.maxWidth);
+			width = Math.max(width, this.options.minWidth);
 
-		style.width = (width + 1) + 'px';
-		style.whiteSpace = '';
+			style.width = (width + 1) + 'px';
+			style.whiteSpace = '';
+		}
 
 		style.height = '';
 

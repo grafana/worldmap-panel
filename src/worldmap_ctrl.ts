@@ -33,6 +33,8 @@ const panelDefaults = {
   hideEmpty: false,
   hideZero: false,
   stickyLabels: false,
+  autoPanLabels: true,
+  autoWidthLabels: true,
   tableQueryOptions: {
     queryType: "geohash",
     geohashField: "geohash",

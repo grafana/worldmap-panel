@@ -195,6 +195,8 @@ export default class WorldMap {
       offset: (<any>window).L.point(0, -2),
       className: 'worldmap-popup',
       closeButton: this.ctrl.panel.stickyLabels,
+      autoPan: this.ctrl.panel.autoPanLabels,
+      autoWidth: this.ctrl.panel.autoWidthLabels,
     });
 
     circle.on('mouseover', function onMouseOver(evt) {
