@@ -217,6 +217,13 @@ export default class DataFormatter {
           link: datapoint[this.ctrl.panel.tableQueryOptions.linkField] || null
         };
 
+        // Add the original datapoint as attributes prefixed with `point_`.
+        for (let key in datapoint) {
+          const value = datapoint[key];
+          key = 'point_' + key;
+          dataValue[key] = value;
+        }
+
         if (dataValue.value > highestValue) {
           highestValue = dataValue.value;
         }

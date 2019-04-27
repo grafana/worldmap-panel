@@ -20,6 +20,8 @@
 - Fix popover labels text color for light theme (#169). Thanks, Ahmed.
 - Add clickthrough option for circles, use fixed url (#129). Thanks, James.
 - Add clickthrough option for circles, use urls from data (#190). Thanks, Leonhard.
+- Combine both clickthrough link implementations #129 and #190,
+  add basic variable interpolation based on keys from `dataPoint`.
 
 ## v0.2.0
 

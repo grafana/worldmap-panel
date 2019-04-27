@@ -165,8 +165,7 @@ export default class WorldMap {
           location: dataPoint.key,
         });
         circle.unbindPopup();
-        //this.createClickthrough(circle, dataPoint.key);
-        this.createClickthrough(circle, dataPoint.link);
+        this.createClickthrough(circle, dataPoint);
         this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
       }
     });
@@ -181,8 +180,7 @@ export default class WorldMap {
       location: dataPoint.key,
     });
 
-    //this.createClickthrough(circle, dataPoint.key);
-    this.createClickthrough(circle, dataPoint.link);
+    this.createClickthrough(circle, dataPoint);
     this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
     return circle;
   }
@@ -201,9 +199,46 @@ export default class WorldMap {
     return circleSizeRange * dataFactor + circleMinSize;
   }
 
-  createClickthrough(circle, linkUrl) {
+  createClickthrough(circle, dataPoint) {
+    /*
+     * Features:
+     * - Unify functionality from #129 and #190
+     * - Optionally open url in new window
+     * - Add generic variable interpolation from dataPoint
+     * - Add generic variable interpolation from dashboard variables
+     *
+     * Todo:
+     * - [o] Take link from variable and apply templating
+     * - [o] Optionally construct this link using baseurl + relative url
+     * - [o] Link to dashboard with templated parameters
+     * - [o] Just switch to dashboard internally instead of fully navigating to the url
+     * - [o] Optionally open link in new or named window
+     * - [o] Convenience checkbox "Add complete dataPoint as query parameters"
+     *
+     */
+
+    // First, try to use link value from the data itself by using the
+    // table control option `linkField` for looking it up.
+    var linkUrl = dataPoint.link;
+
+    // Next, try to use link value directly from table control option `clickthroughURL`.
+    if (!linkUrl && this.ctrl.panel.clickthroughURL) {
+      linkUrl = this.ctrl.panel.clickthroughURL;
+    }
+
+    // Deactivate all links first.
     circle.off('click');
+
     if (linkUrl) {
+
+      // Interpolate the dataPoint variables.
+      for (let key in dataPoint) {
+        let value = dataPoint[key];
+        const symbol = '$' + key;
+        linkUrl = linkUrl.replace(symbol, value);
+      }
+
+      // Attach data point linking to circle "onclick" event.
       circle.on('click', function onClick(evt) {
         window.location.assign(linkUrl);
       });
@@ -230,15 +265,6 @@ export default class WorldMap {
     if (!this.ctrl.panel.stickyLabels) {
       circle.on('mouseout', function onMouseOut() {
         circle.closePopup();
-      });
-    }
-  }
-
-  createClickthrough(circle, key) {
-    if (this.ctrl.panel.clickthroughURL) {
-      const newURL = this.ctrl.panel.clickthroughURL.replace('$country', key);
-      circle.on('click', function onClick(evt) {
-        window.location.assign(newURL);
       });
     }
   }
