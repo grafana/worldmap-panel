@@ -24,6 +24,7 @@ export default class DataFormatter {
         if (_.isString(lastValue)) {
           data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
         } else {
+          // TODO: Bring this up to speed with the current state in `setTableValues`.
           const dataValue = {
             key: serie.alias,
             locationName: location.name,
@@ -54,6 +55,7 @@ export default class DataFormatter {
   }
 
   createDataValue(encodedGeohash, decodedGeohash, locationName, value, link) {
+    // TODO: Bring this up to speed with the current state in `setTableValues`.
     const dataValue = {
       key: encodedGeohash,
       locationName: locationName,
@@ -177,6 +179,10 @@ export default class DataFormatter {
         let longitude;
         let latitude;
 
+        let label = datapoint[this.ctrl.panel.tableQueryOptions.labelField];
+        let value = datapoint[this.ctrl.panel.tableQueryOptions.metricField];
+        let link = datapoint[this.ctrl.panel.tableQueryOptions.linkField] || null;
+
         if (this.ctrl.panel.tableQueryOptions.queryType === 'geohash') {
           const encodedGeohash = datapoint[this.ctrl.panel.tableQueryOptions.geohashField];
           const decodedGeohash = decodeGeoHash(encodedGeohash);
@@ -191,7 +197,8 @@ export default class DataFormatter {
         }
 
         // Attempt to resolve value from table's "labelField" against key from JSON/JSONP result.
-        let locationKey = datapoint[this.ctrl.panel.tableQueryOptions.labelField];
+        // TODO: Introduce new control option `locationKeyField` for resolving this.
+        let locationKey = label;
         let location = _.find(this.ctrl.locations, function (loc) {
             return loc.key === locationKey;
         });
@@ -200,21 +207,31 @@ export default class DataFormatter {
         let locationNameFromTable = locationKey;
         let locationNameFromJson  = location ? location.name : undefined;
         let locationNameEffective = locationNameFromJson || locationNameFromTable || 'n/a';
-
-        // Add suffix
+        // Add locationKey as suffix.
+        // TODO: Make this optional through control option.
         if (locationNameFromJson && locationNameFromTable != locationNameFromJson) {
             locationNameEffective += ' (' + locationNameFromTable + ')';
         }
 
+        // Compute rounded value.
+        let valueRounded = kbn.roundValue(value, this.ctrl.panel.decimals || 0);
+
         const dataValue = {
+
+          // Add location information.
           key: key,
           locationName: locationNameEffective,
           locationLatitude: latitude,
           locationLongitude: longitude,
-          value: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
-          valueFormatted: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
-          valueRounded: 0,
-          link: datapoint[this.ctrl.panel.tableQueryOptions.linkField] || null
+
+          // Add metric name and values.
+          label: label,
+          value: value,
+          valueFormatted: value,
+          valueRounded: valueRounded,
+
+          // Add link.
+          link: link,
         };
 
         // Add the original datapoint as attributes prefixed with `point_`.
@@ -232,7 +249,6 @@ export default class DataFormatter {
           lowestValue = dataValue.value;
         }
 
-        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
         data.push(dataValue);
       });
 
@@ -248,6 +264,7 @@ export default class DataFormatter {
       let lowestValue = Number.MAX_VALUE;
 
       this.ctrl.series.forEach(point => {
+        // TODO: Bring this up to speed with the current state in `setTableValues`.
         const dataValue = {
           key: point.key,
           locationName: point.name,
