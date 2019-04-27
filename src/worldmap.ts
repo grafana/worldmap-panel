@@ -231,12 +231,8 @@ export default class WorldMap {
 
     if (linkUrl) {
 
-      // Interpolate the dataPoint variables.
-      for (let key in dataPoint) {
-        let value = dataPoint[key];
-        const symbol = '$' + key;
-        linkUrl = linkUrl.replace(symbol, value);
-      }
+      // Interpolate the dashboard and dataPoint variables.
+      linkUrl = this.ctrl.dataFormatter.interpolateVariables(linkUrl, dataPoint);
 
       // Attach data point linking to circle "onclick" event.
       circle.on('click', function onClick(evt) {

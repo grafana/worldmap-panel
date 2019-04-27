@@ -71,7 +71,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   mapCenterMoved: boolean;
 
   /** @ngInject **/
-  constructor($scope, $injector, contextSrv) {
+  constructor($scope, $injector, contextSrv, templateSrv) {
     super($scope, $injector);
 
     this.setMapProvider(contextSrv);

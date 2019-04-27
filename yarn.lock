@@ -583,9 +583,9 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@types/grafana@https://git@github.com/CorpGlory/types-grafana.git":
+"@types/grafana@https://github.com/nikitinvasily/types-grafana.git":
   version "4.6.3"
-  resolved "https://git@github.com/CorpGlory/types-grafana.git#2ce6e54491a247b9dbfe6b809e43daf2002e8260"
+  resolved "https://github.com/nikitinvasily/types-grafana.git#2a9669e2d203aa6d69d233ac418ce2a34cf3583d"
 
 "@types/jest@^23.3.9":
   version "23.3.9"

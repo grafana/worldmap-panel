@@ -270,4 +270,18 @@ export default class DataFormatter {
       data.valueRange = highestValue - lowestValue;
     }
   }
+
+  interpolateVariables(target: string, variables: Object, format?: string | Function) {
+    return this.ctrl.templateSrv.replace(target, this.toScoped(variables), format);
+  }
+
+  toScoped(variables) {
+    let scopedVars = {};
+    for (let key in variables) {
+      const value = variables[key];
+      scopedVars[key] = {text: key, value: value};
+    }
+    return scopedVars;
+  }
+
 }
