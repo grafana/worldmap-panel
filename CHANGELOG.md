@@ -17,6 +17,9 @@
     - showAttribution: false
     - legendContainerSelector: ".shared-map-legend"
 - Add Makefile for macOS/Homebrew.
+- Fix popover labels text color for light theme (#169). Thanks, Ahmed.
+- Add clickthrough option for circles, use fixed url (#129). Thanks, James.
+- Add clickthrough option for circles, use urls from data (#190). Thanks, Leonhard.
 
 ## v0.2.0
 
