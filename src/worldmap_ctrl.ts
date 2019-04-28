@@ -230,18 +230,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.updateThresholdData();
 
     if (this.data.length && this.settings.mapCenter === "Last GeoHash") {
-      this.centerOnLastGeoHash();
+      this.setNewMapCenter();
     } else {
       this.render();
     }
-  }
-
-  centerOnLastGeoHash() {
-    const last: any = _.last(this.data);
-    mapCenters[this.settings.mapCenter].mapCenterLatitude = last.locationLatitude;
-    mapCenters[this.settings.mapCenter].mapCenterLongitude =
-      last.locationLongitude;
-    this.setNewMapCenter();
   }
 
   onDataSnapshotLoad(snapshotData) {
@@ -272,6 +264,14 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       center = {
         mapCenterLatitude: this.settings.mapCenterLatitude,
         mapCenterLongitude: this.settings.mapCenterLongitude,
+        zoom: this.settings.initialZoom || 1,
+      }
+    } else if (this.settings.mapCenter == "Last GeoHash") {
+      const last: any = _.last(this.data);
+      center = {
+        mapCenterLatitude: last.locationLatitude,
+        mapCenterLongitude: last.locationLongitude,
+        // TODO: Compute optimal zoom level here.
         zoom: this.settings.initialZoom || 1,
       }
     } else {

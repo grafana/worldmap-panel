@@ -33,6 +33,7 @@
 - Improve clickthroughURL interpolation.
 - Add panel control option `clickthroughOptions.windowName`
   to open clickthrough target in designated window.
+- Improve centering on “Last Geohash”
 
 ## v0.2.0
 
