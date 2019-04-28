@@ -37,7 +37,11 @@
     </gf-form-switch>
     <div class="gf-form">
       <label class="gf-form-label width-10">Clickthrough URL</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.clickthroughURL" ng-change="ctrl.refresh()" ng-model-onblur />
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.clickthroughUrl" ng-change="ctrl.refresh()" ng-model-onblur />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-10">Clickthrough Window</label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.clickthroughOptions.windowName" ng-change="ctrl.refresh()" ng-model-onblur />
     </div>
     <div class="gf-form">
       <label class="gf-form-label width-10">Decimals</label>

@@ -37,7 +37,10 @@ const panelDefaults = {
   hideEmpty: false,
   hideZero: false,
   stickyLabels: false,
-  clickthroughURL: '',
+  clickthroughUrl: '',
+  clickthroughOptions: {
+    windowName: null,
+  },
   autoPanLabels: true,
   autoWidthLabels: true,
   tableQueryOptions: {

@@ -218,8 +218,8 @@ export default class WorldMap {
      *
      */
 
-    // First, use link value directly from table control option `clickthroughURL`.
-    let linkUrl = this.ctrl.settings.interpolateVariable('clickthroughURL', dataPoint);
+    // First, use link value directly from table control option `clickthroughUrl`.
+    let linkUrl = this.ctrl.settings.interpolateVariable('clickthroughUrl', dataPoint);
 
     // Next, use link value from the data itself by using the
     // table control option `linkField` for looking it up.
@@ -233,10 +233,15 @@ export default class WorldMap {
     // Deactivate all links first.
     circle.off('click');
 
+    // Attach data point linking to circle "onclick" event.
     if (linkUrl) {
-      // Attach data point linking to circle "onclick" event.
+      const clickthroughOptions = this.ctrl.settings.clickthroughOptions;
       circle.on('click', function onClick(evt) {
-        window.location.assign(linkUrl);
+        if (clickthroughOptions.windowName) {
+          window.open(linkUrl, clickthroughOptions.windowName);
+        } else {
+          window.location.assign(linkUrl);
+        }
       });
     }
   }

@@ -77,8 +77,8 @@ export default class SmartSettings {
         // When given, use request variable "panel-*", making things like these possible.
         // - ?panel-mapCenterLatitude=62.2
         // - ?panel-showZoomControl=false
-        // - ?panel-clickthroughURL=/path/to/?geohash=$point_geohash
-        // - https://daq.example.org/d/D1Fx12kWk/magic-dashboard?panel-clickthroughURL=/path/to/?foobar=$request_foobar&foobar=hello
+        // - ?panel-clickthroughUrl=/path/to/?geohash=$point_geohash
+        // - https://daq.example.org/d/D1Fx12kWk/magic-dashboard?panel-clickthroughUrl=/path/to/?foobar=$request_foobar&foobar=hello
         const panel_query_name = 'panel-' + name;
         const panel_query_value = this._request[panel_query_name];
         if (panel_query_value !== undefined) {

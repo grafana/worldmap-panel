@@ -31,6 +31,8 @@
   respective panel control options.
 - Improve map center control handling.
 - Improve clickthroughURL interpolation.
+- Add panel control option `clickthroughOptions.windowName`
+  to open clickthrough target in designated window.
 
 ## v0.2.0
 
