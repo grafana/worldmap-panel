@@ -25,6 +25,7 @@
 - Introduce the regular Grafana templating mechanism for interpolating variables
   into clickthrough links, thus interpolating dashboard **and** dataPoint variables now.
 - Apply Grafana-style variable interpolation to **all** panel settings.
+- Add query parameters into the interpolation dictionary, prefixed by `request_`.
 
 ## v0.2.0
 

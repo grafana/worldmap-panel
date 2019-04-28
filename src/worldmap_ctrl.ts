@@ -71,9 +71,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   series: any;
   data: any;
   mapCenterMoved: boolean;
+  $location: any;
 
   /** @ngInject **/
-  constructor($scope, $injector, contextSrv, templateSrv) {
+  constructor($scope, $injector, contextSrv, templateSrv, $location) {
     super($scope, $injector);
 
     this.setMapProvider(contextSrv);
@@ -92,7 +93,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   loadSettings() {
-    this.settings = new SmartSettings(this.panel, this.templateSrv);
+    const query = this.$location.search();
+    this.settings = new SmartSettings(this.panel, this.templateSrv, query);
   }
 
   setMapProvider(contextSrv) {
