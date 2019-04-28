@@ -22,8 +22,9 @@
 - Add clickthrough option for circles, use urls from data (#190). Thanks, Leonhard.
 - Combine both clickthrough link implementations #129 and #190,
   add basic variable interpolation based on keys from `dataPoint`.
-- Use the regular Grafana templating mechanism for interpolating variables
+- Introduce the regular Grafana templating mechanism for interpolating variables
   into clickthrough links, thus interpolating dashboard **and** dataPoint variables now.
+- Apply Grafana-style variable interpolation to **all** panel settings.
 
 ## v0.2.0
 

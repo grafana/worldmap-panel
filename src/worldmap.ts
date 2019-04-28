@@ -36,16 +36,16 @@ export default class WorldMap {
 
   createMap() {
     const mapCenter = (<any>window).L.latLng(
-      parseFloat(this.ctrl.panel.mapCenterLatitude),
-      parseFloat(this.ctrl.panel.mapCenterLongitude)
+      parseFloat(this.ctrl.settings.mapCenterLatitude),
+      parseFloat(this.ctrl.settings.mapCenterLongitude)
     );
     this.map = L.map(this.mapContainer, {
       worldCopyJump: true,
       preferCanvas: true,
       center: mapCenter,
-      zoom: parseInt(this.ctrl.panel.initialZoom, 10) || 1,
-      zoomControl: this.ctrl.panel.showZoomControl,
-      attributionControl: this.ctrl.panel.showAttribution,
+      zoom: parseInt(this.ctrl.settings.initialZoom, 10) || 1,
+      zoomControl: this.ctrl.settings.showZoomControl,
+      attributionControl: this.ctrl.settings.showAttribution,
     });
     this.setMouseWheelZoom();
 
@@ -72,7 +72,7 @@ export default class WorldMap {
       let legendHtml = '';
       legendHtml +=
         '<div class="legend-item"><i style="background:' +
-        this.ctrl.panel.colors[0] +
+        this.ctrl.settings.colors[0] +
         '"></i> ' +
         '&lt; ' +
         thresholds[0] +
@@ -80,7 +80,7 @@ export default class WorldMap {
       for (let index = 0; index < thresholds.length; index += 1) {
         legendHtml +=
           '<div class="legend-item"><i style="background:' +
-          this.ctrl.panel.colors[index + 1] +
+          this.ctrl.settings.colors[index + 1] +
           '"></i> ' +
           thresholds[index] +
           (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '</div>' : '+');
@@ -90,8 +90,8 @@ export default class WorldMap {
     this.legend.addTo(this.map);
 
     // Optionally display legend in different DOM element.
-    if (this.ctrl.panel.legendContainerSelector) {
-      $(this.ctrl.panel.legendContainerSelector).append(this.legend._div);
+    if (this.ctrl.settings.legendContainerSelector) {
+      $(this.ctrl.settings.legendContainerSelector).append(this.legend._div);
     }
 
   }
@@ -112,7 +112,7 @@ export default class WorldMap {
 
   filterEmptyAndZeroValues(data) {
     return _.filter(data, o => {
-      return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) && !(this.ctrl.panel.hideZero && o.value === 0);
+      return !(this.ctrl.settings.hideEmpty && _.isNil(o.value)) && !(this.ctrl.settings.hideZero && o.value === 0);
     });
   }
 
@@ -186,8 +186,8 @@ export default class WorldMap {
   }
 
   calcCircleSize(dataPointValue) {
-    const circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10) || 2;
-    const circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10) || 30;
+    const circleMinSize = parseInt(this.ctrl.settings.circleMinSize, 10) || 2;
+    const circleMaxSize = parseInt(this.ctrl.settings.circleMaxSize, 10) || 30;
 
     if (this.ctrl.data.valueRange === 0) {
       return circleMaxSize;
@@ -242,14 +242,14 @@ export default class WorldMap {
   }
 
   createPopup(circle, locationName, value) {
-    const unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
+    const unit = value && value === 1 ? this.ctrl.settings.unitSingular : this.ctrl.settings.unitPlural;
     const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
     circle.bindPopup(label, {
       offset: (<any>window).L.point(0, -2),
       className: 'worldmap-popup',
-      closeButton: this.ctrl.panel.stickyLabels,
-      autoPan: this.ctrl.panel.autoPanLabels,
-      autoWidth: this.ctrl.panel.autoWidthLabels,
+      closeButton: this.ctrl.settings.stickyLabels,
+      autoPan: this.ctrl.settings.autoPanLabels,
+      autoWidth: this.ctrl.settings.autoWidthLabels,
     });
 
     circle.on('mouseover', function onMouseOver(evt) {
@@ -258,7 +258,7 @@ export default class WorldMap {
       this.openPopup();
     });
 
-    if (!this.ctrl.panel.stickyLabels) {
+    if (!this.ctrl.settings.stickyLabels) {
       circle.on('mouseout', function onMouseOut() {
         circle.closePopup();
       });
@@ -268,10 +268,10 @@ export default class WorldMap {
   getColor(value) {
     for (let index = this.ctrl.data.thresholds.length; index > 0; index -= 1) {
       if (value >= this.ctrl.data.thresholds[index - 1]) {
-        return this.ctrl.panel.colors[index];
+        return this.ctrl.settings.colors[index];
       }
     }
-    return _.first(this.ctrl.panel.colors);
+    return _.first(this.ctrl.settings.colors);
   }
 
   resize() {
@@ -279,7 +279,10 @@ export default class WorldMap {
   }
 
   panToMapCenter() {
-    this.map.panTo([parseFloat(this.ctrl.panel.mapCenterLatitude), parseFloat(this.ctrl.panel.mapCenterLongitude)]);
+    this.map.panTo([
+      parseFloat(this.ctrl.settings.mapCenterLatitude),
+      parseFloat(this.ctrl.settings.mapCenterLongitude)
+    ]);
     this.ctrl.mapCenterMoved = false;
   }
 
@@ -289,7 +292,7 @@ export default class WorldMap {
   }
 
   setMouseWheelZoom() {
-    if (!this.ctrl.panel.mouseWheelZoom) {
+    if (!this.ctrl.settings.mouseWheelZoom) {
       this.map.scrollWheelZoom.disable();
     } else {
       this.map.scrollWheelZoom.enable();

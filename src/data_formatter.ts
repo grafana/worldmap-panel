@@ -30,7 +30,7 @@ export default class DataFormatter {
             locationName: location.name,
             locationLatitude: location.latitude,
             locationLongitude: location.longitude,
-            value: serie.stats[this.ctrl.panel.valueName],
+            value: serie.stats[this.ctrl.settings.valueName],
             valueFormatted: lastValue,
             valueRounded: 0,
           };
@@ -43,7 +43,7 @@ export default class DataFormatter {
             lowestValue = dataValue.value;
           }
 
-          dataValue.valueRounded = kbn.roundValue(dataValue.value, parseInt(this.ctrl.panel.decimals, 10) || 0);
+          dataValue.valueRounded = kbn.roundValue(dataValue.value, parseInt(this.ctrl.settings.decimals, 10) || 0);
           data.push(dataValue);
         }
       });
@@ -67,7 +67,7 @@ export default class DataFormatter {
       link: link
     };
 
-    dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+    dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.settings.decimals || 0);
     return dataValue;
   }
 
@@ -179,20 +179,20 @@ export default class DataFormatter {
         let longitude;
         let latitude;
 
-        let label = datapoint[this.ctrl.panel.tableQueryOptions.labelField];
-        let value = datapoint[this.ctrl.panel.tableQueryOptions.metricField];
-        let link = datapoint[this.ctrl.panel.tableQueryOptions.linkField] || null;
+        let label = datapoint[this.ctrl.settings.tableQueryOptions.labelField];
+        let value = datapoint[this.ctrl.settings.tableQueryOptions.metricField];
+        let link = datapoint[this.ctrl.settings.tableQueryOptions.linkField] || null;
 
-        if (this.ctrl.panel.tableQueryOptions.queryType === 'geohash') {
-          const encodedGeohash = datapoint[this.ctrl.panel.tableQueryOptions.geohashField];
+        if (this.ctrl.settings.tableQueryOptions.queryType === 'geohash') {
+          const encodedGeohash = datapoint[this.ctrl.settings.tableQueryOptions.geohashField];
           const decodedGeohash = decodeGeoHash(encodedGeohash);
 
           latitude = decodedGeohash.latitude;
           longitude = decodedGeohash.longitude;
           key = encodedGeohash;
         } else {
-          latitude = datapoint[this.ctrl.panel.tableQueryOptions.latitudeField];
-          longitude = datapoint[this.ctrl.panel.tableQueryOptions.longitudeField];
+          latitude = datapoint[this.ctrl.settings.tableQueryOptions.latitudeField];
+          longitude = datapoint[this.ctrl.settings.tableQueryOptions.longitudeField];
           key = `${latitude}_${longitude}`;
         }
 
@@ -214,7 +214,7 @@ export default class DataFormatter {
         }
 
         // Compute rounded value.
-        let valueRounded = kbn.roundValue(value, this.ctrl.panel.decimals || 0);
+        let valueRounded = kbn.roundValue(value, this.ctrl.settings.decimals || 0);
 
         const dataValue = {
 
@@ -287,18 +287,4 @@ export default class DataFormatter {
       data.valueRange = highestValue - lowestValue;
     }
   }
-
-  interpolateVariables(target: string, variables: Object, format?: string | Function) {
-    return this.ctrl.templateSrv.replace(target, this.toScoped(variables), format);
-  }
-
-  toScoped(variables) {
-    let scopedVars = {};
-    for (let key in variables) {
-      const value = variables[key];
-      scopedVars[key] = {text: key, value: value};
-    }
-    return scopedVars;
-  }
-
 }

@@ -3,6 +3,7 @@ import TimeSeries from "grafana/app/core/time_series2";
 
 import * as _ from "lodash";
 import DataFormatter from "./data_formatter";
+import SmartSettings from "./settings";
 import "./css/worldmap-panel.css";
 import $ from "jquery";
 import "./css/leaflet.css";
@@ -61,6 +62,7 @@ const mapCenters = {
 export default class WorldmapCtrl extends MetricsPanelCtrl {
   static templateUrl = "partials/module.html";
 
+  settings: any;
   dataFormatter: DataFormatter;
   locations: any;
   tileServer: string;
@@ -79,12 +81,18 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
     this.dataFormatter = new DataFormatter(this);
 
+    this.loadSettings();
+
     this.events.on("init-edit-mode", this.onInitEditMode.bind(this));
     this.events.on("data-received", this.onDataReceived.bind(this));
     this.events.on("panel-teardown", this.onPanelTeardown.bind(this));
     this.events.on("data-snapshot-load", this.onDataSnapshotLoad.bind(this));
 
     this.loadLocationDataFromFile();
+  }
+
+  loadSettings() {
+    this.settings = new SmartSettings(this.panel, this.templateSrv);
   }
 
   setMapProvider(contextSrv) {
@@ -112,40 +120,40 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       return;
     }
 
-    if (this.panel.locationData === "jsonp endpoint" || this.panel.locationData === "table+jsonp") {
-      if (!this.panel.jsonpUrl || !this.panel.jsonpCallback) {
+    if (this.settings.locationData === "jsonp endpoint" || this.settings.locationData === "table+jsonp") {
+      if (!this.settings.jsonpUrl || !this.settings.jsonpCallback) {
         return;
       }
 
       $.ajax({
         type: "GET",
-        url: this.panel.jsonpUrl + "?callback=?",
+        url: this.settings.jsonpUrl + "?callback=?",
         contentType: "application/json",
-        jsonpCallback: this.panel.jsonpCallback,
+        jsonpCallback: this.settings.jsonpCallback,
         dataType: "jsonp",
         success: res => {
           this.locations = res;
           this.render();
         }
       });
-    } else if (this.panel.locationData === "json endpoint" || this.panel.locationData === "table+json") {
-      if (!this.panel.jsonUrl) {
+    } else if (this.settings.locationData === "json endpoint" || this.settings.locationData === "table+json") {
+      if (!this.settings.jsonUrl) {
         return;
       }
 
-      $.getJSON(this.panel.jsonUrl).then(res => {
+      $.getJSON(this.settings.jsonUrl).then(res => {
         this.locations = res;
         this.render();
       });
-    } else if (this.panel.locationData === "table") {
+    } else if (this.settings.locationData === "table") {
       // .. Do nothing
     } else if (
-      this.panel.locationData !== "geohash" &&
-      this.panel.locationData !== "json result"
+      this.settings.locationData !== "geohash" &&
+      this.settings.locationData !== "json result"
     ) {
       $.getJSON(
         "public/plugins/grafana-worldmap-panel/data/" +
-          this.panel.locationData +
+          this.settings.locationData +
           ".json"
       ).then(this.reloadLocations.bind(this));
     }
@@ -157,20 +165,20 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   showTableOptions() {
-    return _.startsWith(this.panel.locationData, "table");
+    return _.startsWith(this.settings.locationData, "table");
   }
 
   showTableGeohashOptions() {
     return (
       this.showTableOptions() &&
-      this.panel.tableQueryOptions.queryType === "geohash"
+      this.settings.tableQueryOptions.queryType === "geohash"
     );
   }
 
   showTableCoordinateOptions() {
     return (
       this.showTableOptions() &&
-      this.panel.tableQueryOptions.queryType === "coordinates"
+      this.settings.tableQueryOptions.queryType === "coordinates"
     );
   }
 
@@ -197,12 +205,12 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
     const data = [];
 
-    if (this.panel.locationData === "geohash") {
+    if (this.settings.locationData === "geohash") {
       this.dataFormatter.setGeohashValues(dataList, data);
     } else if (this.showTableOptions()) {
       const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
       this.dataFormatter.setTableValues(tableData, data);
-    } else if (this.panel.locationData === "json result") {
+    } else if (this.settings.locationData === "json result") {
       this.series = dataList;
       this.dataFormatter.setJsonValues(data);
     } else {
@@ -213,7 +221,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
     this.updateThresholdData();
 
-    if (this.data.length && this.panel.mapCenter === "Last GeoHash") {
+    if (this.data.length && this.settings.mapCenter === "Last GeoHash") {
       this.centerOnLastGeoHash();
     } else {
       this.render();
@@ -222,8 +230,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
   centerOnLastGeoHash() {
     const last: any = _.last(this.data);
-    mapCenters[this.panel.mapCenter].mapCenterLatitude = last.locationLatitude;
-    mapCenters[this.panel.mapCenter].mapCenterLongitude =
+    mapCenters[this.settings.mapCenter].mapCenterLatitude = last.locationLatitude;
+    mapCenters[this.settings.mapCenter].mapCenterLongitude =
       last.locationLongitude;
     this.setNewMapCenter();
   }
@@ -238,23 +246,23 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       alias: seriesData.target
     });
 
-    series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+    series.flotpairs = series.getFlotPairs(this.settings.nullPointMode);
     return series;
   }
 
   setNewMapCenter() {
-    if (this.panel.mapCenter !== "custom") {
-      this.panel.mapCenterLatitude =
-        mapCenters[this.panel.mapCenter].mapCenterLatitude;
-      this.panel.mapCenterLongitude =
-        mapCenters[this.panel.mapCenter].mapCenterLongitude;
+    if (this.settings.mapCenter !== "custom") {
+      this.settings.mapCenterLatitude =
+        mapCenters[this.settings.mapCenter].mapCenterLatitude;
+      this.settings.mapCenterLongitude =
+        mapCenters[this.settings.mapCenter].mapCenterLongitude;
     }
     this.mapCenterMoved = true;
     this.render();
   }
 
   setZoom() {
-    this.map.setZoom(this.panel.initialZoom || 1);
+    this.map.setZoom(this.settings.initialZoom || 1);
   }
 
   teardownMap() {
@@ -265,7 +273,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   toggleLegend() {
-    if (!this.panel.showLegend) {
+    if (!this.settings.showLegend) {
       this.map.removeLegend();
     }
     this.render();
@@ -320,7 +328,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   changeLocationData() {
     this.loadLocationDataFromFile(true);
 
-    if (this.panel.locationData === "geohash") {
+    if (this.settings.locationData === "geohash") {
       this.render();
     }
   }
@@ -356,7 +364,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         ctrl.map.panToMapCenter();
       }
 
-      if (!ctrl.map.legend && ctrl.panel.showLegend) {
+      if (!ctrl.map.legend && ctrl.settings.showLegend) {
         ctrl.map.createLegend();
       }
 
