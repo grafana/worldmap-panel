@@ -35,15 +35,16 @@ export default class WorldMap {
   }
 
   createMap() {
+    const center = this.ctrl.getMapCenter();
     const mapCenter = (<any>window).L.latLng(
-      parseFloat(this.ctrl.settings.mapCenterLatitude),
-      parseFloat(this.ctrl.settings.mapCenterLongitude)
+      center.mapCenterLatitude,
+      center.mapCenterLongitude
     );
     this.map = L.map(this.mapContainer, {
       worldCopyJump: true,
       preferCanvas: true,
       center: mapCenter,
-      zoom: parseInt(this.ctrl.settings.initialZoom, 10) || 1,
+      zoom: center.zoom,
       zoomControl: this.ctrl.settings.showZoomControl,
       attributionControl: this.ctrl.settings.showAttribution,
     });
@@ -279,10 +280,9 @@ export default class WorldMap {
   }
 
   panToMapCenter() {
-    this.map.panTo([
-      parseFloat(this.ctrl.settings.mapCenterLatitude),
-      parseFloat(this.ctrl.settings.mapCenterLongitude)
-    ]);
+    const center = this.ctrl.getMapCenter();
+    const coordinates = [center.mapCenterLatitude, center.mapCenterLongitude];
+    this.map.setView(coordinates, center.zoom, {animate: true});
     this.ctrl.mapCenterMoved = false;
   }
 

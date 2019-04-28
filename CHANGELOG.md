@@ -29,6 +29,7 @@
 - Add query parameters into the interpolation dictionary, prefixed by `request_`.
 - Use request parameters prefixed with "panel-" to optionally override the 
   respective panel control options.
+- Improve map center control handling.
 
 ## v0.2.0
 

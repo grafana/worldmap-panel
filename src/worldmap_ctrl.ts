@@ -51,12 +51,15 @@ const panelDefaults = {
 };
 
 const mapCenters = {
-  "(0°, 0°)": { mapCenterLatitude: 0, mapCenterLongitude: 0 },
-  "North America": { mapCenterLatitude: 40, mapCenterLongitude: -100 },
-  Europe: { mapCenterLatitude: 46, mapCenterLongitude: 14 },
-  "West Asia": { mapCenterLatitude: 26, mapCenterLongitude: 53 },
-  "SE Asia": { mapCenterLatitude: 10, mapCenterLongitude: 106 },
-  "Last GeoHash": { mapCenterLatitude: 0, mapCenterLongitude: 0 }
+  "(0°, 0°)": { mapCenterLatitude: 0, mapCenterLongitude: 0, initialZoom: 1 },
+  "Belgium": { mapCenterLatitude: 50.53665, mapCenterLongitude: 4.39851, initialZoom: 7 },
+  "Europe": { mapCenterLatitude: 46, mapCenterLongitude: 14, initialZoom: 4 },
+  "Germany": { mapCenterLatitude: 51.35149, mapCenterLongitude: 10.45412, initialZoom: 5 },
+  "North America": { mapCenterLatitude: 40, mapCenterLongitude: -100, initialZoom: 3 },
+  "SE Asia": { mapCenterLatitude: 10, mapCenterLongitude: 106, initialZoom: 4 },
+  "Sweden": { mapCenterLatitude: 62.91154, mapCenterLongitude: 17.38539, initialZoom: 4 },
+  "West Asia": { mapCenterLatitude: 26, mapCenterLongitude: 53, initialZoom: 4 },
+  "Last GeoHash": { mapCenterLatitude: 0, mapCenterLongitude: 0 },
 };
 
 export default class WorldmapCtrl extends MetricsPanelCtrl {
@@ -253,18 +256,45 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   setNewMapCenter() {
-    if (this.settings.mapCenter !== "custom") {
-      this.settings.mapCenterLatitude =
-        mapCenters[this.settings.mapCenter].mapCenterLatitude;
-      this.settings.mapCenterLongitude =
-        mapCenters[this.settings.mapCenter].mapCenterLongitude;
-    }
+    const center = this.getMapCenter();
+    this.panel.mapCenterLatitude = center.mapCenterLatitude;
+    this.panel.mapCenterLongitude = center.mapCenterLongitude;
     this.mapCenterMoved = true;
     this.render();
   }
 
+  getMapCenter() {
+    let center:any = {};
+    if (this.settings.mapCenter == "custom") {
+      center = {
+        mapCenterLatitude: this.settings.mapCenterLatitude,
+        mapCenterLongitude: this.settings.mapCenterLongitude,
+        zoom: this.settings.initialZoom || 1,
+      }
+    } else {
+      center = {
+        mapCenterLatitude: mapCenters[this.settings.mapCenter].mapCenterLatitude,
+        mapCenterLongitude: mapCenters[this.settings.mapCenter].mapCenterLongitude,
+        zoom: this.settings.initialZoom || mapCenters[this.settings.mapCenter].initialZoom || 1,
+      }
+    }
+    center = {
+      mapCenterLatitude: parseFloat(center.mapCenterLatitude),
+      mapCenterLongitude: parseFloat(center.mapCenterLongitude),
+      zoom: parseInt(center.zoom),
+    };
+    return center;
+  }
+
+  getMapCenterChoices() {
+    const choices = _.keys(mapCenters);
+    choices.push("custom");
+    return choices;
+  }
+
   setZoom() {
-    this.map.setZoom(this.settings.initialZoom || 1);
+    const center = this.getMapCenter();
+    this.map.setZoom(center.zoom);
   }
 
   teardownMap() {
