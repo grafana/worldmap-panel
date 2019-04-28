@@ -218,23 +218,22 @@ export default class WorldMap {
      *
      */
 
-    // First, try to use link value from the data itself by using the
-    // table control option `linkField` for looking it up.
-    var linkUrl = dataPoint.link;
+    // First, use link value directly from table control option `clickthroughURL`.
+    let linkUrl = this.ctrl.settings.interpolateVariable('clickthroughURL', dataPoint);
 
-    // Next, try to use link value directly from table control option `clickthroughURL`.
-    if (!linkUrl && this.ctrl.panel.clickthroughURL) {
-      linkUrl = this.ctrl.panel.clickthroughURL;
+    // Next, use link value from the data itself by using the
+    // table control option `linkField` for looking it up.
+    if (dataPoint.link) {
+      linkUrl = dataPoint.link;
+
+      // Interpolate the dashboard and dataPoint variables.
+      linkUrl = this.ctrl.settings.interpolateVariableValue(linkUrl, dataPoint);
     }
 
     // Deactivate all links first.
     circle.off('click');
 
     if (linkUrl) {
-
-      // Interpolate the dashboard and dataPoint variables.
-      linkUrl = this.ctrl.dataFormatter.interpolateVariables(linkUrl, dataPoint);
-
       // Attach data point linking to circle "onclick" event.
       circle.on('click', function onClick(evt) {
         window.location.assign(linkUrl);

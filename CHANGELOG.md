@@ -30,6 +30,7 @@
 - Use request parameters prefixed with "panel-" to optionally override the 
   respective panel control options.
 - Improve map center control handling.
+- Improve clickthroughURL interpolation.
 
 ## v0.2.0
 
