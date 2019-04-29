@@ -1,7 +1,9 @@
 <div class="editor-row">
   <div class="section gf-form-group">
     <h5 class="section-heading">Map Visual Options</h5>
-    <div class="gf-form">
+    <gf-form-switch class="gf-form" label="Fit to data" label-class="width-10" checked="ctrl.panel.mapFitData" on-change="ctrl.setNewMapCenter()">
+    </gf-form-switch>
+    <div class="gf-form" ng-show="ctrl.panel.mapFitData != true">
       <label class="gf-form-label width-10">Center</label>
       <div class="gf-form-select-wrapper max-width-10">
         <select class="input-small gf-form-input" ng-model="ctrl.panel.mapCenter" ng-options="t for t in ctrl.getMapCenterChoices()"
@@ -14,10 +16,15 @@
           ng-model-onblur />
       </div>
     </div>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Initial Zoom</label>
+    <div class="gf-form" ng-show="ctrl.panel.mapFitData != true">
+      <label class="gf-form-label width-10">Zoom level</label>
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.initialZoom" ng-change="ctrl.setZoom()"
         placeholder="1" ng-model-onblur />
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.mapFitData != true">
+      <label class="gf-form-label width-10">Zoom radius (km)</label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.mapZoomByRadius" ng-change="ctrl.setZoom()"
+        placeholder="42.5" ng-model-onblur />
     </div>
     <div class="gf-form">
       <label class="gf-form-label width-10">Min Circle Size</label>

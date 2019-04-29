@@ -11,10 +11,12 @@ import WorldMap from "./worldmap";
 
 const panelDefaults = {
   maxDataPoints: 1,
+  mapFitData: false,
   mapCenter: "(0°, 0°)",
   mapCenterLatitude: 0,
   mapCenterLongitude: 0,
   initialZoom: 1,
+  mapZoomByRadius: null,
   valueName: "total",
   circleMinSize: 2,
   circleMaxSize: 30,
@@ -230,7 +232,12 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
     this.updateThresholdData();
 
-    if (this.data.length && (this.settings.mapCenter === "First GeoHash" || this.settings.mapCenter === "Last GeoHash")) {
+    const autoMapSection =
+        this.settings.mapCenter === "First GeoHash" ||
+        this.settings.mapCenter === "Last GeoHash" ||
+        this.settings.mapFitData;
+
+    if (this.data.length && autoMapSection) {
       this.setNewMapCenter();
     } else {
       this.render();
@@ -252,49 +259,45 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   setNewMapCenter() {
-    const center = this.getMapCenter();
-    this.panel.mapCenterLatitude = center.mapCenterLatitude;
-    this.panel.mapCenterLongitude = center.mapCenterLongitude;
+    //const mapDimensions = this.getMapDimensions();
+    //this.panel.mapCenterLatitude = mapDimensions.mapCenterLatitude;
+    //this.panel.mapCenterLongitude = mapDimensions.mapCenterLongitude;
     this.mapCenterMoved = true;
     this.render();
   }
 
-  getMapCenter() {
-    let center:any = {};
-    if (this.settings.mapCenter == "custom") {
-      center = {
-        mapCenterLatitude: this.settings.mapCenterLatitude,
-        mapCenterLongitude: this.settings.mapCenterLongitude,
-        zoom: this.settings.initialZoom || 1,
-      }
-    } else if (this.settings.mapCenter == "First GeoHash") {
-      const first: any = _.first(this.data);
-      center = {
-        mapCenterLatitude: first.locationLatitude,
-        mapCenterLongitude: first.locationLongitude,
-        // TODO: Compute optimal zoom level here.
-        zoom: this.settings.initialZoom || 1,
-      }
-    } else if (this.settings.mapCenter == "Last GeoHash") {
-      const last: any = _.last(this.data);
-      center = {
-        mapCenterLatitude: last.locationLatitude,
-        mapCenterLongitude: last.locationLongitude,
-        // TODO: Compute optimal zoom level here.
-        zoom: this.settings.initialZoom || 1,
-      }
-    } else {
-      center = {
-        mapCenterLatitude: mapCenters[this.settings.mapCenter].mapCenterLatitude,
-        mapCenterLongitude: mapCenters[this.settings.mapCenter].mapCenterLongitude,
-        zoom: this.settings.initialZoom || mapCenters[this.settings.mapCenter].initialZoom || 1,
-      }
-    }
-    center = {
-      mapCenterLatitude: parseFloat(center.mapCenterLatitude),
-      mapCenterLongitude: parseFloat(center.mapCenterLongitude),
-      zoom: parseInt(center.zoom),
+  getMapDimensions() {
+
+    let center:any = {
+      mapFitData: this.settings.mapFitData,
+      mapCenter: this.settings.mapCenter,
+      mapCenterLatitude: this.settings.mapCenterLatitude,
+      mapCenterLongitude: this.settings.mapCenterLongitude,
+      mapZoomLevel: this.settings.initialZoom,
+      mapZoomByRadius: this.settings.mapZoomByRadius,
     };
+
+    if (this.data.length && this.settings.mapCenter == "First GeoHash") {
+      const first:any = _.first(this.data);
+      center.mapCenterLatitude = first.locationLatitude;
+      center.mapCenterLongitude = first.locationLongitude;
+
+    } else if (this.data.length && this.settings.mapCenter == "Last GeoHash") {
+      const last: any = _.last(this.data);
+      center.mapCenterLatitude = last.locationLatitude;
+      center.mapCenterLongitude = last.locationLongitude;
+
+    } else if (mapCenters[this.settings.mapCenter]) {
+      center.mapCenterLatitude = mapCenters[this.settings.mapCenter].mapCenterLatitude;
+      center.mapCenterLongitude = mapCenters[this.settings.mapCenter].mapCenterLongitude;
+      center.mapZoomLevel = this.settings.initialZoom || mapCenters[this.settings.mapCenter].initialZoom;
+    }
+
+    center.mapCenterLatitude = parseFloat(center.mapCenterLatitude);
+    center.mapCenterLongitude = parseFloat(center.mapCenterLongitude);
+    center.mapZoomLevel = parseInt(center.mapZoomLevel) || 1;
+    center.mapZoomByRadius = parseFloat(center.mapZoomByRadius) || null;
+
     return center;
   }
 
@@ -305,8 +308,9 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   setZoom() {
-    const center = this.getMapCenter();
-    this.map.setZoom(center.zoom);
+    //const mapDimensions = this.getMapDimensions();
+    //this.map.setZoom(mapDimensions.mapZoomLevel);
+    this.setNewMapCenter();
   }
 
   teardownMap() {
@@ -394,25 +398,30 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         return;
       }
 
+      let animateMap = true;
+
       if (!ctrl.map) {
         const map = new WorldMap(ctrl, mapContainer[0]);
         map.createMap();
         ctrl.map = map;
+        ctrl.mapCenterMoved = true;
+        animateMap = false;
       }
 
       setTimeout(() => {
         ctrl.map.resize();
       }, 1);
 
-      if (ctrl.mapCenterMoved) {
-        ctrl.map.panToMapCenter();
-      }
-
       if (!ctrl.map.legend && ctrl.settings.showLegend) {
         ctrl.map.createLegend();
       }
 
       ctrl.map.drawCircles();
+
+      if (ctrl.mapCenterMoved) {
+        ctrl.map.panToMapCenter({animate: animateMap});
+      }
+
     }
   }
 }

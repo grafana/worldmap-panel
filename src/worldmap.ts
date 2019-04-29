@@ -35,7 +35,7 @@ export default class WorldMap {
   }
 
   createMap() {
-    const center = this.ctrl.getMapCenter();
+    const center = this.ctrl.getMapDimensions();
     const mapCenter = (<any>window).L.latLng(
       center.mapCenterLatitude,
       center.mapCenterLongitude
@@ -44,7 +44,7 @@ export default class WorldMap {
       worldCopyJump: true,
       preferCanvas: true,
       center: mapCenter,
-      zoom: center.zoom,
+      zoom: center.mapZoomLevel,
       zoomControl: this.ctrl.settings.showZoomControl,
       attributionControl: this.ctrl.settings.showAttribution,
     });
@@ -283,10 +283,35 @@ export default class WorldMap {
     this.map.invalidateSize();
   }
 
-  panToMapCenter() {
-    const center = this.ctrl.getMapCenter();
-    const coordinates = [center.mapCenterLatitude, center.mapCenterLongitude];
-    this.map.setView(coordinates, center.zoom, {animate: true});
+  panToMapCenter(options?: any) {
+    const mapDimensions = this.ctrl.getMapDimensions();
+
+    let coordinates = [mapDimensions.mapCenterLatitude, mapDimensions.mapCenterLongitude];
+    let zoomLevel = mapDimensions.mapZoomLevel;
+
+    // TODO: Use map.getBoundsZoom(bounds) here.
+    // https://leafletjs.com/reference-1.4.0.html#map-getboundszoom
+    if (mapDimensions.mapFitData) {
+      if (this.circlesLayer) {
+        const group = L.featureGroup(this.circlesLayer.getLayers());
+        const bounds = group.getBounds();
+        coordinates = bounds.getCenter();
+        zoomLevel = this.map.getBoundsZoom(bounds);
+      }
+
+    } else if (mapDimensions.mapZoomByRadius) {
+      // Adding and removing a Leaflet layer to/from a map within a single frame will not trigger any animations.
+      // https://github.com/Leaflet/Leaflet/issues/5357#issuecomment-282023917
+      const radius = mapDimensions.mapZoomByRadius * 1000.0;
+      const circle = L.circle(coordinates, {radius: radius}).addTo(this.map);
+      const bounds = circle.getBounds();
+      circle.remove();
+      coordinates = bounds.getCenter();
+      zoomLevel = this.map.getBoundsZoom(bounds);
+    }
+
+    this.map.setView(coordinates, zoomLevel, options);
+
     this.ctrl.mapCenterMoved = false;
   }
 

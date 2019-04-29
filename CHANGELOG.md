@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.0-dev2
+## v0.3.0-dev
 
 - Add new mapping options "table+json" and "table+jsonp" to retrieve
   location information from JSON endpoint, even for table data.
@@ -11,7 +11,7 @@
 - Increase form field width for JSON endpoint url settings.
 - Fix conditional table options display in settings editor.
 - Add "showTableOptions()" conditional for signalling any type of table source.
-- Add software tests for options
+- Add software tests covering new control options
     - locationData: "table+json(p)"
     - showZoomControl: false
     - showAttribution: false
@@ -28,12 +28,14 @@
 - Apply Grafana-style variable interpolation to **all** panel settings.
 - Add query parameters into the interpolation dictionary, prefixed by `request_`.
 - Use request parameters prefixed with "panel-" to optionally override the 
-  respective panel control options.
+  respective control options.
 - Improve map center control handling.
 - Improve clickthroughURL interpolation.
-- Add panel control option `clickthroughOptions.windowName`
+- Add control option `clickthroughOptions.windowName`
   to open clickthrough target in designated window.
 - Improve centering on “Last Geohash”
+- Add support for "First Geohash" centering (#156). Thanks, Fabien.
+- Add control options `mapFitData` and `mapZoomByRadius`.
 
 ## v0.2.0
 
