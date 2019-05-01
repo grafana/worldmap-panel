@@ -27,7 +27,7 @@
   variables, the latter one will get prefixed with "point_" to avoid collisions.
 - Apply Grafana-style variable interpolation to **all** panel settings.
 - Add query parameters into the interpolation dictionary, prefixed by `request_`.
-- Use request parameters prefixed with "panel-" to optionally override the 
+- Use request parameters prefixed with "panel-" to optionally override the
   respective control options.
 - Improve map center control handling.
 - Improve clickthroughURL interpolation.
@@ -36,6 +36,7 @@
 - Improve centering on “Last Geohash”
 - Add support for "First Geohash" centering (#156). Thanks, Fabien.
 - Add control options `mapFitData` and `mapZoomByRadius`.
+- Repaint user interface
 
 ## v0.2.0
 

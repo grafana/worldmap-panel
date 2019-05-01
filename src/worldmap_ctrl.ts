@@ -27,7 +27,7 @@ const panelDefaults = {
     "rgba(237, 129, 40, 0.89)",
     "rgba(50, 172, 45, 0.97)"
   ],
-  unitSingle: "",
+  unitSingular: "",
   unitPlural: "",
   showLegend: true,
   legendContainerSelector: null,

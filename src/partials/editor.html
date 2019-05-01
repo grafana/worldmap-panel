@@ -1,92 +1,23 @@
+<!-- Data mapping -->
 <div class="editor-row">
-  <div class="section gf-form-group">
-    <h5 class="section-heading">Map Visual Options</h5>
-    <gf-form-switch class="gf-form" label="Fit to data" label-class="width-10" checked="ctrl.panel.mapFitData" on-change="ctrl.setNewMapCenter()">
-    </gf-form-switch>
-    <div class="gf-form" ng-show="ctrl.panel.mapFitData != true">
-      <label class="gf-form-label width-10">Center</label>
-      <div class="gf-form-select-wrapper max-width-10">
-        <select class="input-small gf-form-input" ng-model="ctrl.panel.mapCenter" ng-options="t for t in ctrl.getMapCenterChoices()"
-          ng-change="ctrl.setNewMapCenter()"></select>
-      </div>
-      <div class="gf-form" ng-show="ctrl.panel.mapCenter === 'custom'">
-        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.mapCenterLatitude" ng-change="ctrl.setNewMapCenter()"
-          ng-model-onblur />
-        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.mapCenterLongitude" ng-change="ctrl.setNewMapCenter()"
-          ng-model-onblur />
-      </div>
-    </div>
-    <div class="gf-form" ng-show="ctrl.panel.mapFitData != true">
-      <label class="gf-form-label width-10">Zoom level</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.initialZoom" ng-change="ctrl.setZoom()"
-        placeholder="1" ng-model-onblur />
-    </div>
-    <div class="gf-form" ng-show="ctrl.panel.mapFitData != true">
-      <label class="gf-form-label width-10">Zoom radius (km)</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.mapZoomByRadius" ng-change="ctrl.setZoom()"
-        placeholder="42.5" ng-model-onblur />
-    </div>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Min Circle Size</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMinSize" ng-change="ctrl.render()"
-        placeholder="2" ng-model-onblur />
-    </div>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Max Circle Size</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMaxSize" ng-change="ctrl.render()"
-        placeholder="30" ng-model-onblur />
-    </div>
-    <gf-form-switch class="gf-form" label="Sticky Labels" label-class="width-10" checked="ctrl.panel.stickyLabels" on-change="ctrl.toggleStickyLabels()">
-    </gf-form-switch>
-    <gf-form-switch class="gf-form" label="Auto-pan Labels" label-class="width-10" checked="ctrl.panel.autoPanLabels" on-change="ctrl.render()">
-    </gf-form-switch>
-    <gf-form-switch class="gf-form" label="Auto-width Labels" label-class="width-10" checked="ctrl.panel.autoWidthLabels" on-change="ctrl.render()">
-    </gf-form-switch>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Clickthrough URL</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.clickthroughUrl" ng-change="ctrl.refresh()" ng-model-onblur />
-    </div>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Clickthrough Window</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.clickthroughOptions.windowName" ng-change="ctrl.refresh()" ng-model-onblur />
-    </div>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Decimals</label>
-      <input type="number" class="input-small gf-form-input width-10" ng-model="ctrl.panel.decimals" ng-change="ctrl.refresh()"
-        ng-model-onblur />
-    </div>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Unit</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.unitSingular" placeholder="singular form"
-        ng-change="ctrl.render()" ng-model-onblur />
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.unitPlural" placeholder="plural form"
-        ng-change="ctrl.render()" ng-model-onblur />
-    </div>
-    <gf-form-switch class="gf-form" label="Show Legend" label-class="width-10" checked="ctrl.panel.showLegend" on-change="ctrl.toggleLegend()"></gf-form-switch>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Legend container</label>
-      <input type="text" class="input-small gf-form-input width-20" ng-model="ctrl.panel.legendContainerSelector"
-             placeholder=".shared-map-legend" ng-change="ctrl.toggleLegendContainer()" ng-model-onblur />
-    </div>
-    <gf-form-switch class="gf-form" label="Show Zoom Control" label-class="width-10" checked="ctrl.panel.showZoomControl" on-change="ctrl.toggleZoomControl()"></gf-form-switch>
-    <gf-form-switch class="gf-form" label="Show Attribution" label-class="width-10" checked="ctrl.panel.showAttribution" on-change="ctrl.toggleAttribution()"></gf-form-switch>
-    <gf-form-switch class="gf-form" label="Mouse Wheel Zoom" label-class="width-10" checked="ctrl.panel.mouseWheelZoom" on-change="ctrl.toggleMouseWheelZoom()"></gf-form-switch>
-  </div>
-  <div class="section gf-form-group">
-    <h5 class="section-heading">Map Data Options</h5>
+  <h3 class="main-section-heading">Data mapping</h3>
+
+  <!-- Data source -->
+  <div class="section editor-column">
+    <h5>Data source</h5>
     <div class="gf-form-group">
       <div class="gf-form">
         <label class="gf-form-label width-12">Location Data</label>
         <div class="gf-form-select-wrapper width-24">
           <select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'countries_3letter', 'states', 'probes', 'geohash', 'json endpoint', 'jsonp endpoint', 'json result', 'table', 'table+json', 'table+jsonp']"
-            ng-change="ctrl.changeLocationData()"></select>
+                  ng-change="ctrl.changeLocationData()"></select>
         </div>
       </div>
       <div class="gf-form" ng-show="ctrl.panel.locationData !== 'geohash'">
         <label class="gf-form-label width-12">Aggregation</label>
         <div class="gf-form-select-wrapper max-width-10">
           <select class="input-small gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ['min','max','avg', 'current', 'total']"
-            ng-change="ctrl.refresh()"></select>
+                  ng-change="ctrl.refresh()"></select>
         </div>
       </div>
       <div class="gf-form" ng-show="ctrl.panel.locationData === 'json endpoint' || ctrl.panel.locationData === 'table+json'">
@@ -102,151 +33,295 @@
       <div class="gf-form" ng-show="ctrl.panel.locationData === 'jsonp endpoint' || ctrl.panel.locationData === 'table+jsonp'">
         <label class="gf-form-label width-12">JSONP callback</label>
         <input type="text" class="input-small gf-form-input width-24" ng-model="ctrl.panel.jsonpCallback" ng-change="ctrl.refresh()"
-          ng-model-onblur />
+               ng-model-onblur />
       </div>
     </div>
-    <div class="grafana-info-box max-width-28" ng-show="ctrl.panel.locationData ==='countries'">
+  </div>
+
+  <!-- Field mapping -->
+  <div class="section editor-column" ng-show="ctrl.showTableOptions() || ctrl.panel.locationData === 'geohash'">
+
+    <h5>Field mapping</h5>
+
+    <!-- table options -->
+    <div class="gf-form-group">
+      <div class="gf-form" ng-show="ctrl.showTableOptions()">
+        <label class="gf-form-label width-12">Geolocation source</label>
+        <div class="gf-form-select-wrapper max-width-10">
+          <select class="input-small gf-form-input" ng-model="ctrl.panel.tableQueryOptions.queryType" ng-options="t for t in ['geohash', 'coordinates']"
+                  ng-change="ctrl.refresh()"></select>
+        </div>
+      </div>
+      <div class="gf-form" ng-show="ctrl.showTableGeohashOptions()">
+        <label class="gf-form-label width-12">Geohash field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.geohashField" ng-change="ctrl.refresh()"
+               placeholder="geohash" ng-model-onblur />
+      </div>
+      <div class="gf-form" ng-show="ctrl.showTableCoordinateOptions()">
+        <label class="gf-form-label width-12">Latitude field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.latitudeField" ng-change="ctrl.refresh()"
+               placeholder="latitude" ng-model-onblur />
+      </div>
+      <div class="gf-form" ng-show="ctrl.showTableCoordinateOptions()">
+        <label class="gf-form-label width-12">Longitude field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.longitudeField" ng-change="ctrl.refresh()"
+               placeholder="longitude" ng-model-onblur />
+      </div>
+      <div class="gf-form" ng-show="ctrl.showTableOptions()">
+        <label class="gf-form-label width-12">Metric field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.metricField" ng-change="ctrl.refresh()"
+               placeholder="metric" ng-model-onblur />
+      </div>
+      <div class="gf-form" ng-show="ctrl.showTableOptions()">
+        <label class="gf-form-label width-12">Location name field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.labelField" ng-change="ctrl.refresh()"
+               placeholder="" ng-model-onblur />
+      </div>
+      <div class="gf-form" ng-show="ctrl.showTableOptions()">
+        <label class="gf-form-label width-12">Link field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.linkField" ng-change="ctrl.refresh()"
+               placeholder="" ng-model-onblur />
+      </div>
+
+      <!-- geohash options -->
+      <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
+        <label class="gf-form-label width-12">geo_point/geohash field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esGeoPoint" ng-change="ctrl.refresh()"
+               ng-model-onblur />
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
+        <label class="gf-form-label width-12">Metric field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esMetric" ng-change="ctrl.refresh()" ng-model-onblur
+        />
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
+        <label class="gf-form-label width-12">Location name field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLocationName" ng-change="ctrl.refresh()"
+               ng-model-onblur />
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
+        <label class="gf-form-label width-12">Link field</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLink" ng-change="ctrl.refresh()" ng-model-onblur
+        />
+      </div>
+    </div>
+
+    <div class="gf-form-group">
+      <h5>Filtering</h5>
+      <gf-form-switch class="gf-form" label="Skip empty values" label-class="width-10" checked="ctrl.panel.hideEmpty" on-change="ctrl.render()">
+      </gf-form-switch>
+      <gf-form-switch class="gf-form" label="Skip zero values" label-class="width-10" checked="ctrl.panel.hideZero" on-change="ctrl.render()">
+      </gf-form-switch>
+    </div>
+
+  </div>
+
+  <!-- Help -->
+  <div class="section editor-column">
+    <h5>Help</h5>
+    <div class="grafana-info-box" ng-show="ctrl.panel.locationData === 'countries'">
       <h5>Mapping Between Time Series Query and Worldmap</h5>
       <p>The query should be formatted as Time Series data. The time series (group by) name should be a 2-letter country code.
         For example: US for United States or FR for France.</p>
     </div>
-    <div class="grafana-info-box max-width-28" ng-show="ctrl.panel.locationData ==='countries_3letter'">
+    <div class="grafana-info-box" ng-show="ctrl.panel.locationData === 'countries_3letter'">
       <h5>Mapping Between Time Series Query and Worldmap</h5>
       <p>The query should be formatted as Time Series data. The time series (group by) name should be a 3-letter country code.
         For example: USA for United States or FRA for France.</p>
     </div>
-    <div class="grafana-info-box max-width-28" ng-show="ctrl.panel.locationData ==='states'">
-        <h5>Mapping Between Time Series Query and Worldmap</h5>
-        <p>The query should be formatted as Time Series data. The time series (group by) name should be a 2-letter US state code.
-          For example: CA for California.</p>
-      </div>
-    <div class="grafana-info-box max-width-28" ng-show="ctrl.panel.locationData ==='geohash'">
+    <div class="grafana-info-box" ng-show="ctrl.panel.locationData === 'states'">
+      <h5>Mapping Between Time Series Query and Worldmap</h5>
+      <p>The query should be formatted as Time Series data. The time series (group by) name should be a 2-letter US state code.
+        For example: CA for California.</p>
+    </div>
+    <div class="grafana-info-box" ng-show="ctrl.panel.locationData === 'geohash'">
       <h5>Mapping Between Geohash Query and Worldmap</h5>
-      <p>The query should be an Elasticsearch using the Geo Hash Grid feature or a Prometheus query that returns geohashes.</p>
+      <p>The query should be an <b>Elasticsearch</b> query using the GeoHash grid aggregation feature
+        returning geo_point values or a <b>Prometheus</b> query that returns geohashes.</p>
       <ul>
         <li>
-          <b>Location Name Field (optional)</b>: enter the name of the Location Name column. Used to label each circle on the
-          map. If it is empty then the geohash value is used as the label.</li>
-        <li>
-          <b>geo_point/geohash Field</b>: enter the name of the geo_point/geohash column. This is used to calculate where the
+          <b>geo_point/geohash field</b>: Enter the name of the geo_point/geohash column. This is used to calculate where the
           circle should be drawn.</li>
-        <li>
-          <b>Metric Field</b>: enter the name of the metric column. This is used to give the circle a value - this determines
-          how large the circle is.</li>
+        <ng-template ng-include="'help_metric_field'"></ng-template>
+        <ng-template ng-include="'help_location_field'"></ng-template>
       </ul>
     </div>
-    <div class="grafana-info-box max-width-28" ng-show="ctrl.showTableGeohashOptions()">
+    <div class="grafana-info-box" ng-show="ctrl.showTableGeohashOptions()">
       <h5>Mapping Between Table Query and Worldmap</h5>
-      <p>The query should be formatted as Table data and have a geohash column and a numeric metric column.</p>
+      <p>The query should be formatted as <b>table data</b> and contain an obligatory <b>geohash</b> column
+        as well as optional data like a <b>metric</b> column.</p>
       <ul>
         <li>
-          <b>Location Name Field (optional)</b>: enter the name of the Location Name column. Used to label each circle on the
-          map. If it is empty then the geohash value is used as the label.</li>
-        <li>
-          <b>Geohash Field</b>: enter the name of the geohash column. This is used to calculate where the circle should be drawn.</li>
-        <li>
-          <b>Metric Field</b>: enter the name of the metric column. This is used to give the circle a value - this determines
-          how large the circle is.</li>
+          <b>Geohash field</b>: Enter the name of the geohash column. This is used to calculate where the circle should be drawn.</li>
+        <ng-template ng-include="'help_metric_field'"></ng-template>
+        <ng-template ng-include="'help_location_field'"></ng-template>
       </ul>
     </div>
-    <div class="grafana-info-box max-width-28" ng-show="ctrl.showTableCoordinateOptions()">
+    <div class="grafana-info-box" ng-show="ctrl.showTableCoordinateOptions()">
       <h5>Mapping Between Table Query and Worldmap</h5>
-      <p>The query should be formatted as Table data and contain latitude, longitude columns and a numeric metric column.</p>
+      <p>The query should be formatted as <b>table data</b> and contain obligatory <b>latitude, longitude</b> columns
+        as well as optional data like a <b>metric</b> column.</p>
       <ul>
         <li>
-          <b>Location Name Field (optional)</b>: enter the name of the Location Name column. Used to label each circle on the
-          map. If it is empty then the value N/A is used as the label.</li>
-        <li>
-          <b>Latitude/Longitude Fields</b>: enter the name of the latitude and longitude columns. These are used to calculate
+          <b>Latitude/Longitude fields</b>: Enter the name of the latitude and longitude columns. These are used to calculate
           where the circle should be drawn.</li>
+        <ng-template ng-include="'help_metric_field'"></ng-template>
         <li>
-          <b>Metric Field</b>: enter the name of the metric column. This is used to give the circle a value - this determines
-          how large the circle is.</li>
+          <b>Location name field (optional)</b>: Enter the name of the location name column. Used to label each circle on the
+          map. If it is empty then N/A is used as the label.</li>
       </ul>
     </div>
-    <h6 ng-show="ctrl.showTableOptions() || ctrl.panel.locationData === 'geohash'">Field Mapping</h6>
+  </div>
 
-    <!-- table options -->
-    <div class="gf-form" ng-show="ctrl.showTableOptions()">
-      <label class="gf-form-label width-12">Table Query Format</label>
-      <div class="gf-form-select-wrapper max-width-10">
-        <select class="input-small gf-form-input" ng-model="ctrl.panel.tableQueryOptions.queryType" ng-options="t for t in ['geohash', 'coordinates']"
-          ng-change="ctrl.refresh()"></select>
+</div>
+
+<script type="text/ng-template" id="help_metric_field">
+  <li>
+    <b>Metric field (optional)</b>: Enter the name of the metric column. The value is used to determine how large the circle is
+    displayed (when not limited by the minimum/maximum circle size options below) and will also be used to colorize
+    the circle by mapping the value against configured thresholds.</li>
+</script>
+<script type="text/ng-template" id="help_location_field">
+  <li>
+    <b>Location name field (optional)</b>: Enter the name of the location name column. Used to label each circle on the
+    map. If it is empty then the geohash value is used as the label.</li>
+  <li>
+    <b>Link field (optional)</b>: Enter the name of the link column. When this is set, use value as an URL template
+    for clickthrough-linking, overriding any value configured through "Clickthrough URL". Because this will invoke
+    the full variable interpolation machinery, this might have considerable performance impact when operating on
+    large datasets.</li>
+</script>
+
+<hr/>
+
+<!-- Visual options -->
+<div class="editor-row">
+  <h3 class="main-section-heading">Visual options</h3>
+
+  <!-- 1st column -->
+  <div class="section editor-column">
+
+    <div class="gf-form-group">
+      <h5>Center and zoom level</h5>
+      <gf-form-switch class="gf-form" label="Fit to data" label-class="width-10" checked="ctrl.panel.mapFitData" on-change="ctrl.setNewMapCenter()">
+      </gf-form-switch>
+      <div class="gf-form" ng-show="ctrl.panel.mapFitData != true">
+        <label class="gf-form-label width-10">Center</label>
+        <div class="gf-form-select-wrapper max-width-18">
+          <select class="input-small gf-form-input" ng-model="ctrl.panel.mapCenter" ng-options="t for t in ctrl.getMapCenterChoices()"
+            ng-change="ctrl.setNewMapCenter()"></select>
+        </div>
+        <div class="gf-form" ng-show="ctrl.panel.mapCenter === 'custom'">
+          <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.mapCenterLatitude" ng-change="ctrl.setNewMapCenter()"
+            ng-model-onblur />
+          <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.mapCenterLongitude" ng-change="ctrl.setNewMapCenter()"
+            ng-model-onblur />
+        </div>
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.mapFitData != true">
+        <label class="gf-form-label width-10">Zoom level</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.initialZoom" ng-change="ctrl.setZoom()"
+          placeholder="1" ng-model-onblur />
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.mapFitData != true">
+        <label class="gf-form-label width-10">Zoom radius (km)</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.mapZoomByRadius" ng-change="ctrl.setZoom()"
+          placeholder="42.5" ng-model-onblur />
       </div>
     </div>
-    <div class="gf-form" ng-show="ctrl.showTableOptions()">
-      <label class="gf-form-label width-12">Location Name Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.labelField" ng-change="ctrl.refresh()"
-        ng-model-onblur />
-    </div>
-    <div class="gf-form" ng-show="ctrl.showTableGeohashOptions()">
-      <label class="gf-form-label width-12">Geohash Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.geohashField" ng-change="ctrl.refresh()"
-        ng-model-onblur />
-    </div>
-    <div class="gf-form" ng-show="ctrl.showTableOptions()">
-      <label class="gf-form-label width-12">Metric Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.metricField" ng-change="ctrl.refresh()"
-        ng-model-onblur />
-    </div>
-    <div class="gf-form" ng-show="ctrl.showTableCoordinateOptions()">
-      <label class="gf-form-label width-12">Latitude Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.latitudeField" ng-change="ctrl.refresh()"
-        ng-model-onblur />
-    </div>
-    <div class="gf-form" ng-show="ctrl.showTableCoordinateOptions()">
-      <label class="gf-form-label width-12">Longitude Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.longitudeField" ng-change="ctrl.refresh()"
-        ng-model-onblur />
-    </div>
-    <div class="gf-form" ng-show="ctrl.showTableOptions()">
-      <label class="gf-form-label width-12">Link Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.tableQueryOptions.linkField" ng-change="ctrl.refresh()"
-        ng-model-onblur />
+
+    <div class="gf-form-group">
+      <h5>Appearance</h5>
+      <gf-form-switch class="gf-form" label="Show Legend" label-class="width-10" checked="ctrl.panel.showLegend" on-change="ctrl.toggleLegend()"></gf-form-switch>
+      <div class="gf-form" ng-show="ctrl.panel.showLegend == true">
+        <label class="gf-form-label width-10">Legend container</label>
+        <input type="text" class="input-small gf-form-input max-width-18" ng-model="ctrl.panel.legendContainerSelector"
+               placeholder=".shared-map-legend" ng-change="ctrl.toggleLegendContainer()" ng-model-onblur />
+      </div>
+      <gf-form-switch class="gf-form" label="Show Zoom Control" label-class="width-10" checked="ctrl.panel.showZoomControl" on-change="ctrl.toggleZoomControl()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show Attribution" label-class="width-10" checked="ctrl.panel.showAttribution" on-change="ctrl.toggleAttribution()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Mouse Wheel Zoom" label-class="width-10" checked="ctrl.panel.mouseWheelZoom" on-change="ctrl.toggleMouseWheelZoom()"></gf-form-switch>
     </div>
 
-    <!-- geohash options -->
-    <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
-      <label class="gf-form-label width-12">Location Name Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLocationName" ng-change="ctrl.refresh()"
-        ng-model-onblur />
-    </div>
-    <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
-      <label class="gf-form-label width-12">geo_point/geohash Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esGeoPoint" ng-change="ctrl.refresh()"
-        ng-model-onblur />
-    </div>
-    <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
-      <label class="gf-form-label width-12">Metric Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esMetric" ng-change="ctrl.refresh()" ng-model-onblur
-      />
-    </div>
-    <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
-      <label class="gf-form-label width-12">Link Field</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLink" ng-change="ctrl.refresh()" ng-model-onblur
-      />
-    </div>
   </div>
 
-  <div class="section gf-form-group">
-    <h5 class="section-heading">Threshold Options</h5>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Thresholds</label>
-      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.thresholds" ng-change="ctrl.changeThresholds()"
-        placeholder="0,10" ng-model-onblur />
+  <!-- 2nd column -->
+  <div class="section editor-column">
+
+    <div class="gf-form-group">
+      <h5>Circle parameters</h5>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Minimum size</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMinSize" ng-change="ctrl.render()"
+          placeholder="2" ng-model-onblur />
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Maximum size</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMaxSize" ng-change="ctrl.render()"
+          placeholder="30" ng-model-onblur />
+      </div>
+
     </div>
-    <div class="gf-form">
-      <label class="gf-form-label width-10">Colors</label>
-      <spectrum-picker class="gf-form-input width-3" ng-repeat="color in ctrl.panel.colors track by $index" ng-model="ctrl.panel.colors[$index]"
-        ng-change="ctrl.changeThresholds()"></spectrum-picker>
+
+    <div class="gf-form-group" style="overflow-x: visible">
+      <h5>Colorize thresholds</h5>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Threshold values</label>
+        <input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.panel.thresholds" ng-change="ctrl.changeThresholds()"
+               placeholder="0,10" ng-model-onblur />
+      </div>
+      <div class="gf-form" style2="overflow-x: visible">
+        <label class="gf-form-label width-10">Colors</label>
+        <div class="width-24" style="display: inline-flex">
+        <spectrum-picker class="gf-form-input width-3" ng-repeat="color in ctrl.panel.colors track by $index" ng-model="ctrl.panel.colors[$index]"
+                         ng-change="ctrl.changeThresholds()"></spectrum-picker>
+        </div>
+      </div>
     </div>
+
   </div>
 
-  <div class="section gf-form-group">
-    <h5 class="section-heading">Hide series</h5>
-    <gf-form-switch class="gf-form" label="With only nulls" label-class="width-10" checked="ctrl.panel.hideEmpty" on-change="ctrl.render()">
-    </gf-form-switch>
-    <gf-form-switch class="gf-form" label="With only zeros" label-class="width-10" checked="ctrl.panel.hideZero" on-change="ctrl.render()">
-    </gf-form-switch>
+  <!-- 3rd column -->
+  <div class="section editor-column">
+
+    <div class="gf-form-group">
+      <h5>Popup labels</h5>
+      <gf-form-switch class="gf-form" label="Sticky" label-class="width-10" checked="ctrl.panel.stickyLabels" on-change="ctrl.toggleStickyLabels()">
+      </gf-form-switch>
+      <gf-form-switch class="gf-form" label="Auto-pan" label-class="width-10" checked="ctrl.panel.autoPanLabels" on-change="ctrl.render()">
+      </gf-form-switch>
+      <gf-form-switch class="gf-form" label="Auto-width" label-class="width-10" checked="ctrl.panel.autoWidthLabels" on-change="ctrl.render()">
+      </gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Decimals</label>
+        <input type="number" class="input-small gf-form-input width-10" ng-model="ctrl.panel.decimals" ng-change="ctrl.refresh()"
+               ng-model-onblur />
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Unit singular</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.unitSingular" placeholder="singular form"
+               ng-change="ctrl.render()" ng-model-onblur />
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Unit plural</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.unitPlural" placeholder="plural form"
+               ng-change="ctrl.render()" ng-model-onblur />
+      </div>
+    </div>
+
+    <div class="gf-form-group">
+      <h5>Clickthrough links</h5>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Clickthrough URL</label>
+        <input type="text" class="input-small gf-form-input width-20" ng-model="ctrl.panel.clickthroughUrl" ng-change="ctrl.refresh()" ng-model-onblur />
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Clickthrough Window</label>
+        <input type="text" class="input-small gf-form-input width-20" ng-model="ctrl.panel.clickthroughOptions.windowName" placeholder="_blank"
+               ng-change="ctrl.refresh()" ng-model-onblur />
+      </div>
+    </div>
+
   </div>
+
 </div>
