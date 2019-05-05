@@ -45,6 +45,8 @@ const panelDefaults = {
   decimals: 0,
   hideEmpty: false,
   hideZero: false,
+  ignoreEmptyGeohashValues: false,
+  ignoreInvalidGeohashValues: false,
   stickyLabels: false,
   clickthroughUrl: '',
   clickthroughOptions: {

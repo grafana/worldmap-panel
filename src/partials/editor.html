@@ -150,9 +150,21 @@
 
     <div class="gf-form-group">
       <h5>Filtering</h5>
-      <gf-form-switch class="gf-form" label="Ignore empty values" label-class="width-12" checked="ctrl.panel.hideEmpty" on-change="ctrl.refresh()">
+
+      <!-- Geohash values -->
+      <gf-form-switch class="gf-form" label="Ignore empty geohash values" label-class="width-14"
+                      checked="ctrl.panel.ignoreEmptyGeohashValues" on-change="ctrl.refresh()">
       </gf-form-switch>
-      <gf-form-switch class="gf-form" label="Ignore zero values" label-class="width-12" checked="ctrl.panel.hideZero" on-change="ctrl.refresh()">
+      <gf-form-switch class="gf-form" label="Ignore invalid geohash values" label-class="width-14"
+                      checked="ctrl.panel.ignoreInvalidGeohashValues" on-change="ctrl.refresh()">
+      </gf-form-switch>
+
+      <!-- Metric values -->
+      <gf-form-switch class="gf-form" label="Ignore empty metric values" label-class="width-14"
+                      checked="ctrl.panel.hideEmpty" on-change="ctrl.refresh()">
+      </gf-form-switch>
+      <gf-form-switch class="gf-form" label="Ignore zero metric values" label-class="width-14"
+                      checked="ctrl.panel.hideZero" on-change="ctrl.refresh()">
       </gf-form-switch>
     </div>
 

@@ -145,14 +145,20 @@ export default class DataFormatter {
   decodeGeohashSafe(encodedGeohash) {
     // Safely decode the geohash value, either by raising an exception or by ignoring it.
     if (!encodedGeohash) {
-      if (this.settings.ignoreGeohashDecodingErrors) {
-        return;
-      } else {
+      if (!this.settings.ignoreEmptyGeohashValues) {
         throw new DataError('geohash value missing or empty');
       }
+      return;
     }
-    const decodedGeohash = decodeGeoHash(encodedGeohash);
-    return decodedGeohash;
+    try {
+      const decodedGeohash = decodeGeoHash(encodedGeohash);
+      return decodedGeohash;
+    } catch (e) {
+      if (!this.settings.ignoreInvalidGeohashValues) {
+        throw e;
+      }
+      return;
+    }
   }
 
   setGeohashValues(dataList, data) {
