@@ -38,7 +38,8 @@
 - Add control options `mapFitData` and `mapZoomByRadius`.
 - Repaint user interface.
 - Refactor machinery and user interface.
-- Add options `ignoreEmptyGeohashValues` and `ignoreInvalidGeohashValues`. 
+- Add options `ignoreEmptyGeohashValues` and `ignoreInvalidGeohashValues`.
+- Add `ignoreEscapeKey` option.
 
 ## v0.2.0
 

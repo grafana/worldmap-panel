@@ -63,7 +63,8 @@ const panelDefaults = {
     labelField: null,
     labelLocationKeyField: null,
     linkField: null,
-  }
+  },
+  ignoreEscapeKey: false,
 };
 
 export default class WorldmapCtrl extends MetricsPanelCtrl {
@@ -84,8 +85,6 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   $document: any;
 
   settings: any;
-  dataErrors:Array<any> = [];
-  locationErrors:Array<any> = [];
   core: WorldmapCore;
   chrome: WorldmapChrome;
   errors: ErrorManager;
@@ -135,9 +134,14 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     /*
      * Initialize the plugin.
      */
-    // TODO: Establish conditions for running this.
-    //this.removeTimePickerNav();
-    //this.removeEscapeKeyBinding();
+
+    // Optionally ignore the escape key.
+    if (this.settings.ignoreEscapeKey) {
+      this.chrome.removeEscapeKeyBinding();
+    } else {
+      this.chrome.restoreEscapeKeyBinding();
+    }
+
   }
 
   setupEvents() {

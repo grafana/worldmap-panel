@@ -347,6 +347,12 @@
       <gf-form-switch class="gf-form" label="Mouse Wheel Zoom" label-class="width-10" checked="ctrl.panel.mouseWheelZoom" on-change="ctrl.toggleMouseWheelZoom()"></gf-form-switch>
     </div>
 
+    <div class="gf-form-group">
+      <h5>Global options</h5>
+      <gf-form-switch class="gf-form" label="Ignore escape key" label-class="width-10" checked="ctrl.panel.ignoreEscapeKey" on-change="ctrl.setupGlobal()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Hide time picker" label-class="width-10" checked="ctrl.panel.hideTimepickerNavigation" on-change="ctrl.setupGlobal()"></gf-form-switch>
+    </div>
+
   </div>
 
   <!-- 2nd column -->

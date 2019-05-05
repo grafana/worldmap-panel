@@ -44,4 +44,33 @@ export class WorldmapChrome {
     });
   }
 
+  removeEscapeKeyBinding() {
+    /*
+     * Prevent navigation
+     * - https://github.com/grafana/grafana/issues/11636
+     * - https://github.com/grafana/grafana/issues/13706
+     *
+     * Embed entire dashboard
+     * - https://github.com/grafana/grafana/issues/4757
+     * - https://github.com/grafana/grafana/issues/10979
+     * - https://github.com/grafana/grafana/issues/13493
+     *
+     * References
+     * - https://github.com/grafana/grafana/blob/v6.1.6/public/app/core/services/keybindingSrv.ts
+     * - https://github.com/grafana/grafana/blob/v6.1.6/public/app/plugins/datasource/grafana-azure-monitor-datasource/editor/query_field.tsx
+     * - https://github.com/daq-tools/grafanimate/blob/0.5.5/grafanimate/grafana-studio.js
+     *
+     */
+    this.getKeybindingSrv().unbind('esc', 'keydown');
+  }
+
+  restoreEscapeKeyBinding() {
+    this.getKeybindingSrv().setupGlobal();
+  }
+
+  getKeybindingSrv() {
+    const app = window['angular'].element('grafana-app');
+    return app.injector().get('keybindingSrv');
+  }
+
 }
