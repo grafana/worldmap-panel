@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import {TemplateSrv} from "grafana/app/features/templating/template_srv";
 
-export default class SmartSettings {
+
+export default class PluginSettings {
 
     private _request: Object;
     private request_variables: Object;

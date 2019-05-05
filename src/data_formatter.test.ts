@@ -1,5 +1,4 @@
 import DataFormatter from './data_formatter';
-import _ from 'lodash';
 
 describe('DataFormatter', () => {
   let dataFormatter;
@@ -103,8 +102,8 @@ describe('DataFormatter', () => {
           locationData: 'table+json',
           tableQueryOptions: {
             queryType: 'geohash',
-            labelField: 'station_id',
             geohashField: 'geohash',
+            labelLocationKeyField: 'station_id',
           }
         },
         // Location enrichment data is ingested from a JSON(P) response.
@@ -169,7 +168,7 @@ describe('DataFormatter', () => {
         ]
       };
       dataFormatter = new DataFormatter(ctrl);
-      dataFormatter.setValues(formattedData);
+      dataFormatter.setTimeseriesValues(formattedData);
     });
 
     it('should format the data and match the serie to a location', () => {
@@ -203,7 +202,7 @@ describe('DataFormatter', () => {
         ]
       };
       dataFormatter = new DataFormatter(ctrl);
-      dataFormatter.setValues(formattedData);
+      dataFormatter.setTimeseriesValues(formattedData);
     });
 
     it('should format the data and match the serie to a location', () => {
@@ -234,7 +233,7 @@ describe('DataFormatter', () => {
         ]
       };
       dataFormatter = new DataFormatter(ctrl);
-      dataFormatter.setValues(formattedData);
+      dataFormatter.setTimeseriesValues(formattedData);
     });
 
     it('should ignore the serie', () => {
@@ -260,7 +259,7 @@ describe('DataFormatter', () => {
           ]
         };
         dataFormatter = new DataFormatter(ctrl);
-        dataFormatter.setValues(formattedData);
+        dataFormatter.setTimeseriesValues(formattedData);
       });
 
       it('should format the value with 2 decimals', () => {
@@ -285,7 +284,7 @@ describe('DataFormatter', () => {
           ]
         };
         dataFormatter = new DataFormatter(ctrl);
-        dataFormatter.setValues(formattedData);
+        dataFormatter.setTimeseriesValues(formattedData);
       });
 
       it('should format the value with 2 decimals', () => {

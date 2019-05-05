@@ -46,6 +46,10 @@
 }
 
 .editor-column {
-  max-width: 33%;
+  max-width: 30%;
   margin-right: 2rem;
+}
+
+.editor-link-color {
+  color: #2846a1;
 }

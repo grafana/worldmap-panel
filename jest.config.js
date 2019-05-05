@@ -1,5 +1,6 @@
 module.exports = {
   verbose: true,
+  silent: true,
   "globals": {
     "ts-jest": {
       "tsConfig": "tsconfig.jest.json"

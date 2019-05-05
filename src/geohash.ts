@@ -1,6 +1,6 @@
 export default function decodeGeoHash(geohash) {
   if (!geohash || geohash.length === 0) {
-    throw new Error('Missing geohash value');
+    throw new Error('Unable to decode empty geohash');
   }
   const BITS = [16, 8, 4, 2, 1];
   const BASE32 = '0123456789bcdefghjkmnpqrstuvwxyz';

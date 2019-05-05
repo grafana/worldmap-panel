@@ -36,7 +36,8 @@
 - Improve centering on “Last Geohash”
 - Add support for "First Geohash" centering (#156). Thanks, Fabien.
 - Add control options `mapFitData` and `mapZoomByRadius`.
-- Repaint user interface
+- Repaint user interface.
+- Refactor machinery and user interface.
 
 ## v0.2.0
 

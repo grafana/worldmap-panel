@@ -1,6 +1,5 @@
 import WorldMap from './worldmap';
 import DataBuilder from '../test/data_builder';
-import * as _ from 'lodash';
 import $ from "jquery";
 
 describe('Worldmap', () => {
@@ -357,13 +356,21 @@ describe('Worldmap', () => {
 
     ctrl = {
       panel: {
-        mapCenterLatitude: 0,
-        mapCenterLongitude: 0,
-        initialZoom: 1,
+        center: {
+          mapCenterLatitude: 0,
+          mapCenterLongitude: 0,
+          initialZoom: 1,
+        },
         colors: ['red', 'blue', 'green'],
       },
       tileServer: 'CartoDB Positron',
     };
+
+    // This mimics the `ctrl.panel` proxying established
+    // by `PluginSettings` to make the tests happy.
+    // Todo: Don't worry, this will go away.
+    ctrl.settings = ctrl.panel;
+
     worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
     worldMap.createMap();
   }
@@ -438,15 +445,23 @@ describe('WorldmapFoundation', () => {
 
     ctrl = {
       panel: {
-        mapCenterLatitude: 0,
-        mapCenterLongitude: 0,
-        initialZoom: 1,
+        center: {
+          mapCenterLatitude: 0,
+          mapCenterLongitude: 0,
+          initialZoom: 1,
+        },
         colors: ['red', 'blue', 'green'],
         showZoomControl: true,
         showAttribution: true,
       },
       tileServer: 'CartoDB Positron',
     };
+
+    // This mimics the `ctrl.panel` proxying established
+    // by `PluginSettings` to make the tests happy.
+    // Todo: Don't worry, this will go away.
+    ctrl.settings = ctrl.panel;
+
     worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
   }
 

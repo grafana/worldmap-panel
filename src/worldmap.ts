@@ -35,7 +35,7 @@ export default class WorldMap {
   }
 
   createMap() {
-    const center = this.ctrl.getMapDimensions();
+    const center = this.ctrl.settings.center;
     const mapCenter = (<any>window).L.latLng(
       center.mapCenterLatitude,
       center.mapCenterLongitude
@@ -58,6 +58,41 @@ export default class WorldMap {
       detectRetina: true,
       attribution: selectedTileServer.attribution,
     }).addTo(this.map);
+
+  }
+
+  renderMapFirst() {
+    let _this = this;
+    this.map.whenReady(function(ctx, options) {
+      _this.renderMap({animate: false});
+    });
+  }
+
+  renderMap(options?: Object) {
+
+    options = options || {};
+    _.defaults(options, {animate: true});
+
+    if (!this.legend && this.ctrl.settings.showLegend) {
+      this.createLegend();
+    }
+
+    console.info('Drawing circles');
+    this.drawCircles();
+
+    setTimeout(() => {
+      this.drawMap(options);
+    }, 1);
+
+  }
+
+  drawMap(options?: Object) {
+    console.info('Drawing map');
+    this.resize();
+    if (this.ctrl.mapCenterMoved) {
+      this.panToMapCenter(options);
+    }
+    //this.ctrl.updatePanelCorner();
   }
 
   createLegend() {
@@ -98,6 +133,9 @@ export default class WorldMap {
   }
 
   needToRedrawCircles(data) {
+
+    console.info(`Data points ${data.length}. Circles on map ${this.circles.length}.`);
+
     if (this.circles.length === 0 && data.length > 0) {
       return true;
     }
@@ -112,9 +150,16 @@ export default class WorldMap {
   }
 
   filterEmptyAndZeroValues(data) {
-    return _.filter(data, o => {
+    const count_before = data.length;
+    data = _.filter(data, o => {
       return !(this.ctrl.settings.hideEmpty && _.isNil(o.value)) && !(this.ctrl.settings.hideZero && o.value === 0);
     });
+    const count_after = data.length;
+    const count_filtered = count_after - count_before;
+    if (count_filtered > 0) {
+      console.info(`Filtered ${count_filtered} records`);
+    }
+    return data;
   }
 
   clearCircles() {
@@ -128,16 +173,21 @@ export default class WorldMap {
   drawCircles() {
     const data = this.filterEmptyAndZeroValues(this.ctrl.data);
     if (this.needToRedrawCircles(data)) {
+      console.info('Creating circles')
       this.clearCircles();
       this.createCircles(data);
     } else {
+      console.info('Updating circles')
       this.updateCircles(data);
     }
   }
 
   createCircles(data) {
+    console.log('createCircles: begin');
     const circles: any[] = [];
     data.forEach(dataPoint => {
+      // Todo: Review: Is a "locationName" really required
+      //  just for displaying a circle on a map?
       if (!dataPoint.locationName) {
         return;
       }
@@ -145,6 +195,7 @@ export default class WorldMap {
     });
     this.circlesLayer = this.addCircles(circles);
     this.circles = circles;
+    console.log('createCircles: end');
   }
 
   updateCircles(data) {
@@ -187,10 +238,15 @@ export default class WorldMap {
   }
 
   calcCircleSize(dataPointValue) {
-    const circleMinSize = parseInt(this.ctrl.settings.circleMinSize, 10) || 2;
-    const circleMaxSize = parseInt(this.ctrl.settings.circleMaxSize, 10) || 30;
+    const circleMinSize = parseInt(this.ctrl.settings.circleMinSize, 10) || 1;
+    const circleMaxSize = parseInt(this.ctrl.settings.circleMaxSize, 10) || 10;
 
-    if (this.ctrl.data.valueRange === 0) {
+    // If measurement value equals zero, use minimum circle size.
+    if (dataPointValue == 0) {
+      return circleMinSize;
+    }
+
+    if (this.ctrl.data.valueRange == 0) {
       return circleMaxSize;
     }
 
@@ -204,22 +260,16 @@ export default class WorldMap {
     /*
      * Features:
      * - Unify functionality from #129 and #190
+     * - Generic variable interpolation from dataPoint
+     * - Generic variable interpolation from dashboard variables
      * - Optionally open url in new window
-     * - Add generic variable interpolation from dataPoint
-     * - Add generic variable interpolation from dashboard variables
-     *
-     * Todo:
-     * - [o] Take link from variable and apply templating
-     * - [o] Optionally construct this link using baseurl + relative url
-     * - [o] Link to dashboard with templated parameters
-     * - [o] Just switch to dashboard internally instead of fully navigating to the url
-     * - [o] Optionally open link in new or named window
-     * - [o] Convenience checkbox "Add complete dataPoint as query parameters"
-     *
      */
 
-    // First, use link value directly from table control option `clickthroughUrl`.
-    let linkUrl = this.ctrl.settings.interpolateVariable('clickthroughUrl', dataPoint);
+    // First, use link value directly from `clickthroughUrl` setting.
+    let linkUrl;
+    if (this.ctrl.settings.clickthroughUrl) {
+      linkUrl = this.ctrl.settings.interpolateVariable('clickthroughUrl', dataPoint);
+    }
 
     // Next, use link value from the data itself by using the
     // table control option `linkField` for looking it up.
@@ -233,7 +283,7 @@ export default class WorldMap {
     // Deactivate all links first.
     circle.off('click');
 
-    // Attach data point linking to circle "onclick" event.
+    // Attach "onclick" event to data point linking.
     if (linkUrl) {
       const clickthroughOptions = this.ctrl.settings.clickthroughOptions;
       circle.on('click', function onClick(evt) {
@@ -247,8 +297,13 @@ export default class WorldMap {
   }
 
   createPopup(circle, locationName, value) {
-    const unit = value && value === 1 ? this.ctrl.settings.unitSingular : this.ctrl.settings.unitPlural;
-    const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
+    let unit;
+    if (_.isNaN(value)) {
+      value = 'n/a';
+    } else {
+      unit = value && value === 1 ? this.ctrl.settings.unitSingular : this.ctrl.settings.unitPlural;
+    }
+    const label = `${locationName}: ${value} ${unit || ''}`.trim();
     circle.bindPopup(label, {
       offset: (<any>window).L.point(0, -2),
       className: 'worldmap-popup',
@@ -284,23 +339,34 @@ export default class WorldMap {
   }
 
   panToMapCenter(options?: any) {
-    const mapDimensions = this.ctrl.getMapDimensions();
+
+    // Get a bunch of metadata from settings and data which
+    // controls the map centering and zoom level.
+    const mapDimensions = this.ctrl.settings.center;
 
     let coordinates = [mapDimensions.mapCenterLatitude, mapDimensions.mapCenterLongitude];
     let zoomLevel = mapDimensions.mapZoomLevel;
 
-    // TODO: Use map.getBoundsZoom(bounds) here.
-    // https://leafletjs.com/reference-1.4.0.html#map-getboundszoom
     if (mapDimensions.mapFitData) {
+      // Choose optimal map center and zoom level based on the data points displayed.
+      // This is done by computing the boundaries of a Leaflet feature group created
+      // from the contents of the circles layer.
+      // https://leafletjs.com/reference-1.4.0.html#map-getboundszoom
       if (this.circlesLayer) {
         const group = L.featureGroup(this.circlesLayer.getLayers());
         const bounds = group.getBounds();
-        coordinates = bounds.getCenter();
-        zoomLevel = this.map.getBoundsZoom(bounds);
+        if (!_.isEmpty(bounds)) {
+          coordinates = bounds.getCenter();
+          zoomLevel = this.map.getBoundsZoom(bounds);
+        }
       }
 
     } else if (mapDimensions.mapZoomByRadius) {
-      // Adding and removing a Leaflet layer to/from a map within a single frame will not trigger any animations.
+      // Compute zoom level based on current coordinates and given radius in kilometers.
+      // This is done by temporarily adding a circle with the respective radius and
+      // computing its boundaries before removing it right away.
+      // Note that adding and removing a Leaflet layer to/from a map within a single
+      // frame will not trigger any animations, see
       // https://github.com/Leaflet/Leaflet/issues/5357#issuecomment-282023917
       const radius = mapDimensions.mapZoomByRadius * 1000.0;
       const circle = L.circle(coordinates, {radius: radius}).addTo(this.map);
@@ -310,8 +376,10 @@ export default class WorldMap {
       zoomLevel = this.map.getBoundsZoom(bounds);
     }
 
+    // Apply coordinates and zoom level to Leaflet map.
     this.map.setView(coordinates, zoomLevel, options);
 
+    // Resolve signal / release lock.
     this.ctrl.mapCenterMoved = false;
   }
 

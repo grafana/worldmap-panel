@@ -1,13 +1,15 @@
 import { MetricsPanelCtrl } from "grafana/app/plugins/sdk";
-import TimeSeries from "grafana/app/core/time_series2";
 
 import * as _ from "lodash";
-import DataFormatter from "./data_formatter";
-import SmartSettings from "./settings";
 import "./css/worldmap-panel.css";
-import $ from "jquery";
 import "./css/leaflet.css";
+import PluginSettings from "./settings";
 import WorldMap from "./worldmap";
+import {LocationSources, MapCenters} from "./model";
+import {WorldmapCore} from "./core";
+import {WorldmapChrome} from "./chrome";
+import {ErrorManager} from "./errors";
+import DataFormatter from "./data_formatter";
 
 const panelDefaults = {
   maxDataPoints: 1,
@@ -20,7 +22,7 @@ const panelDefaults = {
   valueName: "total",
   circleMinSize: 2,
   circleMaxSize: 30,
-  locationData: "countries",
+  locationData: null,
   thresholds: "0,10",
   colors: [
     "rgba(245, 54, 54, 0.9)",
@@ -34,7 +36,12 @@ const panelDefaults = {
   showZoomControl: true,
   showAttribution: true,
   mouseWheelZoom: false,
+  esGeoPoint: null,
+  // Todo: Investigate: Is "Count" a reasonable default here
+  //  or does it confuse the operator?
   esMetric: "Count",
+  esLocationName: null,
+  esLink: null,
   decimals: 0,
   hideEmpty: false,
   hideZero: false,
@@ -51,62 +58,109 @@ const panelDefaults = {
     latitudeField: "latitude",
     longitudeField: "longitude",
     metricField: "metric",
-    linkField: "link"
+    labelField: null,
+    labelLocationKeyField: null,
+    linkField: null,
   }
-};
-
-const mapCenters = {
-  "(0°, 0°)": { mapCenterLatitude: 0, mapCenterLongitude: 0, initialZoom: 1 },
-  "Belgium": { mapCenterLatitude: 50.53665, mapCenterLongitude: 4.39851, initialZoom: 7 },
-  "Europe": { mapCenterLatitude: 46, mapCenterLongitude: 14, initialZoom: 4 },
-  "Germany": { mapCenterLatitude: 51.35149, mapCenterLongitude: 10.45412, initialZoom: 5 },
-  "North America": { mapCenterLatitude: 40, mapCenterLongitude: -100, initialZoom: 3 },
-  "SE Asia": { mapCenterLatitude: 10, mapCenterLongitude: 106, initialZoom: 4 },
-  "Sweden": { mapCenterLatitude: 62.91154, mapCenterLongitude: 17.38539, initialZoom: 4 },
-  "West Asia": { mapCenterLatitude: 26, mapCenterLongitude: 53, initialZoom: 4 },
-  "First GeoHash": { mapCenterLatitude: 0, mapCenterLongitude: 0 },
-  "Last GeoHash": { mapCenterLatitude: 0, mapCenterLongitude: 0 },
 };
 
 export default class WorldmapCtrl extends MetricsPanelCtrl {
   static templateUrl = "partials/module.html";
 
-  settings: any;
-  dataFormatter: DataFormatter;
   locations: any;
   tileServer: string;
   saturationClass: string;
   map: any;
   series: any;
-  data: any;
+  data: any = [];
+  dataInfo: any;
   mapCenterMoved: boolean;
+
+  contextSrv: any;
   $location: any;
+  $element: any;
+  $document: any;
+
+  settings: any;
+  dataErrors:Array<any> = [];
+  locationErrors:Array<any> = [];
+  core: WorldmapCore;
+  chrome: WorldmapChrome;
+  errors: ErrorManager;
 
   /** @ngInject **/
-  constructor($scope, $injector, contextSrv, templateSrv, $location) {
+  constructor($scope, $injector, $element, $document, contextSrv, templateSrv, $location) {
     super($scope, $injector);
 
-    this.setMapProvider(contextSrv);
-    _.defaults(this.panel, panelDefaults);
+    this.$element = $element;
+    this.$document = $document;
+    this.contextSrv = contextSrv;
 
-    this.dataFormatter = new DataFormatter(this);
+    this.errors = new ErrorManager();
+    this.errors.registerDomains('data', 'location');
 
     this.loadSettings();
 
+    this.core = new WorldmapCore(this);
+    this.chrome = new WorldmapChrome(this);
+
+    this.setupMap();
+    this.setupGlobal();
+    this.setupEvents();
+
+    this.loadLocationData();
+  }
+
+  loadSettings() {
+    /*
+     * Initialize the plugin setting subsystem to provide `this.settings`.
+     */
+    console.info('Loading settings');
+    _.defaults(this.panel, panelDefaults);
+    const query = this.$location.search();
+    this.settings = new PluginSettings(this.panel, this.templateSrv, query);
+
+    // Establish a virtual settings property accessible through `this.settings.center`.
+    const _this = this;
+    Object.defineProperty(this.settings, 'center', {
+      get: function() { return _this.core.getMapDimensions() },
+      enumerable: true,
+    });
+
+  }
+
+  setupGlobal() {
+    /*
+     * Initialize the plugin.
+     */
+    // TODO: Establish conditions for running this.
+    //this.removeTimePickerNav();
+    //this.removeEscapeKeyBinding();
+  }
+
+  setupEvents() {
+    /*
+     * Attach plugin event handlers.
+     */
+    this.events.on("refresh", this.onRefresh.bind(this));
     this.events.on("init-edit-mode", this.onInitEditMode.bind(this));
     this.events.on("data-received", this.onDataReceived.bind(this));
     this.events.on("panel-teardown", this.onPanelTeardown.bind(this));
     this.events.on("data-snapshot-load", this.onDataSnapshotLoad.bind(this));
-
-    this.loadLocationDataFromFile();
   }
 
-  loadSettings() {
-    const query = this.$location.search();
-    this.settings = new SmartSettings(this.panel, this.templateSrv, query);
+  setupMap() {
+    /*
+     * Setup the Leaflet map widget.
+     */
+    console.info('Setting up map');
+    this.setMapProvider(this.contextSrv);
   }
 
   setMapProvider(contextSrv) {
+    /*
+     * Configure the Leaflet map widget.
+     */
     this.tileServer = contextSrv.user.lightTheme
       ? "CartoDB Positron"
       : "CartoDB Dark";
@@ -114,6 +168,9 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   setMapSaturationClass() {
+    /*
+     * Configure the Leaflet map widget.
+     */
     if (this.tileServer === "CartoDB Dark") {
       this.saturationClass = "map-darken";
     } else {
@@ -121,59 +178,234 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     }
   }
 
-  loadLocationDataFromFile(reload?) {
+  loadLocationData(reload?) {
+    /*
+     * Conditionally acquire location information from out-of-band data source.
+     */
+
     if (this.map && !reload) {
       return;
     }
 
+    // Load locations from snapshot.
     if (this.panel.snapshotLocationData) {
       this.locations = this.panel.snapshotLocationData;
       return;
     }
 
-    if (this.settings.locationData === "jsonp endpoint" || this.settings.locationData === "table+jsonp") {
-      if (!this.settings.jsonpUrl || !this.settings.jsonpCallback) {
-        return;
-      }
+    try {
+      this.core.acquireLocations();
 
-      $.ajax({
-        type: "GET",
-        url: this.settings.jsonpUrl + "?callback=?",
-        contentType: "application/json",
-        jsonpCallback: this.settings.jsonpCallback,
-        dataType: "jsonp",
-        success: res => {
-          this.locations = res;
-          this.render();
-        }
-      });
-    } else if (this.settings.locationData === "json endpoint" || this.settings.locationData === "table+json") {
-      if (!this.settings.jsonUrl) {
-        return;
-      }
+    } catch (e) {
+      this.errors.add(e, {domain: 'location'});
+      this.setLocations();
+    }
 
-      $.getJSON(this.settings.jsonUrl).then(res => {
-        this.locations = res;
-        this.render();
-      });
-    } else if (this.settings.locationData === "table") {
-      // .. Do nothing
-    } else if (
-      this.settings.locationData !== "geohash" &&
-      this.settings.locationData !== "json result"
-    ) {
-      $.getJSON(
-        "public/plugins/grafana-worldmap-panel/data/" +
-          this.settings.locationData +
-          ".json"
-      ).then(this.reloadLocations.bind(this));
+  }
+
+  setLocations(res:Array<any> = []) {
+    /*
+     * Will be called when location information arrived.
+     */
+    console.info(`Setting ${res.length} locations`);
+    this.locations = res;
+    this.refreshSafe();
+  }
+
+  refreshSafe() {
+    /*
+     * Conditionally refresh the plugin, but not if it's still loading.
+     */
+    const loading = this.loading != false;
+    console.log('Still loading:', loading);
+    if (!loading) {
+      this.refresh();
     }
   }
 
-  reloadLocations(res) {
-    this.locations = res;
-    this.refresh();
+  onRefresh() {
+    console.info('Refreshing panel');
+    this.errors.reset('data');
   }
+
+  onDataSnapshotLoad(snapshotData) {
+    console.info('Received data from snapshot');
+    this.onDataReceived(snapshotData);
+  }
+
+  onDataReceived(dataList) {
+    /*
+     * Obtain data from the Grafana data source,
+     * decode appropriately and render the map.
+     */
+
+    console.info('Data received:', dataList);
+
+    try {
+      this.processData(dataList);
+
+      this.updateThresholdData();
+
+      const autoCenterMap =
+          this.settings.mapCenter === "First GeoHash" ||
+          this.settings.mapCenter === "Last GeoHash" ||
+          this.settings.mapFitData;
+
+      if (this.data.length && autoCenterMap) {
+        this.updateMapCenter(false);
+      }
+
+    } catch (e) {
+      this.errors.add(e, {domain: 'data'});
+      throw e;
+
+    } finally {
+      this.render();
+
+    }
+
+  }
+
+  processData(dataList) {
+    /*
+     * Decode data from the Grafana data source appropriately,
+     * depending on the data format of the ingress data.
+     */
+
+    if (_.isEmpty(dataList)) {
+      this.resetData();
+      this.resetLocations();
+      this.errors.add(
+        'No data received, please check data source and time range',
+        {level: 'warning', domain: 'data'});
+      return;
+    }
+
+    this.dataInfo = DataFormatter.analyzeData(dataList);
+    console.info(`Received ${this.dataInfo.count} records in ${this.dataInfo.type} format`);
+
+    // Save snapshot of locations.
+    if (this.dashboard.snapshot && this.locations) {
+      this.panel.snapshotLocationData = this.locations;
+    }
+
+    // Decode data coming from the primary data source according to its format and other parameters.
+    try {
+      const decodedData = this.core.decodeData(dataList, this.dataInfo.type);
+      this.data = decodedData.data;
+      if (decodedData.series) this.series = decodedData.series;
+
+    } catch (ex) {
+      //this.resetDataErrors();
+      //this.resetLocationErrors();
+      this.resetData();
+      this.resetLocations();
+      //this.render();
+      throw ex;
+    }
+  }
+
+  updateThresholdData() {
+    // FIXME: Isn't `this.data` actually an array?
+    this.data.thresholds = this.settings.thresholds.split(",").map(strValue => {
+      return Number(strValue.trim());
+    });
+    while (_.size(this.settings.colors) > _.size(this.data.thresholds) + 1) {
+      // too many colors. remove the last one.
+      this.settings.colors.pop();
+    }
+    while (_.size(this.settings.colors) < _.size(this.data.thresholds) + 1) {
+      // not enough colors. add one.
+      const newColor = "rgba(50, 172, 45, 0.97)";
+      this.settings.colors.push(newColor);
+    }
+  }
+
+  onPanelTeardown() {
+    this.teardownMap();
+  }
+
+  onInitEditMode() {
+    this.addEditorTab(
+      "Worldmap",
+      "public/plugins/grafana-worldmap-panel/partials/editor.html",
+      2
+    );
+  }
+
+  propagateWarningsAndErrors() {
+    /*
+     * Propagate collected warnings and errors to tooltip in panel corner.
+     * This is crucial for improved user-feedback when operating the
+     * Worldmap Panel.
+     *
+     * This is a central place where the behavior can be relaxed in order
+     * to display warning messages elsewhere in the future.
+     *
+     * Todo: Add a `suppressCornerWarnings` setting to improve flexibility.
+     */
+
+    // Effective list of warnings and errors from all error domains.
+    const messages = this.errors.getMessages();
+
+    // Update panel corner with error messages in the next event cycle.
+    _.defer(this.chrome.updatePanelCorner.bind(this.chrome, messages));
+  }
+
+  link(scope, elem, attrs, ctrl) {
+    /*
+     * Hook the panel into the rendering phase.
+     */
+
+    ctrl.events.on("render", (ev) => {
+
+      // Perform rendering.
+      render();
+      ctrl.renderingCompleted();
+      console.info('Rendering panel completed');
+
+      // Propagate warnings and errors to tooltip in panel corner.
+      ctrl.propagateWarningsAndErrors();
+    });
+
+    function render() {
+
+      console.info('Rendering panel');
+      if (!ctrl.data) {
+        return;
+      }
+
+      const mapContainer = elem.find(".mapcontainer");
+
+      if (mapContainer[0].id.indexOf("{{") > -1) {
+        return;
+      }
+
+      console.info('Rendering map');
+      if (!ctrl.map) {
+
+        // Create map.
+        const map = new WorldMap(ctrl, mapContainer[0]);
+        map.createMap();
+        ctrl.map = map;
+
+        // When rendering the first time, make sure to signal `panToMapCenter()`.
+        ctrl.mapCenterMoved = true;
+
+        // Render the map the first time, timing-safe.
+        ctrl.map.renderMapFirst();
+
+      } else {
+        // Invoke regular map rendering.
+        ctrl.map.renderMap();
+      }
+
+    }
+  }
+
+
+  /* Data format indicators */
+  // Todo: Refactor them to improved LocationType system, see `model.ts`.
 
   showTableOptions() {
     return _.startsWith(this.settings.locationData, "table");
@@ -193,124 +425,50 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     );
   }
 
-  onPanelTeardown() {
+
+  /* Data accessors */
+  reset() {
+    console.info('Resetting everything.');
+    this.errors.resetAll();
+    this.resetData();
+    this.resetLocations();
+  }
+
+  resetData() {
+    this.data = [];
+    //this.mapCenterMoved = true;
+  }
+
+  resetLocations() {
+    //console.log('resetLocations');
+    this.locations = [];
+    this.panel.snapshotLocationData = undefined;
+  }
+
+
+  /* Actions with rendering */
+
+  reload() {
+    this.reset();
+    //this.refresh();
+    this.loadLocationData(true);
+  }
+
+  reloadLocations() {
+    this.errors.resetAll();
+    this.resetLocations();
+    this.loadLocationData(true);
+  }
+
+  restart() {
     this.teardownMap();
-  }
-
-  onInitEditMode() {
-    this.addEditorTab(
-      "Worldmap",
-      "public/plugins/grafana-worldmap-panel/partials/editor.html",
-      2
-    );
-  }
-
-  onDataReceived(dataList) {
-    if (!dataList) {
-      return;
-    }
-
-    if (this.dashboard.snapshot && this.locations) {
-      this.panel.snapshotLocationData = this.locations;
-    }
-
-    const data = [];
-
-    if (this.settings.locationData === "geohash") {
-      this.dataFormatter.setGeohashValues(dataList, data);
-    } else if (this.showTableOptions()) {
-      const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
-      this.dataFormatter.setTableValues(tableData, data);
-    } else if (this.settings.locationData === "json result") {
-      this.series = dataList;
-      this.dataFormatter.setJsonValues(data);
-    } else {
-      this.series = dataList.map(this.seriesHandler.bind(this));
-      this.dataFormatter.setValues(data);
-    }
-    this.data = data;
-
-    this.updateThresholdData();
-
-    const autoMapSection =
-        this.settings.mapCenter === "First GeoHash" ||
-        this.settings.mapCenter === "Last GeoHash" ||
-        this.settings.mapFitData;
-
-    if (this.data.length && autoMapSection) {
-      this.setNewMapCenter();
-    } else {
-      this.render();
-    }
-  }
-
-  onDataSnapshotLoad(snapshotData) {
-    this.onDataReceived(snapshotData);
-  }
-
-  seriesHandler(seriesData) {
-    const series = new TimeSeries({
-      datapoints: seriesData.datapoints,
-      alias: seriesData.target
-    });
-
-    series.flotpairs = series.getFlotPairs(this.settings.nullPointMode);
-    return series;
-  }
-
-  setNewMapCenter() {
-    //const mapDimensions = this.getMapDimensions();
-    //this.panel.mapCenterLatitude = mapDimensions.mapCenterLatitude;
-    //this.panel.mapCenterLongitude = mapDimensions.mapCenterLongitude;
-    this.mapCenterMoved = true;
     this.render();
   }
 
-  getMapDimensions() {
-
-    let center:any = {
-      mapFitData: this.settings.mapFitData,
-      mapCenter: this.settings.mapCenter,
-      mapCenterLatitude: this.settings.mapCenterLatitude,
-      mapCenterLongitude: this.settings.mapCenterLongitude,
-      mapZoomLevel: this.settings.initialZoom,
-      mapZoomByRadius: this.settings.mapZoomByRadius,
-    };
-
-    if (this.data.length && this.settings.mapCenter == "First GeoHash") {
-      const first:any = _.first(this.data);
-      center.mapCenterLatitude = first.locationLatitude;
-      center.mapCenterLongitude = first.locationLongitude;
-
-    } else if (this.data.length && this.settings.mapCenter == "Last GeoHash") {
-      const last: any = _.last(this.data);
-      center.mapCenterLatitude = last.locationLatitude;
-      center.mapCenterLongitude = last.locationLongitude;
-
-    } else if (mapCenters[this.settings.mapCenter]) {
-      center.mapCenterLatitude = mapCenters[this.settings.mapCenter].mapCenterLatitude;
-      center.mapCenterLongitude = mapCenters[this.settings.mapCenter].mapCenterLongitude;
-      center.mapZoomLevel = this.settings.initialZoom || mapCenters[this.settings.mapCenter].initialZoom;
-    }
-
-    center.mapCenterLatitude = parseFloat(center.mapCenterLatitude);
-    center.mapCenterLongitude = parseFloat(center.mapCenterLongitude);
-    center.mapZoomLevel = parseInt(center.mapZoomLevel) || 1;
-    center.mapZoomByRadius = parseFloat(center.mapZoomByRadius) || null;
-
-    return center;
-  }
-
-  getMapCenterChoices() {
-    const choices = _.keys(mapCenters);
-    choices.push("custom");
-    return choices;
-  }
-
-  setZoom() {
-    //const mapDimensions = this.getMapDimensions();
-    //this.map.setZoom(mapDimensions.mapZoomLevel);
-    this.setNewMapCenter();
+  updateMapCenter(render:boolean = true) {
+    // Signal `panToMapCenter()` and trigger rendering.
+    this.mapCenterMoved = true;
+    render && this.render();
   }
 
   teardownMap() {
@@ -324,21 +482,6 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     if (!this.settings.showLegend) {
       this.map.removeLegend();
     }
-    this.render();
-  }
-
-  toggleLegendContainer() {
-    this.teardownMap();
-    this.render();
-  }
-
-  toggleZoomControl() {
-    this.teardownMap();
-    this.render();
-  }
-
-  toggleAttribution() {
-    this.teardownMap();
     this.render();
   }
 
@@ -358,70 +501,37 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
-  updateThresholdData() {
-    this.data.thresholds = this.panel.thresholds.split(",").map(strValue => {
-      return Number(strValue.trim());
-    });
-    while (_.size(this.panel.colors) > _.size(this.data.thresholds) + 1) {
-      // too many colors. remove the last one.
-      this.panel.colors.pop();
-    }
-    while (_.size(this.panel.colors) < _.size(this.data.thresholds) + 1) {
-      // not enough colors. add one.
-      const newColor = "rgba(50, 172, 45, 0.97)";
-      this.panel.colors.push(newColor);
+
+
+  /* Form choice accessors */
+
+  // Todo: Refactor to `model.ts`.
+
+  getLocationDataChoices() {
+    return LocationSources;
+  }
+
+  getSelectedLocationType() {
+    const locationSource:any = _.find(LocationSources, {id: this.settings.locationData });
+    return locationSource.type ? locationSource.type.replace('Format: ', '') : undefined;
+  }
+
+  getSelectedLocationFormat() {
+    const locationSource:any = _.find(LocationSources, {id: this.settings.locationData });
+    if (_.isArray(locationSource.format)) {
+      return locationSource.format.join(' or ');
+    } else {
+      return locationSource.format;
     }
   }
 
-  changeLocationData() {
-    this.loadLocationDataFromFile(true);
-
-    if (this.settings.locationData === "geohash") {
-      this.render();
-    }
+  getMapCenterChoices() {
+    return MapCenters;
   }
 
-  link(scope, elem, attrs, ctrl) {
-    ctrl.events.on("render", () => {
-      render();
-      ctrl.renderingCompleted();
-    });
-
-    function render() {
-      if (!ctrl.data) {
-        return;
-      }
-
-      const mapContainer = elem.find(".mapcontainer");
-
-      if (mapContainer[0].id.indexOf("{{") > -1) {
-        return;
-      }
-
-      let animateMap = true;
-
-      if (!ctrl.map) {
-        const map = new WorldMap(ctrl, mapContainer[0]);
-        map.createMap();
-        ctrl.map = map;
-        ctrl.mapCenterMoved = true;
-        animateMap = false;
-      }
-
-      setTimeout(() => {
-        ctrl.map.resize();
-      }, 1);
-
-      if (!ctrl.map.legend && ctrl.settings.showLegend) {
-        ctrl.map.createLegend();
-      }
-
-      ctrl.map.drawCircles();
-
-      if (ctrl.mapCenterMoved) {
-        ctrl.map.panToMapCenter({animate: animateMap});
-      }
-
-    }
+  getSelectedMapCenter() {
+    const mapCenter:any = _.find(MapCenters, {id: this.settings.mapCenter });
+    return mapCenter && mapCenter.data;
   }
+
 }
