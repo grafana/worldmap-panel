@@ -230,6 +230,8 @@ export default class WorldMap {
       fillColor: this.getColor(dataPoint.value),
       fillOpacity: 0.5,
       location: dataPoint.key,
+      stroke: Boolean(this.ctrl.settings.circleOptions.strokeEnabled),
+      weight: parseInt(this.ctrl.settings.circleOptions.strokeWeight) || 3,
     });
 
     this.createClickthrough(circle, dataPoint);

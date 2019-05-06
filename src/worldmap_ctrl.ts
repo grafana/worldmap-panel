@@ -22,6 +22,10 @@ const panelDefaults = {
   valueName: "total",
   circleMinSize: 2,
   circleMaxSize: 30,
+  circleOptions: {
+    strokeEnabled: true,
+    strokeWeight: 3,
+  },
   locationData: null,
   thresholds: "0,10",
   colors: [
@@ -503,7 +507,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
-  toggleStickyLabels() {
+  redrawCircles() {
     this.map.clearCircles();
     this.render();
   }

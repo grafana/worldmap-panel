@@ -41,6 +41,7 @@
 - Add options `ignoreEmptyGeohashValues` and `ignoreInvalidGeohashValues`.
 - Add `ignoreEscapeKey` option.
 - Add `hideTimepickerNavigation` option.
+- Add `circleOptions.strokeEnabled` and `circleOptions.strokeWeight`.
 
 ## v0.2.0
 

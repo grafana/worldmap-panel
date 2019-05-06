@@ -362,15 +362,24 @@
       <h5>Circle parameters</h5>
       <div class="gf-form">
         <label class="gf-form-label width-10">Minimum size</label>
-        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMinSize" ng-change="ctrl.refresh()"
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMinSize" ng-change="ctrl.render()"
           placeholder="1" ng-model-onblur />
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-10">Maximum size</label>
-        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMaxSize" ng-change="ctrl.refresh()"
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleMaxSize" ng-change="ctrl.render()"
           placeholder="10" ng-model-onblur />
       </div>
-
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Enable strokes</label>
+        <gf-form-switch checked="ctrl.panel.circleOptions.strokeEnabled" on-change="ctrl.redrawCircles()">
+        </gf-form-switch>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Stroke width</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleOptions.strokeWeight" ng-change="ctrl.redrawCircles()"
+          placeholder="3" ng-model-onblur />
+      </div>
     </div>
 
     <div class="gf-form-group" style="overflow-x: visible">
@@ -396,7 +405,7 @@
 
     <div class="gf-form-group">
       <h5>Popup labels</h5>
-      <gf-form-switch class="gf-form" label="Sticky" label-class="width-10" checked="ctrl.panel.stickyLabels" on-change="ctrl.toggleStickyLabels()">
+      <gf-form-switch class="gf-form" label="Sticky" label-class="width-10" checked="ctrl.panel.stickyLabels" on-change="ctrl.redrawCircles()">
       </gf-form-switch>
       <gf-form-switch class="gf-form" label="Auto-pan" label-class="width-10" checked="ctrl.panel.autoPanLabels" on-change="ctrl.render()">
       </gf-form-switch>
