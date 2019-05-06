@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.0-dev2
+## v0.3.0-dev
 
 - Add new mapping options "table+json" and "table+jsonp" to retrieve
   location information from JSON endpoint, even for table data.
@@ -11,12 +11,38 @@
 - Increase form field width for JSON endpoint url settings.
 - Fix conditional table options display in settings editor.
 - Add "showTableOptions()" conditional for signalling any type of table source.
-- Add software tests for options
+- Add software tests covering new control options
     - locationData: "table+json(p)"
     - showZoomControl: false
     - showAttribution: false
     - legendContainerSelector: ".shared-map-legend"
 - Add Makefile for macOS/Homebrew.
+- Fix popover labels text color for light theme (#169). Thanks, [@dtheb](https://github.com/dtheb).
+- Add clickthrough option for circles, use fixed url (#129). Thanks, [@ryft](https://github.com/ryft).
+- Add clickthrough option for circles, use urls from data (#190). Thanks, [@leonhardhaas](https://github.com/leonhardhaas).
+- Combine both clickthrough link implementations #129 and #190,
+  add basic variable interpolation based on keys from `dataPoint`.
+- Introduce the regular Grafana templating mechanism for interpolating variables
+  into clickthrough links. As we are now interpolating dashboard **and** `dataPoint`
+  variables, the latter one will get prefixed with "point_" to avoid collisions.
+- Apply Grafana-style variable interpolation to **all** panel settings.
+- Add query parameters into the interpolation dictionary, prefixed by `request_`.
+- Use request parameters prefixed with "panel-" to optionally override the
+  respective control options.
+- Improve map center control handling.
+- Improve clickthroughURL interpolation.
+- Add control option `clickthroughOptions.windowName`
+  to open clickthrough target in designated window.
+- Improve centering on “Last Geohash”
+- Add support for "First Geohash" centering (#156). Thanks, Fabien.
+- Add control options `mapFitData` and `mapZoomByRadius`.
+- Repaint user interface.
+- Refactor machinery and user interface.
+- Add options `ignoreEmptyGeohashValues` and `ignoreInvalidGeohashValues`.
+- Add `ignoreEscapeKey` option.
+- Add `hideTimepickerNavigation` option.
+- Add `circleOptions.strokeEnabled` and `circleOptions.strokeWeight`.
+- Add options `customAttribution` and `customAttributionText`.
 
 ## v0.2.0
 

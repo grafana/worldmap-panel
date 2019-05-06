@@ -1,5 +1,10 @@
 # Worldmap Panel Plugin for Grafana
 
+**The [Grafana Worldmap Panel 0.3.0-dev series] ([changes]) is a work in progress, please don't use it in production yet. We are happy for testing and feedback.**
+
+[Grafana Worldmap Panel 0.3.0-dev series]: https://github.com/hiveeyes/grafana-worldmap-panel
+[changes]: https://github.com/hiveeyes/grafana-worldmap-panel/blob/develop/CHANGELOG.md
+
 The Worldmap Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or data in the Table format.
 
 ![Worldmap](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-world.png)
@@ -208,7 +213,7 @@ Supported Databases:
 
 - Warp&nbsp;10 via [grafana-warp10-datasource](https://github.com/cityzendata/grafana-warp10) plugin  
 
-It supports any datasource capable of generating a JSON response with a  a custom list of locations (the same format that for the JSON enpoint).
+It supports any datasource capable of generating a JSON response with a custom list of locations (the same format that for the JSON endpoint).
 
 ### Map Data Options
 
