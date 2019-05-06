@@ -362,6 +362,7 @@ describe('Worldmap', () => {
           initialZoom: 1,
         },
         colors: ['red', 'blue', 'green'],
+        circleOptions: {},
       },
       tileServer: 'CartoDB Positron',
     };
@@ -451,6 +452,7 @@ describe('WorldmapFoundation', () => {
           initialZoom: 1,
         },
         colors: ['red', 'blue', 'green'],
+        circleOptions: {},
         showZoomControl: true,
         showAttribution: true,
       },
