@@ -40,6 +40,7 @@
 - Refactor machinery and user interface.
 - Add options `ignoreEmptyGeohashValues` and `ignoreInvalidGeohashValues`.
 - Add `ignoreEscapeKey` option.
+- Add `hideTimepickerNavigation` option.
 
 ## v0.2.0
 

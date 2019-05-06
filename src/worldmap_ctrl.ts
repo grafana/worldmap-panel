@@ -65,6 +65,7 @@ const panelDefaults = {
     linkField: null,
   },
   ignoreEscapeKey: false,
+  hideTimepickerNavigation: false,
 };
 
 export default class WorldmapCtrl extends MetricsPanelCtrl {
@@ -142,6 +143,12 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       this.chrome.restoreEscapeKeyBinding();
     }
 
+    // Optionally hide the timepicker navigation widget.
+    if (this.settings.hideTimepickerNavigation) {
+      this.chrome.removeTimePickerNav();
+    } else {
+      this.chrome.restoreTimePickerNav();
+    }
   }
 
   setupEvents() {

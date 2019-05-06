@@ -1,5 +1,6 @@
 import WorldmapCtrl from "./worldmap_ctrl";
 import * as _ from "lodash";
+import $ from "jquery";
 
 export class WorldmapChrome {
   settings: any;
@@ -71,6 +72,14 @@ export class WorldmapChrome {
   getKeybindingSrv() {
     const app = window['angular'].element('grafana-app');
     return app.injector().get('keybindingSrv');
+  }
+
+  removeTimePickerNav() {
+    $('.gf-timepicker-nav').hide();
+  }
+
+  restoreTimePickerNav() {
+    $('.gf-timepicker-nav').show();
   }
 
 }
