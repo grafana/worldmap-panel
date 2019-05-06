@@ -1,22 +1,22 @@
 # Backlog for Grafana Worldmap Panel
 
 ## Prio 1
-- Completely proxy all accesses to self.panel through self.settings
+- Improve PluginSettings: `TypeError: "setting getter-only property "customAttributionText"`
+- After `restart()`: `TypeError: this._ctx is undefined`
 - Indicate which location source might be suitable for which data source 
-- Remove overloading of labelField for table+json location source
-- Add note about variable interpolation to user interface
-- Document the Makefile and how to run this in a sandbox
+- Add control options ignoreGeohashDecodingErrors, strokeWidth, attributionText, ignoreEscapeKey
+- Add options `strokeDisabled` and `strokeWidth``
+  https://leafletjs.com/reference-1.4.0.html#path
+- Just reloading / hitting / triggering `refresh` does not acquire locations 
+  again if previously empty. Improve that.
 - Propagate errors from InfluxDB like "GROUP BY requires at least one aggregate function"
   when having "GROUP BY time ($__interval)" in query.
-- Add control options ignoreGeohashDecodingErrors, strokeWidth, attributionText
-- Add documentation about table+json and table+jsonp
-- When switching from JSON to JSONP, the location list will not get cleared out.
-- Currently, only "valueRounded is displayed"
-- Just reloading / `refresh` does not acquire locations again if previously empty.
-  Improve that.
 
 ## Documentation
+- Add documentation about table+json and table+jsonp
 - https://community.grafana.com/t/influxdb-and-grafana-plugin-worldmap-panel/16761
+- Add note about variable interpolation to user interface
+- Document the Makefile and how to run this in a sandbox
 
 ## Prio 2
 - Add variable interpolation like `$point_station_id` also to other data sources != "table"
@@ -64,6 +64,7 @@
   - Just switch to dashboard internally instead of fully navigating to the url
   - Optionally open link in new or named window
   - Convenience checkbox "Add complete dataPoint as query parameters"
+- Review: Currently, only "valueRounded is displayed"
 
 ## Prio 3
 - Something might still be fishy with circle sizes.
@@ -88,3 +89,9 @@
 - Dynamic coloring
     - https://github.com/grafana/worldmap-panel/issues/171
 - Add location picker based on NominatimAssistant
+
+
+## Done
+- Completely proxy all accesses to self.panel through self.settings
+- Remove overloading of labelField for table+json location source
+- When switching from JSON to JSONP, the location list will not get cleared out.
