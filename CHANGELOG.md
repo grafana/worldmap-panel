@@ -42,6 +42,7 @@
 - Add `ignoreEscapeKey` option.
 - Add `hideTimepickerNavigation` option.
 - Add `circleOptions.strokeEnabled` and `circleOptions.strokeWeight`.
+- Add options `customAttribution` and `customAttributionText`.
 
 ## v0.2.0
 

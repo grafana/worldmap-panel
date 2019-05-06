@@ -80,6 +80,8 @@ export default class WorldMap {
     console.info('Drawing circles');
     this.drawCircles();
 
+    this.drawCustomAttribution();
+
     setTimeout(() => {
       this.drawMap(options);
     }, 1);
@@ -399,7 +401,9 @@ export default class WorldMap {
   }
 
   addCircles(circles) {
-    return (<any>window).L.layerGroup(circles).addTo(this.map);
+    // Todo: Optionally add fixed custom attributions to the circle layer.
+    let attribution;
+    return (<any>window).L.layerGroup(circles, {attribution: attribution}).addTo(this.map);
   }
 
   removeCircles() {
@@ -420,4 +424,19 @@ export default class WorldMap {
     }
     this.map.remove();
   }
+
+  drawCustomAttribution() {
+    // The operator wants a custom attribution.
+    if (this.ctrl.settings.customAttribution) {
+
+      // The custom attribution text.
+      const attribution = this.ctrl.settings.customAttributionText;
+
+      // Amend the Leaflet map by clearing out and setting the custom attribution text.
+      const attributionControl = this.map.attributionControl;
+      attributionControl._attributions = {};
+      attributionControl.addAttribution(attribution);
+    }
+  }
+
 }

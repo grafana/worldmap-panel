@@ -39,6 +39,8 @@ const panelDefaults = {
   legendContainerSelector: null,
   showZoomControl: true,
   showAttribution: true,
+  customAttribution: false,
+  customAttributionText: null,
   mouseWheelZoom: false,
   esGeoPoint: null,
   // Todo: Investigate: Is "Count" a reasonable default here
@@ -505,6 +507,36 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   toggleMouseWheelZoom() {
     this.map.setMouseWheelZoom();
     this.render();
+  }
+
+  toggleCustomAttribution() {
+    if (this.settings.customAttribution) {
+
+      const attributionControl = this.map.map.attributionControl;
+
+      // When switching on custom attributions and the text is
+      // empty yet, use the value which is currently active.
+      if (!this.panel.customAttributionText) {
+
+        // Collect active attributions.
+        const entries:Array<any> = [];
+        for (let key in attributionControl._attributions) {
+          entries.push(key);
+        }
+
+        // Store in custom text.
+        this.panel.customAttributionText = entries.join(', ');
+      }
+
+      // Clear out builtin attributions.
+      attributionControl._attributions = {};
+      attributionControl._update();
+      this.render();
+
+    } else {
+      // The operator wants vanilla attributions again, so let's start over.
+      this.restart();
+    }
   }
 
   redrawCircles() {

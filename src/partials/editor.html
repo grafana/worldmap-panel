@@ -336,15 +336,30 @@
 
     <div class="gf-form-group">
       <h5>Appearance</h5>
+
+      <!-- Zoom -->
+      <div class="gf-form-subgroup">
+      <gf-form-switch class="gf-form" label="Show Zoom Control" label-class="width-10" checked="ctrl.panel.showZoomControl" on-change="ctrl.restart()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Mouse Wheel Zoom" label-class="width-10" checked="ctrl.panel.mouseWheelZoom" on-change="ctrl.toggleMouseWheelZoom()"></gf-form-switch>
+      </div>
+
+      <!-- Legend -->
+      <div class="gf-form-subgroup">
       <gf-form-switch class="gf-form" label="Show Legend" label-class="width-10" checked="ctrl.panel.showLegend" on-change="ctrl.toggleLegend()"></gf-form-switch>
       <div class="gf-form" ng-show="ctrl.panel.showLegend == true">
         <label class="gf-form-label width-10">Legend container</label>
         <input type="text" class="input-small gf-form-input max-width-18" ng-model="ctrl.panel.legendContainerSelector"
                placeholder=".shared-map-legend" ng-change="ctrl.restart()" ng-model-onblur />
       </div>
-      <gf-form-switch class="gf-form" label="Show Zoom Control" label-class="width-10" checked="ctrl.panel.showZoomControl" on-change="ctrl.restart()"></gf-form-switch>
+      </div>
+
+      <!-- Attribution -->
+      <div class="gf-form-subgroup">
       <gf-form-switch class="gf-form" label="Show Attribution" label-class="width-10" checked="ctrl.panel.showAttribution" on-change="ctrl.restart()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="Mouse Wheel Zoom" label-class="width-10" checked="ctrl.panel.mouseWheelZoom" on-change="ctrl.toggleMouseWheelZoom()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Custom Attribution" label-class="width-10" checked="ctrl.panel.customAttribution" on-change="ctrl.toggleCustomAttribution()"></gf-form-switch>
+      <textarea class="gf-form input-small gf-form-input width-24" rows="5" ng-show="ctrl.panel.customAttribution" ng-model="ctrl.panel.customAttributionText" ng-change="ctrl.render()"></textarea>
+      </div>
+
     </div>
 
     <div class="gf-form-group">
