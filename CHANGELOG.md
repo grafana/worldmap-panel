@@ -17,9 +17,9 @@
     - showAttribution: false
     - legendContainerSelector: ".shared-map-legend"
 - Add Makefile for macOS/Homebrew.
-- Fix popover labels text color for light theme (#169). Thanks, Ahmed.
-- Add clickthrough option for circles, use fixed url (#129). Thanks, James.
-- Add clickthrough option for circles, use urls from data (#190). Thanks, Leonhard.
+- Fix popover labels text color for light theme (#169). Thanks, [@dtheb](https://github.com/dtheb).
+- Add clickthrough option for circles, use fixed url (#129). Thanks, [@ryft](https://github.com/ryft).
+- Add clickthrough option for circles, use urls from data (#190). Thanks, [@leonhardhaas](https://github.com/leonhardhaas).
 - Combine both clickthrough link implementations #129 and #190,
   add basic variable interpolation based on keys from `dataPoint`.
 - Introduce the regular Grafana templating mechanism for interpolating variables
