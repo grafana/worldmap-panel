@@ -288,6 +288,8 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
+      // Todo: Using hardcoded `tableData[0]` means
+      //  this will only use the first active query?
       tableData[0].forEach(datapoint => {
         let key;
         let longitude;
