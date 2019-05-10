@@ -91,7 +91,7 @@ export const LocationSources = [
 
 export class MapCenterType {
   static readonly Other:string = 'Others';
-  static readonly Region:string = 'Region';
+  static readonly Region:string = 'Regions';
   static readonly Country:string = 'Countries';
   static readonly City:string = 'Cities';
 }
@@ -125,25 +125,6 @@ export const MapCenters = [
   },
 
   {
-    id: 'Belgium',
-    label: 'Belgium',
-    type: MapCenterType.Country,
-    data: { mapCenterLatitude: 50.53665, mapCenterLongitude: 4.39851, initialZoom: 7 },
-  },
-  {
-    id: 'Germany',
-    label: 'Germany',
-    type: MapCenterType.Country,
-    data: { mapCenterLatitude: 51.35149, mapCenterLongitude: 10.45412, initialZoom: 5 },
-  },
-  {
-    id: 'Sweden',
-    label: 'Sweden',
-    type: MapCenterType.Country,
-    data: { mapCenterLatitude: 62.91154, mapCenterLongitude: 17.38539, initialZoom: 4 },
-  },
-
-  {
     id: 'Europe',
     label: 'Europe',
     type: MapCenterType.Region,
@@ -166,6 +147,25 @@ export const MapCenters = [
     label: 'West Asia',
     type: MapCenterType.Region,
     data: { mapCenterLatitude: 26, mapCenterLongitude: 53, initialZoom: 4 },
+  },
+
+  {
+    id: 'Belgium',
+    label: 'Belgium',
+    type: MapCenterType.Country,
+    data: { mapCenterLatitude: 50.53665, mapCenterLongitude: 4.39851, initialZoom: 7 },
+  },
+  {
+    id: 'Germany',
+    label: 'Germany',
+    type: MapCenterType.Country,
+    data: { mapCenterLatitude: 51.35149, mapCenterLongitude: 10.45412, initialZoom: 5 },
+  },
+  {
+    id: 'Sweden',
+    label: 'Sweden',
+    type: MapCenterType.Country,
+    data: { mapCenterLatitude: 62.91154, mapCenterLongitude: 17.38539, initialZoom: 4 },
   },
 
   {
