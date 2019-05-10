@@ -446,8 +446,11 @@
     <div class="gf-form-group">
       <h5>Clickthrough links</h5>
       <div class="gf-form">
-        <label class="gf-form-label width-10">Clickthrough URL</label>
-        <input type="text" class="input-small gf-form-input width-20" ng-model="ctrl.panel.clickthroughUrl" ng-change="ctrl.refresh()" ng-model-onblur />
+        <label class="gf-form-label width-10">
+          Clickthrough URL
+          <i class="grafana-tip fa fa-question-circle" bs-tooltip="'Address field values by prefixing $__field, e.g. $__field_geohash'"></i>
+        </label>
+        <input type="text" class="input-small gf-form-input width-20" ng-model="ctrl.panel.clickthroughUrl" ng-change="ctrl.refresh()" ng-model-onblur/>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-10">Clickthrough Window</label>
