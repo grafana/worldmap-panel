@@ -28,7 +28,7 @@
   add basic variable interpolation based on keys from `dataPoint`.
 - Introduce the regular Grafana templating mechanism for interpolating variables
   into clickthrough links. As we are now interpolating dashboard **and** `dataPoint`
-  variables, the latter one will get prefixed with `point_` to avoid collisions.
+  variables, the latter one will get prefixed with `__field_` to avoid collisions.
 - Apply Grafana-style variable interpolation to **all** panel settings.
 - Add query parameters into the interpolation dictionary, prefixed by `request_`.
 - Use request parameters prefixed with "panel-" to optionally override the
@@ -47,6 +47,7 @@
 - Add `hideTimepickerNavigation` option.
 - Add `circleOptions.strokeEnabled` and `circleOptions.strokeWeight`.
 - Add options `customAttribution` and `customAttributionText`.
+- Rename `point_` prefix to `__field_` when interpolating datapoint field values
 
 ## v0.2.0
 

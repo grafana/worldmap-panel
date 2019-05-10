@@ -363,10 +363,10 @@ export default class DataFormatter {
           link: link,
         };
 
-        // Add all values from the original datapoint as attributes prefixed with `point_`.
+        // Add all values from the original datapoint as attributes prefixed with `__field_`.
         for (let key in datapoint) {
           const value = datapoint[key];
-          key = 'point_' + key;
+          key = '__field_' + key;
           dataValue[key] = value;
         }
 

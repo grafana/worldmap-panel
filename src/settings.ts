@@ -78,7 +78,7 @@ export default class PluginSettings {
         // When given, use request variable "panel-*", making things like these possible.
         // - ?panel-mapCenterLatitude=62.2
         // - ?panel-showZoomControl=false
-        // - ?panel-clickthroughUrl=/path/to/?geohash=$point_geohash
+        // - ?panel-clickthroughUrl=/path/to/?geohash=$__field_geohash
         // - https://daq.example.org/d/D1Fx12kWk/magic-dashboard?panel-clickthroughUrl=/path/to/?foobar=$request_foobar&foobar=hello
         const panel_query_name = 'panel-' + name;
         const panel_query_value = this._request[panel_query_name];
