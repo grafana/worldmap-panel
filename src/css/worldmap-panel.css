@@ -40,3 +40,20 @@
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
   color: #d8d9da !important;
 }
+
+.main-section-heading {
+  margin-bottom: 1.25rem;
+}
+
+.editor-column {
+  max-width: 30%;
+  margin-right: 2rem;
+}
+
+.editor-link-color {
+  color: #2846a1;
+}
+
+.gf-form-subgroup {
+  margin-bottom: 1rem;
+}
