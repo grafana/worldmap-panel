@@ -338,15 +338,6 @@ export default class DataFormatter {
         let locationNameFromJson  = location ? location.name : undefined;
         let locationNameEffective = locationNameFromJson || locationNameFromTable || key;
 
-        // Add regular label as suffix when label is coming from JSON through "table+json" or "table+jsonp".
-        // This is effectively the key value.
-        // This is required to attach station identifiers to the effective name.
-        // Todo: Better control this through appropriate editor option, e.g.
-        //  "Add location key to label" (`addLocationKey`).
-        if (labelJsonKey) {
-          locationNameEffective += ` (${labelJsonKey})`;
-        }
-
         const dataValue = {
 
           // Add location information.
