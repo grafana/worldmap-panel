@@ -18,6 +18,7 @@ const panelDefaults = {
   mapCenterLatitude: 0,
   mapCenterLongitude: 0,
   initialZoom: 1,
+  maximumZoom: null,
   mapZoomByRadius: null,
   valueName: "total",
   circleMinSize: 2,

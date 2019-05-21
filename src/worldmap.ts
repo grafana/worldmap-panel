@@ -40,11 +40,14 @@ export default class WorldMap {
       center.mapCenterLatitude,
       center.mapCenterLongitude
     );
+
+    let zoomLevel = this.getEffectiveZoomLevel(center.mapZoomLevel);
+
     this.map = L.map(this.mapContainer, {
       worldCopyJump: true,
       preferCanvas: true,
       center: mapCenter,
-      zoom: center.mapZoomLevel,
+      zoom: zoomLevel,
       zoomControl: this.ctrl.settings.showZoomControl,
       attributionControl: this.ctrl.settings.showAttribution,
     });
@@ -95,6 +98,13 @@ export default class WorldMap {
       this.panToMapCenter(options);
     }
     //this.ctrl.updatePanelCorner();
+  }
+
+  getEffectiveZoomLevel(zoomLevel) {
+    if (this.ctrl.settings.maximumZoom) {
+      zoomLevel = Math.min(parseInt(this.ctrl.settings.maximumZoom), zoomLevel);
+    }
+    return zoomLevel;
   }
 
   createLegend() {
@@ -379,6 +389,8 @@ export default class WorldMap {
       coordinates = bounds.getCenter();
       zoomLevel = this.map.getBoundsZoom(bounds);
     }
+
+    zoomLevel = this.getEffectiveZoomLevel(zoomLevel);
 
     // Apply coordinates and zoom level to Leaflet map.
     this.map.setView(coordinates, zoomLevel, options);
