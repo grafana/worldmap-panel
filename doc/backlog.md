@@ -1,6 +1,12 @@
 # Backlog for Grafana Worldmap Panel
 
 ## Prio 1
+- When navigating by variables and hitting an empty dataset, the locations get erroneously cleared out
+- Navigate by Variable-Schnackel
+
+## Prio 1.5
+- Migrate "Field mapping" to just "Fields" where one can interpolate arbitrary strings
+  and the database fields will get interpolated into them.
 - Improve PluginSettings: `TypeError: "setting getter-only property "customAttributionText"`
 - After `restart()`: `TypeError: this._ctx is undefined`
 - Indicate which location source might be suitable for which data source 
@@ -21,6 +27,8 @@
   https://grafana.com/docs/installation/configuration/#disable-sanitize-html
 - The contrast of the text on the red tooltip drop isn't that great. Maybe use black or white, at least for the light theme.
 - Does data autofitting work when changing dashboard variables?
+- Rename request parameters from "request_" to "__request"
+- Add "maxZoomLevel" option to accompany the "FitToData" option
 
 ## Documentation
 - Note about installation
