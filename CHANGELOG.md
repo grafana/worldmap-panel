@@ -50,6 +50,7 @@
 - Rename `point_` prefix to `__field_` when interpolating datapoint field values
 - Remove automatic key suffix for popover texts
 - Limit effective zoom level by new "Maximum zoom level" option
+- Fix transformation machinery for data in timeseries format
 
 ## v0.2.0
 
