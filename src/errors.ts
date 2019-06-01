@@ -47,7 +47,7 @@ export class ErrorManager {
     const domain = args.domain || 'default';
 
     const item = this.makeItem(message, level);
-    console.exception(JSON.stringify(item));
+    console.error(JSON.stringify(item));
 
     if (!this.storage[domain]) {
       throw new Error(`Error domain "${domain}" not registered`);

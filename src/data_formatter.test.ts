@@ -1,12 +1,23 @@
 import DataFormatter from './data_formatter';
+import {ErrorManager} from "./errors";
+import * as jQuery from "jquery";
 
 describe('DataFormatter', () => {
+  let ctrl;
   let dataFormatter;
   let formattedData: any[] = [];
 
+  beforeEach(() => {
+    const errors = new ErrorManager();
+    errors.registerDomains('data', 'location');
+    ctrl = {
+      errors: errors
+    };
+  });
+
   describe('when latitude and longitude are given in table data and query type is coordinates', () => {
     beforeEach(() => {
-      const ctrl = {
+      jQuery.extend(ctrl, {
         panel: {
           tableQueryOptions: {
             queryType: 'coordinates',
@@ -14,7 +25,7 @@ describe('DataFormatter', () => {
             longitudeField: 'longitude'
           }
         }
-      };
+      });
       dataFormatter = new DataFormatter(ctrl);
     });
 
@@ -121,7 +132,7 @@ describe('DataFormatter', () => {
       dataFormatter = new DataFormatter(ctrl);
     });
 
-    it('should use the value from table\'s labelField as a key to lookup the designated locationName from the JSON/JSONP result', () => {
+    it('should use the value from table\'s labelLocationKeyField as a key to lookup the designated locationName from the JSON/JSONP result', () => {
       // Main Location Data is coming from table data.
       // However, the humanized string is resolved by mapping e.g.
       // "station_id == 28" to "key == 28", in turn yielding the
@@ -144,17 +155,17 @@ describe('DataFormatter', () => {
 
       expect(data[0].locationLatitude).toBeCloseTo(48.7779);
       expect(data[0].locationLongitude).toBeCloseTo(9.23600);
-      expect(data[0].locationName).toEqual('Ulmer Straße, Wangen, Stuttgart, Baden-Württemberg, DE (28)');
+      expect(data[0].locationName).toEqual('Ulmer Straße, Wangen, Stuttgart, Baden-Württemberg, DE');
 
       expect(data[1].locationLatitude).toBeCloseTo(52.544);
       expect(data[1].locationLongitude).toBeCloseTo(13.374);
-      expect(data[1].locationName).toEqual('Gerichtstraße, Gesundbrunnen, Mitte, Berlin, DE (1071)');
+      expect(data[1].locationName).toEqual('Gerichtstraße, Gesundbrunnen, Mitte, Berlin, DE');
     });
   });
 
   describe('when the time series data matches the location', () => {
     beforeEach(() => {
-      const ctrl = {
+      jQuery.extend(ctrl, {
         panel: {
           valueName: 'total'
         },
@@ -166,9 +177,9 @@ describe('DataFormatter', () => {
           {alias: 'IE', datapoints: [1, 2], stats: {total: 3}},
           {alias: 'SE', datapoints: [2, 3], stats: {total: 5}},
         ]
-      };
+      });
       dataFormatter = new DataFormatter(ctrl);
-      dataFormatter.setTimeseriesValues(formattedData);
+      dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
     });
 
     it('should format the data and match the serie to a location', () => {
@@ -188,7 +199,7 @@ describe('DataFormatter', () => {
 
   describe('when the time series data has lowercase country codes', () => {
     beforeEach(() => {
-      const ctrl = {
+      jQuery.extend(ctrl, {
         panel: {
           valueName: 'total'
         },
@@ -200,9 +211,9 @@ describe('DataFormatter', () => {
           {alias: 'ie', datapoints: [1, 2], stats: {total: 3}},
           {alias: 'se', datapoints: [2, 3], stats: {total: 5}},
         ]
-      };
+      });
       dataFormatter = new DataFormatter(ctrl);
-      dataFormatter.setTimeseriesValues(formattedData);
+      dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
     });
 
     it('should format the data and match the serie to a location', () => {
@@ -222,7 +233,7 @@ describe('DataFormatter', () => {
 
   describe('when the time series data does not match any location', () => {
     beforeEach(() => {
-      const ctrl = {
+      jQuery.extend(ctrl, {
         panel: {
           valueName: 'total'
         },
@@ -231,9 +242,9 @@ describe('DataFormatter', () => {
           {alias: 'SX', datapoints: [1, 2], stats: {total: 3}},
           {alias: 'IE', datapoints: [1, 2], stats: {total: 3}}
         ]
-      };
+      });
       dataFormatter = new DataFormatter(ctrl);
-      dataFormatter.setTimeseriesValues(formattedData);
+      dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
     });
 
     it('should ignore the serie', () => {
@@ -244,7 +255,7 @@ describe('DataFormatter', () => {
   describe('when the time series data has decimals', () => {
     describe('and decimals are specified as an integer', () => {
       beforeEach(() => {
-        const ctrl = {
+        jQuery.extend(ctrl, {
           panel: {
             valueName: 'total',
             decimals: 2
@@ -257,9 +268,9 @@ describe('DataFormatter', () => {
             {alias: 'IE', datapoints: [1.11, 2.22], stats: {total: 3.33}},
             {alias: 'SE', datapoints: [2.221, 3.331], stats: {total: 5.552}},
           ]
-        };
+        });
         dataFormatter = new DataFormatter(ctrl);
-        dataFormatter.setTimeseriesValues(formattedData);
+        dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
       });
 
       it('should format the value with 2 decimals', () => {
@@ -269,7 +280,7 @@ describe('DataFormatter', () => {
 
     describe('and decimals are specified as a string', () => {
       beforeEach(() => {
-        const ctrl = {
+        jQuery.extend(ctrl, {
           panel: {
             valueName: 'total',
             decimals: '2'
@@ -282,9 +293,9 @@ describe('DataFormatter', () => {
             {alias: 'IE', datapoints: [1.11, 2.22], stats: {total: 3.33}},
             {alias: 'SE', datapoints: [2.221, 3.331], stats: {total: 5.552}},
           ]
-        };
+        });
         dataFormatter = new DataFormatter(ctrl);
-        dataFormatter.setTimeseriesValues(formattedData);
+        dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
       });
 
       it('should format the value with 2 decimals', () => {
