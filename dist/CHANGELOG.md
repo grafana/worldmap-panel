@@ -51,6 +51,7 @@
 - Remove automatic key suffix for popover texts
 - Limit effective zoom level by new "Maximum zoom level" option
 - Fix transformation machinery for data in timeseries format
+- Acquire location data again after being cleared out when hitting an empty dataset
 
 ## v0.2.0
 

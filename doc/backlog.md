@@ -1,8 +1,10 @@
 # Backlog for Grafana Worldmap Panel
 
 ## Prio 1
-- When navigating by variables and hitting an empty dataset, the locations get erroneously cleared out
-- Navigate by Variable-Schnackel
+- Click-through navigation by Variable-Schnackel
+- Improve caching behavior
+  http http://localhost:3000/public/data/json/ldi-stations-timeseries.json
+  Cache-Control: public, max-age=3600
 
 ## Prio 1.5
 - Migrate "Field mapping" to just "Fields" where one can interpolate arbitrary strings
@@ -122,11 +124,12 @@
 - Completely proxy all accesses to self.panel through self.settings
 - Remove overloading of labelField for table+json location source
 - When switching from JSON to JSONP, the location list will not get cleared out.
+- When navigating by variables and hitting an empty dataset, location data gets cleared out and is not acquired again
 
 
 ## Release
 ```
 cd /srv/packages/organizations/hiveeyes/grafana/grafana-worldmap-panel
-wget https://github.com/hiveeyes/grafana-worldmap-panel/archive/0.3.0-dev4.zip
+wget https://github.com/hiveeyes/grafana-worldmap-panel/archive/0.3.0-dev7.zip
 grafana-cli --repo https://packages.hiveeyes.org/grafana/ plugins install grafana-worldmap-panel
 ```
