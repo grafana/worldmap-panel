@@ -97,6 +97,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   chrome: WorldmapChrome;
   errors: ErrorManager;
 
+  initializing: boolean;
+
   /** @ngInject **/
   constructor($scope, $injector, $element, $document, contextSrv, templateSrv, $location) {
     super($scope, $injector);
@@ -104,6 +106,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.$element = $element;
     this.$document = $document;
     this.contextSrv = contextSrv;
+
+    this.initializing = true;
 
     this.errors = new ErrorManager();
     this.errors.registerDomains('data', 'location');
@@ -236,17 +240,17 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     /*
      * Conditionally refresh the plugin, but not if it's still loading.
      */
-    const loading = this.loading != false;
-    console.log('Still loading:', loading);
-    if (!loading) {
+    console.log('Still initializing:', this.initializing);
+    if (!this.initializing) {
       this.refresh();
     }
   }
 
   onRefresh() {
-    console.info('Refreshing panel');
+    console.info('Refreshing panel. initializing=', this.initializing);
     this.errors.reset('data');
-    if (_.isEmpty(this.locations) && _.isEmpty(this.panel.snapshotLocationData)) {
+
+    if (!this.loading && !this.initializing && (_.isEmpty(this.locations) && _.isEmpty(this.panel.snapshotLocationData))) {
       this.loadLocationData(true);
     }
   }
@@ -263,6 +267,9 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
      */
 
     console.info('Data received:', dataList);
+
+    // Is this the right place to indicate the plugin has been initialized?
+    this.initializing = false;
 
     try {
       this.processData(dataList);
