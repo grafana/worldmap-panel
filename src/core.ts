@@ -87,7 +87,7 @@ export class WorldmapCore {
 
       // Compute URL to builtin JSON resource.
       const url =
-        "public/plugins/grafana-worldmap-panel/data/" +
+        `public/plugins/${this.ctrl.pluginId}/data/` +
         this.settings.locationData +
         ".json";
 

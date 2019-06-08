@@ -105,7 +105,7 @@ describe('DataFormatter', () => {
      * - https://github.com/grafana/worldmap-panel/pull/177
      * - https://community.hiveeyes.org/t/erneuerung-der-luftdatenpumpe/1199
      * - https://community.hiveeyes.org/t/ldi-data-plane-v2/1412
-     * - https://community.hiveeyes.org/t/grafana-worldmap-panel-0-3-0-dev-series/1824/2
+     * - https://community.hiveeyes.org/t/grafana-worldmap-panel-ng/1824/2
      */
     beforeEach(() => {
       const ctrl = {

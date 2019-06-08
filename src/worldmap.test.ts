@@ -325,7 +325,7 @@ describe('Worldmap', () => {
      * options here to proof they actually toggle the visibility
      * of the respective control elements.
      *
-     * See also https://community.hiveeyes.org/t/grafana-worldmap-panel-0-3-0-dev-series/1824/3
+     * See also https://community.hiveeyes.org/t/grafana-worldmap-panel-ng/1824/3
      */
     beforeEach(() => {
       ctrl.data = new DataBuilder().withThresholdValues([2, 4, 6]).build();
@@ -390,7 +390,7 @@ describe('WorldmapFoundation', () => {
    * options here to proof they actually toggle the visibility
    * of the respective control elements.
    *
-   * See also https://community.hiveeyes.org/t/grafana-worldmap-panel-0-3-0-dev-series/1824/3
+   * See also https://community.hiveeyes.org/t/grafana-worldmap-panel-ng/1824/3
    */
 
   let worldMap;

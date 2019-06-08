@@ -1,4 +1,4 @@
-import { MetricsPanelCtrl } from "grafana/app/plugins/sdk";
+import {loadPluginCss, MetricsPanelCtrl} from "grafana/app/plugins/sdk";
 
 import * as _ from "lodash";
 import "./css/worldmap-panel.css";
@@ -107,6 +107,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.$document = $document;
     this.contextSrv = contextSrv;
 
+    this.loadCss();
+
     this.initializing = true;
 
     this.errors = new ErrorManager();
@@ -122,6 +124,14 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.setupEvents();
 
     this.loadLocationData();
+  }
+
+  loadCss() {
+    loadPluginCss({
+      dark: `plugins/${this.pluginId}/css/worldmap.dark.css`,
+      light: `plugins/${this.pluginId}/css/worldmap.light.css`
+    });
+
   }
 
   loadSettings() {
@@ -358,7 +368,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   onInitEditMode() {
     this.addEditorTab(
       "Worldmap",
-      "public/plugins/grafana-worldmap-panel/partials/editor.html",
+      `public/plugins/${this.pluginId}/partials/editor.html`,
       2
     );
   }
