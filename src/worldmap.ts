@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import * as L from './libs/leaflet';
+import * as L from 'leaflet';
 import WorldmapCtrl from './worldmap_ctrl';
 
 const tileServers = {

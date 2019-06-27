@@ -1,5 +1,4 @@
 import DataFormatter from './data_formatter';
-import _ from 'lodash';
 
 describe('DataFormatter', () => {
   let dataFormatter;
