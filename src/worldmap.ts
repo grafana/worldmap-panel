@@ -197,14 +197,13 @@ export default class WorldMap {
       closeButton: this.ctrl.panel.stickyLabels,
     });
 
-    circle.on('mouseover', function onMouseOver(evt) {
+    circle.on('mouseover', (evt) => {
       const layer = evt.target;
       layer.bringToFront();
-      this.openPopup();
     });
 
     if (!this.ctrl.panel.stickyLabels) {
-      circle.on('mouseout', function onMouseOut() {
+      circle.on('mouseout', () => {
         circle.closePopup();
       });
     }
