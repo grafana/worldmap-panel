@@ -34,7 +34,7 @@ export default class WorldMap {
   }
 
   createMap() {
-    const mapCenter = (<any>window).L.latLng(
+    const mapCenter = (window as any).L.latLng(
       parseFloat(this.ctrl.panel.mapCenterLatitude),
       parseFloat(this.ctrl.panel.mapCenterLongitude)
     );
@@ -47,7 +47,7 @@ export default class WorldMap {
     this.setMouseWheelZoom();
 
     const selectedTileServer = tileServers[this.ctrl.tileServer];
-    (<any>window).L.tileLayer(selectedTileServer.url, {
+    (window as any).L.tileLayer(selectedTileServer.url, {
       maxZoom: 18,
       subdomains: selectedTileServer.subdomains,
       reuseTiles: true,
@@ -57,9 +57,9 @@ export default class WorldMap {
   }
 
   createLegend() {
-    this.legend = (<any>window).L.control({ position: 'bottomleft' });
+    this.legend = (window as any).L.control({ position: 'bottomleft' });
     this.legend.onAdd = () => {
-      this.legend._div = (<any>window).L.DomUtil.create('div', 'info legend');
+      this.legend._div = (window as any).L.DomUtil.create('div', 'info legend');
       this.legend.update();
       return this.legend._div;
     };
@@ -162,7 +162,7 @@ export default class WorldMap {
   }
 
   createCircle(dataPoint) {
-    const circle = (<any>window).L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
+    const circle = (window as any).L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
       radius: this.calcCircleSize(dataPoint.value || 0),
       color: this.getColor(dataPoint.value),
       fillColor: this.getColor(dataPoint.value),
@@ -192,7 +192,7 @@ export default class WorldMap {
     const unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
     const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
     circle.bindPopup(label, {
-      offset: (<any>window).L.point(0, -2),
+      offset: (window as any).L.point(0, -2),
       className: 'worldmap-popup',
       closeButton: this.ctrl.panel.stickyLabels,
     });
@@ -242,7 +242,7 @@ export default class WorldMap {
   }
 
   addCircles(circles) {
-    return (<any>window).L.layerGroup(circles).addTo(this.map);
+    return (window as any).L.layerGroup(circles).addTo(this.map);
   }
 
   removeCircles() {
