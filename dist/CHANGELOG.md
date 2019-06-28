@@ -1,6 +1,12 @@
 # Changelog
 
-## v0.3.0-dev
+
+## v0.4.0
+- Rename to `grafana-worldmap-panel-ng` to allow side-by-side installation
+  with upstream *Grafana Worldmap Panel 0.2.0*.
+
+
+## v0.3.0
 
 - Add new mapping options `table+json` and `table+jsonp` to retrieve
   location information from JSON endpoint, even for table data.
