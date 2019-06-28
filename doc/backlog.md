@@ -31,6 +31,7 @@
 - Does data autofitting work when changing dashboard variables?
 - Rename request parameters from "request_" to "__request"
 - Add "maxZoomLevel" option to accompany the "FitToData" option
+- Add https://github.com/mlevans/leaflet-hash as location picker
 
 ## Documentation
 - Note about installation
