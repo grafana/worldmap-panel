@@ -14,10 +14,10 @@ interface DataInfo {
   count: number;
 }
 
-enum DataFormat {
+export enum DataFormat {
   Table = 'table',
+  Timeseries = 'timeseries',
   // Fixme: Add detection for other data formats.
-  //Timeseries = 'timeseries',
   //Json = 'json',
 }
 
@@ -44,7 +44,7 @@ export default class DataFormatter {
      * the plugin more robust wrt. to applying the correct mapping
      * flavors to the corresponding ingress data format.
      *
-     * Fixme: Add detection for timeseries format.
+     * Todo: Implement decoding from multiple queries.
      *
      */
 
@@ -53,33 +53,37 @@ export default class DataFormatter {
       const metric0 = dataList[0];
       dataInfo.type = metric0.type;
 
-      if (dataInfo.type == DataFormat.Table) {
+      if (metric0.type == DataFormat.Table) {
+        dataInfo.type = DataFormat.Table;
         dataInfo.count = metric0.rows.length;
 
+      } else if (metric0.datapoints) {
+        dataInfo.type = DataFormat.Timeseries;
+        dataInfo.count = dataList.length;
+
       } else {
-        console.warn('Todo: Implement "analyzeData" for other data sources');
-        //info.type = 'timeseries';
+        throw new DataError('Todo: Implement "analyzeData" for other data sources');
       }
     }
     return dataInfo;
   }
 
-  static seriesHandler(seriesData, settings) {
+  seriesHandler(seriesData) {
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
       alias: seriesData.target
     });
 
-    series.flotpairs = series.getFlotPairs(settings.nullPointMode);
+    series.flotpairs = series.getFlotPairs(this.settings.nullPointMode);
     return series;
   }
 
-  setTimeseriesValues(data) {
-    if (this.ctrl.series && this.ctrl.series.length > 0) {
+  setTimeseriesValues(seriesData, data) {
+    if (seriesData && seriesData.length > 0) {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.ctrl.series.forEach(serie => {
+      seriesData.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
         const location = _.find(this.ctrl.locations, loc => {
@@ -337,15 +341,6 @@ export default class DataFormatter {
         let locationNameFromTable = label;
         let locationNameFromJson  = location ? location.name : undefined;
         let locationNameEffective = locationNameFromJson || locationNameFromTable || key;
-
-        // Add regular label as suffix when label is coming from JSON through "table+json" or "table+jsonp".
-        // This is effectively the key value.
-        // This is required to attach station identifiers to the effective name.
-        // Todo: Better control this through appropriate editor option, e.g.
-        //  "Add location key to label" (`addLocationKey`).
-        if (labelJsonKey) {
-          locationNameEffective += ` (${labelJsonKey})`;
-        }
 
         const dataValue = {
 

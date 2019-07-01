@@ -48,6 +48,11 @@
 - Add `circleOptions.strokeEnabled` and `circleOptions.strokeWeight`.
 - Add options `customAttribution` and `customAttributionText`.
 - Rename `point_` prefix to `__field_` when interpolating datapoint field values
+- Remove automatic key suffix for popover texts
+- Limit effective zoom level by new "Maximum zoom level" option
+- Fix transformation machinery for data in timeseries format
+- Acquire location data again after being cleared out when hitting an empty dataset
+- Improve initialisation and refresh behaviour
 
 ## v0.2.0
 

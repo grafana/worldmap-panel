@@ -1,6 +1,14 @@
 # Backlog for Grafana Worldmap Panel
 
 ## Prio 1
+- Click-through navigation by Variable-Schnackel
+- Improve caching behavior
+  http http://localhost:3000/public/data/json/ldi-stations-timeseries.json
+  Cache-Control: public, max-age=3600
+
+## Prio 1.5
+- Migrate "Field mapping" to just "Fields" where one can interpolate arbitrary strings
+  and the database fields will get interpolated into them.
 - Improve PluginSettings: `TypeError: "setting getter-only property "customAttributionText"`
 - After `restart()`: `TypeError: this._ctx is undefined`
 - Indicate which location source might be suitable for which data source 
@@ -21,6 +29,8 @@
   https://grafana.com/docs/installation/configuration/#disable-sanitize-html
 - The contrast of the text on the red tooltip drop isn't that great. Maybe use black or white, at least for the light theme.
 - Does data autofitting work when changing dashboard variables?
+- Rename request parameters from "request_" to "__request"
+- Add "maxZoomLevel" option to accompany the "FitToData" option
 
 ## Documentation
 - Note about installation
@@ -114,11 +124,12 @@
 - Completely proxy all accesses to self.panel through self.settings
 - Remove overloading of labelField for table+json location source
 - When switching from JSON to JSONP, the location list will not get cleared out.
+- When navigating by variables and hitting an empty dataset, location data gets cleared out and is not acquired again
 
 
 ## Release
 ```
 cd /srv/packages/organizations/hiveeyes/grafana/grafana-worldmap-panel
-wget https://github.com/hiveeyes/grafana-worldmap-panel/archive/0.3.0-dev4.zip
+wget https://github.com/hiveeyes/grafana-worldmap-panel/archive/0.3.0-dev7.zip
 grafana-cli --repo https://packages.hiveeyes.org/grafana/ plugins install grafana-worldmap-panel
 ```

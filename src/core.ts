@@ -1,7 +1,7 @@
 import $ from "jquery";
 import * as _ from "lodash";
 import WorldmapCtrl from "./worldmap_ctrl";
-import DataFormatter from "./data_formatter";
+import DataFormatter, {DataFormat} from "./data_formatter";
 import {ErrorManager} from "./errors";
 
 
@@ -149,7 +149,7 @@ export class WorldmapCore {
 
     // Todo: Get rid of `showTableOptions()` by refactoring the format/mapping type subsystem.
     } else if (this.ctrl.showTableOptions()) {
-      this.assertDataFormat(dataFormat == 'table', dataFormat,'table');
+      this.assertDataFormat(dataFormat == DataFormat.Table, dataFormat, DataFormat.Table);
       console.info('Interpreting data as table format');
       const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
       this.dataFormatter.setTableValues(tableData, data);
@@ -163,10 +163,10 @@ export class WorldmapCore {
       this.dataFormatter.setJsonValues(data);
 
     } else if (this.settings.locationData) {
-      this.assertDataFormat(dataFormat != 'table', dataFormat,'timeseries');
+      this.assertDataFormat(dataFormat == DataFormat.Timeseries, dataFormat, DataFormat.Timeseries);
       console.info('Interpreting data as timeseries format');
-      series = dataList.map(DataFormatter.seriesHandler.bind(this, this.settings));
-      this.dataFormatter.setTimeseriesValues(data);
+      series = dataList.map(this.dataFormatter.seriesHandler.bind(this));
+      this.dataFormatter.setTimeseriesValues(series, data);
 
     } else {
       throw new DataError('No data format and mapping selected');
