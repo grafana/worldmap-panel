@@ -1,14 +1,14 @@
 export class LocationFormat {
-  static readonly Table:string = 'Table';
-  static readonly Timeseries:string = 'Timeseries';
-  static readonly JSON:string = 'JSON';
+  static readonly Table: string = 'Table';
+  static readonly Timeseries: string = 'Timeseries';
+  static readonly JSON: string = 'JSON';
 }
 
 export class LocationType {
-  static readonly Generic:string = 'Generic';
-  static readonly Table:string = 'Table with latitude/longitude or geohash fields';
-  static readonly TimeseriesBuiltin:string = 'Time series, resolve location by matching metric name against';
-  static readonly TimeseriesJson:string = 'Time series, resolve location from custom JSON';
+  static readonly Generic: string = 'Generic';
+  static readonly Table: string = 'Table with latitude/longitude or geohash fields';
+  static readonly TimeseriesBuiltin: string = 'Time series, resolve location by matching metric name against';
+  static readonly TimeseriesJson: string = 'Time series, resolve location from custom JSON';
 }
 
 export const LocationSources = [
@@ -90,10 +90,10 @@ export const LocationSources = [
 
 
 export class MapCenterType {
-  static readonly Other:string = 'Others';
-  static readonly Region:string = 'Regions';
-  static readonly Country:string = 'Countries';
-  static readonly City:string = 'Cities';
+  static readonly Other: string = 'Others';
+  static readonly Region: string = 'Regions';
+  static readonly Country: string = 'Countries';
+  static readonly City: string = 'Cities';
 }
 
 export const MapCenters = [

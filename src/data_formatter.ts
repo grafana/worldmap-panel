@@ -24,7 +24,7 @@ export enum DataFormat {
 export default class DataFormatter {
 
   settings: any;
-  
+
   constructor(private ctrl: any | WorldmapCtrl) {
     this.settings = ctrl.settings;
 
@@ -35,7 +35,7 @@ export default class DataFormatter {
     }
   }
 
-  static analyzeData(dataList) : DataInfo {
+  static analyzeData(dataList): DataInfo {
     /*
      * Introspect the ingress data and try to heuristically
      * find out about its data format and character.
@@ -48,12 +48,12 @@ export default class DataFormatter {
      *
      */
 
-    const dataInfo = <DataInfo>{};
+    const dataInfo = {} as DataInfo;
     if (!_.isEmpty(dataList)) {
       const metric0 = dataList[0];
       dataInfo.type = metric0.type;
 
-      if (metric0.type == DataFormat.Table) {
+      if (metric0.type === DataFormat.Table) {
         dataInfo.type = DataFormat.Table;
         dataInfo.count = metric0.rows.length;
 
@@ -199,7 +199,7 @@ export default class DataFormatter {
 
             // Safely decode the geohash value.
             const decodedGeohash = this.decodeGeohashSafe(encodedGeohash);
-            if (!decodedGeohash) return;
+            if (!decodedGeohash) { return; }
 
             const locationName = this.settings.esLocationName
               ? row[columnNames[this.settings.esLocationName]]
@@ -232,7 +232,7 @@ export default class DataFormatter {
 
             // Safely decode the geohash value.
             const decodedGeohash = this.decodeGeohashSafe(encodedGeohash);
-            if (!decodedGeohash) return;
+            if (!decodedGeohash) { return; }
 
             const locationName = this.settings.esLocationName
               ? datapoint[this.settings.esLocationName]
@@ -304,8 +304,8 @@ export default class DataFormatter {
         //  Essentially, this would mask all exceptions raised from this code.
 
         // Assign value.
-        let value = datapoint[this.settings.tableQueryOptions.metricField];
-        let valueRounded = kbn.roundValue(value, this.settings.decimals || 0);
+        const value = datapoint[this.settings.tableQueryOptions.metricField];
+        const valueRounded = kbn.roundValue(value, this.settings.decimals || 0);
 
         // Assign latitude and longitude, either directly or by decoding from geohash.
         if (this.settings.tableQueryOptions.queryType === 'geohash') {
@@ -313,7 +313,7 @@ export default class DataFormatter {
 
           // Safely decode the geohash value.
           const decodedGeohash = this.decodeGeohashSafe(encodedGeohash);
-          if (!decodedGeohash) return;
+          if (!decodedGeohash) { return; }
 
           latitude = decodedGeohash.latitude;
           longitude = decodedGeohash.longitude;
@@ -326,21 +326,21 @@ export default class DataFormatter {
         }
 
         // Assign label.
-        let label = datapoint[this.settings.tableQueryOptions.labelField];
+        const label = datapoint[this.settings.tableQueryOptions.labelField];
 
         // For improved labelling, attempt to resolve value from table's "labelLocationKeyField" against JSON location key.
-        let labelJsonKey = datapoint[this.settings.tableQueryOptions.labelLocationKeyField];
-        let location = _.find(this.ctrl.locations, function (loc) {
-            return loc.key == labelJsonKey;
+        const labelJsonKey = datapoint[this.settings.tableQueryOptions.labelLocationKeyField];
+        const location = _.find(this.ctrl.locations, (loc) => {
+            return loc.key === labelJsonKey;
         });
 
         // Assign link.
-        let link = datapoint[this.settings.tableQueryOptions.linkField] || null;
+        const link = datapoint[this.settings.tableQueryOptions.linkField] || null;
 
         // Compute effective location name.
-        let locationNameFromTable = label;
-        let locationNameFromJson  = location ? location.name : undefined;
-        let locationNameEffective = locationNameFromJson || locationNameFromTable || key;
+        const locationNameFromTable = label;
+        const locationNameFromJson  = location ? location.name : undefined;
+        const locationNameEffective = locationNameFromJson || locationNameFromTable || key;
 
         const dataValue = {
 

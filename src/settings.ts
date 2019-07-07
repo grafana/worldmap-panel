@@ -4,20 +4,20 @@ import {TemplateSrv} from "grafana/app/features/templating/template_srv";
 
 export default class PluginSettings {
 
-    private _request: Object;
-    private request_variables: Object;
+    private _request: {};
+    private requestVariables: {};
 
-    constructor(private model: Object, private templateSrv: TemplateSrv, private request?: Object) {
+    constructor(private model: {}, private templateSrv: TemplateSrv, private request?: {}) {
         this._request = this.request || {};
-        this.request_variables = {};
+        this.requestVariables = {};
         this.loadVariablesFromRequest();
         this.establishProperties();
     }
 
     establishProperties() {
-        for (let name in this.model) {
+        for (const name in this.model) {
             Object.defineProperty(this, name, {
-                get: function() { return this.interpolateVariable(name) },
+                get: () => this.interpolateVariable(name),
                 enumerable: true,
             });
         }
@@ -35,16 +35,16 @@ export default class PluginSettings {
         for (let key in this._request) {
             const value = this._request[key];
             key = 'request_' + key;
-            this.request_variables[key] = value;
+            this.requestVariables[key] = value;
         }
     }
 
-    interpolateVariable(name, variables?: Object) {
+    interpolateVariable(name, variables?: {}) {
 
         variables = variables || {};
 
         variables = _.cloneDeep(variables);
-        _.merge(variables, this.request_variables);
+        _.merge(variables, this.requestVariables);
 
         // By default, use vanilla control option attribute from panel data model.
         let value = this.model[name];
@@ -56,8 +56,8 @@ export default class PluginSettings {
         return this.interpolateVariableValue(value, variables);
     }
 
-    interpolateVariableValue(target: string, variables?: Object, format?: string | Function) {
-        if (typeof target == 'string') {
+    interpolateVariableValue(target: string, variables?: {}, format?: string | Function) {
+        if (typeof target === 'string') {
             const scopedVariables = this.toScoped(variables || {});
             target = this.templateSrv.replace(target, scopedVariables, format);
         }
@@ -65,8 +65,8 @@ export default class PluginSettings {
     }
 
     toScoped(variables) {
-        let scopedVars = {};
-        for (let key in variables) {
+        const scopedVars = {};
+        for (const key in variables) {
             const value = variables[key];
             scopedVars[key] = {text: key, value: value};
         }
@@ -80,15 +80,15 @@ export default class PluginSettings {
         // - ?panel-showZoomControl=false
         // - ?panel-clickthroughUrl=/path/to/?geohash=$__field_geohash
         // - https://daq.example.org/d/D1Fx12kWk/magic-dashboard?panel-clickthroughUrl=/path/to/?foobar=$request_foobar&foobar=hello
-        const panel_query_name = 'panel-' + name;
-        const panel_query_value = this._request[panel_query_name];
-        if (panel_query_value !== undefined) {
+        const panelQueryName = 'panel-' + name;
+        const panelQueryValue = this._request[panelQueryName];
+        if (panelQueryValue !== undefined) {
 
             // Apply appropriate type conversion. This is important for booleans.
-            if (typeof value == 'boolean') {
-                value = asBool(panel_query_value);
+            if (typeof value === 'boolean') {
+                value = asBool(panelQueryValue);
             } else {
-                value = panel_query_value;
+                value = panelQueryValue;
             }
         }
 
@@ -100,7 +100,7 @@ export default class PluginSettings {
 
 function asBool(value) {
     // https://stackoverflow.com/questions/263965/how-can-i-convert-a-string-to-boolean-in-javascript/1414175#1414175
-    switch(value.toLowerCase().trim()){
+    switch (value.toLowerCase().trim()){
         case "true": case "yes": case "1": return true;
         case "false": case "no": case "0": case null: return false;
         default: return Boolean(value);

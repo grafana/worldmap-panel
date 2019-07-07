@@ -40,7 +40,7 @@ export class WorldmapCore {
     console.info('Acquiring location data');
 
     // Acquire locations by JSONP HTTP request.
-    if (this.settings.locationData == "jsonp endpoint" || this.settings.locationData == "table+jsonp") {
+    if (this.settings.locationData === "jsonp endpoint" || this.settings.locationData === "table+jsonp") {
 
       if (!this.settings.jsonpUrl || !this.settings.jsonpCallback) {
         throw new LocationError('Loading locations from JSONP endpoint requires URL and callback');
@@ -52,7 +52,7 @@ export class WorldmapCore {
         contentType: "application/json",
         jsonpCallback: this.settings.jsonpCallback,
         dataType: "jsonp",
-        beforeSend: function (jqXHR, settings) {
+        beforeSend: (jqXHR, settings) => {
           jqXHR.url = settings.url;
         },
       }).then(
@@ -60,7 +60,7 @@ export class WorldmapCore {
         this.signalLocationRequestError.bind(this));
 
     // Acquire locations by JSON HTTP request.
-    } else if (this.settings.locationData == "json endpoint" || this.settings.locationData == "table+json") {
+    } else if (this.settings.locationData === "json endpoint" || this.settings.locationData === "table+json") {
 
       if (!this.settings.jsonUrl) {
         throw new LocationError('Loading locations from JSON endpoint requires URL');
@@ -70,7 +70,7 @@ export class WorldmapCore {
       $.ajax({
         dataType: "json",
         url: this.settings.jsonUrl,
-        beforeSend: function (jqXHR, settings) {
+        beforeSend: (jqXHR, settings) => {
           jqXHR.url = settings.url;
         },
       }).then(
@@ -95,7 +95,7 @@ export class WorldmapCore {
       $.ajax({
         dataType: "json",
         url: url,
-        beforeSend: function (jqXHR, settings) {
+        beforeSend: (jqXHR, settings) => {
           jqXHR.url = settings.url;
         },
       }).then(
@@ -109,7 +109,7 @@ export class WorldmapCore {
 
   }
 
-  setLocations(locations:Array<any> = []) {
+  setLocations(locations: any[] = []) {
     //console.log('Setting locations:', locations);
     this.ctrl.setLocations(locations);
   }
@@ -143,19 +143,19 @@ export class WorldmapCore {
     const data = [];
     let series;
 
-    if (this.settings.locationData == "geohash") {
+    if (this.settings.locationData === "geohash") {
       console.info('Interpreting data as table or timeseries format');
       this.dataFormatter.setGeohashValues(dataList, data);
 
     // Todo: Get rid of `showTableOptions()` by refactoring the format/mapping type subsystem.
     } else if (this.ctrl.showTableOptions()) {
-      this.assertDataFormat(dataFormat == DataFormat.Table, dataFormat, DataFormat.Table);
+      this.assertDataFormat(dataFormat === DataFormat.Table, dataFormat, DataFormat.Table);
       console.info('Interpreting data as table format');
       const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
       this.dataFormatter.setTableValues(tableData, data);
 
-    } else if (this.settings.locationData == "json result") {
-      this.assertDataFormat(dataFormat != 'table', dataFormat,'JSON');
+    } else if (this.settings.locationData === "json result") {
+      this.assertDataFormat(dataFormat !== 'table', dataFormat,'JSON');
       console.info('Interpreting data as JSON format');
       // Todo: Don't misuse `this.series` for this as it is a completely different format.
       //  Better pass the payload to `setJsonValues()` like seen with `setTableValues()`.
@@ -163,7 +163,7 @@ export class WorldmapCore {
       this.dataFormatter.setJsonValues(data);
 
     } else if (this.settings.locationData) {
-      this.assertDataFormat(dataFormat == DataFormat.Timeseries, dataFormat, DataFormat.Timeseries);
+      this.assertDataFormat(dataFormat === DataFormat.Timeseries, dataFormat, DataFormat.Timeseries);
       console.info('Interpreting data as timeseries format');
       series = dataList.map(this.dataFormatter.seriesHandler.bind(this));
       this.dataFormatter.setTimeseriesValues(series, data);
@@ -175,7 +175,7 @@ export class WorldmapCore {
     return {
       data: data,
       series: series,
-    }
+    };
 
   }
 
@@ -185,7 +185,7 @@ export class WorldmapCore {
      * based on data and settings.
      */
 
-    let center:any = {
+    const center: any = {
       mapFitData: this.settings.mapFitData,
       mapCenter: this.settings.mapCenter,
       mapCenterLatitude: this.settings.mapCenterLatitude,
@@ -196,12 +196,12 @@ export class WorldmapCore {
 
     const mapCenter = this.ctrl.getSelectedMapCenter();
 
-    if (this.ctrl.data.length && this.settings.mapCenter == "First GeoHash") {
-      const first:any = _.first(this.ctrl.data);
+    if (this.ctrl.data.length && this.settings.mapCenter === "First GeoHash") {
+      const first: any = _.first(this.ctrl.data);
       center.mapCenterLatitude = first.locationLatitude;
       center.mapCenterLongitude = first.locationLongitude;
 
-    } else if (this.ctrl.data.length && this.settings.mapCenter == "Last GeoHash") {
+    } else if (this.ctrl.data.length && this.settings.mapCenter === "Last GeoHash") {
       const last: any = _.last(this.ctrl.data);
       center.mapCenterLatitude = last.locationLatitude;
       center.mapCenterLongitude = last.locationLongitude;
@@ -215,7 +215,7 @@ export class WorldmapCore {
     // Convert scalar types and apply reasonable defaults.
     center.mapCenterLatitude = parseFloat(center.mapCenterLatitude);
     center.mapCenterLongitude = parseFloat(center.mapCenterLongitude);
-    center.mapZoomLevel = parseInt(center.mapZoomLevel) || 1;
+    center.mapZoomLevel = parseInt(center.mapZoomLevel, 10) || 1;
     center.mapZoomByRadius = parseFloat(center.mapZoomByRadius) || null;
 
     return center;
@@ -235,7 +235,7 @@ export class WorldmapCore {
     }
   }
 
-  getDataFormatMismatchMessage(dataFormatIs, dataFormatShould):any {
+  getDataFormatMismatchMessage(dataFormatIs, dataFormatShould): any {
     const message =
       `Format mismatch: ${dataFormatIs} data ` +
       `can not be interpreted as ${dataFormatShould} format`;
@@ -248,7 +248,7 @@ export class WorldmapCore {
   }
 
   signalLocationRequestError(jqXHR, textStatus, errorThrown) {
-    let message =
+    const message =
       `Unable to load locations in JSON format from "${jqXHR.url}".\n` +
       `The response status was "${jqXHR.status} ${jqXHR.statusText}"`;
     this.signalLocationError(message);
