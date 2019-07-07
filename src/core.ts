@@ -52,7 +52,7 @@ export class WorldmapCore {
         contentType: "application/json",
         jsonpCallback: this.settings.jsonpCallback,
         dataType: "jsonp",
-        beforeSend: function (jqXHR, settings) {
+        beforeSend: (jqXHR, settings) => {
           jqXHR.url = settings.url;
         },
       }).then(
@@ -70,7 +70,7 @@ export class WorldmapCore {
       $.ajax({
         dataType: "json",
         url: this.settings.jsonUrl,
-        beforeSend: function (jqXHR, settings) {
+        beforeSend: (jqXHR, settings) => {
           jqXHR.url = settings.url;
         },
       }).then(
@@ -95,7 +95,7 @@ export class WorldmapCore {
       $.ajax({
         dataType: "json",
         url: url,
-        beforeSend: function (jqXHR, settings) {
+        beforeSend: (jqXHR, settings) => {
           jqXHR.url = settings.url;
         },
       }).then(
@@ -215,7 +215,7 @@ export class WorldmapCore {
     // Convert scalar types and apply reasonable defaults.
     center.mapCenterLatitude = parseFloat(center.mapCenterLatitude);
     center.mapCenterLongitude = parseFloat(center.mapCenterLongitude);
-    center.mapZoomLevel = parseInt(center.mapZoomLevel) || 1;
+    center.mapZoomLevel = parseInt(center.mapZoomLevel, 10) || 1;
     center.mapZoomByRadius = parseFloat(center.mapZoomByRadius) || null;
 
     return center;

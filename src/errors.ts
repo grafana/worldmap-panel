@@ -87,8 +87,8 @@ export class ErrorManager {
      * Get formatted error messages for all application domains.
      */
     const messages: string[] = [];
-    this.getAll().forEach(function(item) {
-      const suffix = item.name && item.name != 'Error' ? ` (${item.name})` : '';
+    this.getAll().forEach((item) => {
+      const suffix = item.name && item.name !== 'Error' ? ` (${item.name})` : '';
       const message = `- ${item.message}${suffix}.`;
       messages.push(message);
     });

@@ -79,13 +79,13 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   static templateUrl = "partials/module.html";
 
   locations: any;
-  tileServer: string;
-  saturationClass: string;
+  tileServer = '';
+  saturationClass = '';
   map: any;
   series: any;
   data: any = [];
   dataInfo: any;
-  mapCenterMoved: boolean;
+  mapCenterMoved = false;
 
   contextSrv: any;
   $location: any;
@@ -99,7 +99,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
   initializing: boolean;
 
-  /** @ngInject **/
+  /** @ngInject */
   constructor($scope, $injector, $element, $document, contextSrv, templateSrv, $location) {
     super($scope, $injector);
 
@@ -144,12 +144,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.settings = new PluginSettings(this.panel, this.templateSrv, query);
 
     // Establish a virtual settings property accessible through `this.settings.center`.
-    const _this = this;
     Object.defineProperty(this.settings, 'center', {
-      get: function() { return _this.core.getMapDimensions(); },
+      get: () => this.core.getMapDimensions(),
       enumerable: true,
     });
-
   }
 
   setupGlobal() {
@@ -508,7 +506,9 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   updateMapCenter(render = true) {
     // Signal `panToMapCenter()` and trigger rendering.
     this.mapCenterMoved = true;
-    render && this.render();
+    if (render) {
+      this.render();
+    }
   }
 
   teardownMap() {

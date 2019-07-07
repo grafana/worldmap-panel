@@ -4,10 +4,10 @@ import {TemplateSrv} from "grafana/app/features/templating/template_srv";
 
 export default class PluginSettings {
 
-    private _request: Object;
-    private requestVariables: Object;
+    private _request: {};
+    private requestVariables: {};
 
-    constructor(private model: Object, private templateSrv: TemplateSrv, private request?: Object) {
+    constructor(private model: {}, private templateSrv: TemplateSrv, private request?: {}) {
         this._request = this.request || {};
         this.requestVariables = {};
         this.loadVariablesFromRequest();
@@ -17,7 +17,7 @@ export default class PluginSettings {
     establishProperties() {
         for (const name in this.model) {
             Object.defineProperty(this, name, {
-                get: function() { return this.interpolateVariable(name); },
+                get: () => this.interpolateVariable(name),
                 enumerable: true,
             });
         }
@@ -39,7 +39,7 @@ export default class PluginSettings {
         }
     }
 
-    interpolateVariable(name, variables?: Object) {
+    interpolateVariable(name, variables?: {}) {
 
         variables = variables || {};
 
@@ -56,7 +56,7 @@ export default class PluginSettings {
         return this.interpolateVariableValue(value, variables);
     }
 
-    interpolateVariableValue(target: string, variables?: Object, format?: string | Function) {
+    interpolateVariableValue(target: string, variables?: {}, format?: string | Function) {
         if (typeof target === 'string') {
             const scopedVariables = this.toScoped(variables || {});
             target = this.templateSrv.replace(target, scopedVariables, format);
@@ -80,15 +80,15 @@ export default class PluginSettings {
         // - ?panel-showZoomControl=false
         // - ?panel-clickthroughUrl=/path/to/?geohash=$__field_geohash
         // - https://daq.example.org/d/D1Fx12kWk/magic-dashboard?panel-clickthroughUrl=/path/to/?foobar=$request_foobar&foobar=hello
-        const panel_query_name = 'panel-' + name;
-        const panel_query_value = this._request[panel_query_name];
-        if (panel_query_value !== undefined) {
+        const panelQueryName = 'panel-' + name;
+        const panelQueryValue = this._request[panelQueryName];
+        if (panelQueryValue !== undefined) {
 
             // Apply appropriate type conversion. This is important for booleans.
             if (typeof value === 'boolean') {
-                value = asBool(panel_query_value);
+                value = asBool(panelQueryValue);
             } else {
-                value = panel_query_value;
+                value = panelQueryValue;
             }
         }
 

@@ -71,7 +71,7 @@ export default class WorldMap {
     });
   }
 
-  renderMap(options?: Object) {
+  renderMap(options?: {}) {
 
     options = options || {};
     _.defaults(options, {animate: true});
@@ -91,7 +91,7 @@ export default class WorldMap {
 
   }
 
-  drawMap(options?: Object) {
+  drawMap(options?: {}) {
     console.info('Drawing map');
     this.resize();
     if (this.ctrl.mapCenterMoved) {
@@ -169,7 +169,7 @@ export default class WorldMap {
     const countAfter = data.length;
     const countFiltered = countAfter - countBefore;
     if (countFiltered > 0) {
-      console.info(`Filtered ${count_filtered} records`);
+      console.info(`Filtered ${countFiltered} records`);
     }
     return data;
   }
@@ -300,7 +300,7 @@ export default class WorldMap {
     // Attach "onclick" event to data point linking.
     if (linkUrl) {
       const clickthroughOptions = this.ctrl.settings.clickthroughOptions;
-      circle.on('click', function onClick(evt) {
+      circle.on('click', (evt) => {
         if (clickthroughOptions.windowName) {
           window.open(linkUrl, clickthroughOptions.windowName);
         } else {
@@ -326,14 +326,14 @@ export default class WorldMap {
       autoWidth: this.ctrl.settings.autoWidthLabels,
     });
 
-    circle.on('mouseover', function onMouseOver(evt) {
+    circle.on('mouseover', (evt) => {
       const layer = evt.target;
       layer.bringToFront();
-      this.openPopup();
+      circle.openPopup();
     });
 
     if (!this.ctrl.settings.stickyLabels) {
-      circle.on('mouseout', function onMouseOut() {
+      circle.on('mouseout', () => {
         circle.closePopup();
       });
     }
@@ -414,7 +414,7 @@ export default class WorldMap {
 
   addCircles(circles) {
     // Todo: Optionally add fixed custom attributions to the circle layer.
-    const attribution;
+    const attribution = undefined;
     return (window as any).L.layerGroup(circles, {attribution: attribution}).addTo(this.map);
   }
 

@@ -330,7 +330,7 @@ export default class DataFormatter {
 
         // For improved labelling, attempt to resolve value from table's "labelLocationKeyField" against JSON location key.
         const labelJsonKey = datapoint[this.settings.tableQueryOptions.labelLocationKeyField];
-        const location = _.find(this.ctrl.locations, function (loc) {
+        const location = _.find(this.ctrl.locations, (loc) => {
             return loc.key === labelJsonKey;
         });
 
