@@ -1,24 +1,32 @@
-version: 2 # use CircleCI 2.0
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:10
 
-jobs: # a collection of steps
-    build: # runs not using Workflows must have a `build` job as entry point
-        working_directory: ~/worldmap-panel # directory where steps will run
-        docker: # run the steps with Docker
-            - image: circleci/node:latest
-        steps:
-            - checkout
-            - restore_cache:
-                name: Restore Yarn Package Cache
-                keys:
-                - yarn-packages-{{ checksum "yarn.lock" }}
-            - run:
-                name: Install Dependencies
-                command: yarn install --frozen-lockfile
-            - save_cache:
-                name: Save Yarn Package Cache
-                key: yarn-packages-{{ checksum "yarn.lock" }}
-                paths:
-                    - ~/.cache/yarn
-            - run: # run tests
-                name: test
-                command: yarn test
+    working_directory: ~/plugin
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: install yarn
+          command: 'sudo npm install -g yarn --quiet'
+      - run:
+          name: install dependencies
+          command: 'yarn install --pure-lockfile'
+      - run:
+          name: Run Toolkit CI
+          command: 'npx grafana-toolkit plugin:ci'
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - store_artifacts:
+          path: artifacts
+      - store_artifacts:
+          path: dist
