@@ -10,3 +10,4 @@ artifacts/
 
 .venv*
 bin/
+build/

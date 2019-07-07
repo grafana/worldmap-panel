@@ -19,6 +19,7 @@ $(eval github-release := ./bin/github-release)
 # -----
 sdist:
 	yarn build
+	cp package.json dist/
 
 
 # -------
@@ -37,15 +38,27 @@ prepare-release:
 	$(eval version := $(shell cat package.json | jq -r .version))
 	$(eval releasename := $(name)-$(version))
 
+	@# Define directories.
+	$(eval build_dir := ./build)
+	$(eval work_dir := $(build_dir)/$(releasename))
+
+	@# Define archive names.
 	$(eval zipfile := artifacts/$(releasename).zip)
 
 create-release: prepare-release
 
 	@echo "Baking release artefacts for $(releasename)"
 
+    # Populate build directory.
+	@mkdir -p $(work_dir)
+	@rm -r $(work_dir)
+	@mkdir -p $(work_dir)
+	cp -r dist/* $(work_dir)
+	cp package.json LICENSE README.md CHANGELOG.md $(work_dir)
+
     # Create .zip archive.
 	@mkdir -p artifacts
-	(cd dist; zip -r ../$(zipfile) *)
+	(cd $(build_dir); zip -r ../$(zipfile) $(releasename))
 
 publish-release: check-github-release prepare-release create-release
 
@@ -56,7 +69,7 @@ publish-release: check-github-release prepare-release create-release
 
     # Create Release.
 	@#$(github-release) release --user hiveeyes --repo grafana-worldmap-panel --tag $(version) --draft
-	$(github-release) release --user hiveeyes --repo grafana-worldmap-panel --tag $(version)
+	$(github-release) release --user hiveeyes --repo grafana-worldmap-panel --tag $(version) || true
 
     # Upload release artifacts.
 	$(github-release) upload --user hiveeyes --repo grafana-worldmap-panel --tag $(version) --name $(notdir $(zipfile)) --file $(zipfile) --replace
