@@ -36,12 +36,12 @@ export default class WorldMap {
 
   createMap() {
     const center = this.ctrl.settings.center;
-    const mapCenter = (<any>window).L.latLng(
+    const mapCenter = (window as any).L.latLng(
       center.mapCenterLatitude,
       center.mapCenterLongitude
     );
 
-    let zoomLevel = this.getEffectiveZoomLevel(center.mapZoomLevel);
+    const zoomLevel = this.getEffectiveZoomLevel(center.mapZoomLevel);
 
     this.map = L.map(this.mapContainer, {
       worldCopyJump: true,
@@ -54,7 +54,7 @@ export default class WorldMap {
     this.setMouseWheelZoom();
 
     const selectedTileServer = tileServers[this.ctrl.tileServer];
-    (<any>window).L.tileLayer(selectedTileServer.url, {
+    (window as any).L.tileLayer(selectedTileServer.url, {
       maxZoom: 18,
       subdomains: selectedTileServer.subdomains,
       reuseTiles: true,
@@ -65,8 +65,8 @@ export default class WorldMap {
   }
 
   renderMapFirst() {
-    let _this = this;
-    this.map.whenReady(function(ctx, options) {
+    const _this = this;
+    this.map.whenReady((ctx, options) => {
       _this.renderMap({animate: false});
     });
   }
@@ -102,15 +102,15 @@ export default class WorldMap {
 
   getEffectiveZoomLevel(zoomLevel) {
     if (this.ctrl.settings.maximumZoom) {
-      zoomLevel = Math.min(parseInt(this.ctrl.settings.maximumZoom), zoomLevel);
+      zoomLevel = Math.min(parseInt(this.ctrl.settings.maximumZoom, 10), zoomLevel);
     }
     return zoomLevel;
   }
 
   createLegend() {
-    this.legend = (<any>window).L.control({ position: 'bottomleft' });
+    this.legend = (window as any).L.control({ position: 'bottomleft' });
     this.legend.onAdd = () => {
-      this.legend._div = (<any>window).L.DomUtil.create('div', 'info legend');
+      this.legend._div = (window as any).L.DomUtil.create('div', 'info legend');
       this.legend.update();
       return this.legend._div;
     };
@@ -162,13 +162,13 @@ export default class WorldMap {
   }
 
   filterEmptyAndZeroValues(data) {
-    const count_before = data.length;
+    const countBefore = data.length;
     data = _.filter(data, o => {
       return !(this.ctrl.settings.hideEmpty && _.isNil(o.value)) && !(this.ctrl.settings.hideZero && o.value === 0);
     });
-    const count_after = data.length;
-    const count_filtered = count_after - count_before;
-    if (count_filtered > 0) {
+    const countAfter = data.length;
+    const countFiltered = countAfter - countBefore;
+    if (countFiltered > 0) {
       console.info(`Filtered ${count_filtered} records`);
     }
     return data;
@@ -185,11 +185,11 @@ export default class WorldMap {
   drawCircles() {
     const data = this.filterEmptyAndZeroValues(this.ctrl.data);
     if (this.needToRedrawCircles(data)) {
-      console.info('Creating circles')
+      console.info('Creating circles');
       this.clearCircles();
       this.createCircles(data);
     } else {
-      console.info('Updating circles')
+      console.info('Updating circles');
       this.updateCircles(data);
     }
   }
@@ -236,14 +236,14 @@ export default class WorldMap {
   }
 
   createCircle(dataPoint) {
-    const circle = (<any>window).L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
+    const circle = (window as any).L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
       radius: this.calcCircleSize(dataPoint.value || 0),
       color: this.getColor(dataPoint.value),
       fillColor: this.getColor(dataPoint.value),
       fillOpacity: 0.5,
       location: dataPoint.key,
       stroke: Boolean(this.ctrl.settings.circleOptions.strokeEnabled),
-      weight: parseInt(this.ctrl.settings.circleOptions.strokeWeight) || 3,
+      weight: parseInt(this.ctrl.settings.circleOptions.strokeWeight, 10) || 3,
     });
 
     this.createClickthrough(circle, dataPoint);
@@ -256,11 +256,11 @@ export default class WorldMap {
     const circleMaxSize = parseInt(this.ctrl.settings.circleMaxSize, 10) || 10;
 
     // If measurement value equals zero, use minimum circle size.
-    if (dataPointValue == 0) {
+    if (dataPointValue === 0) {
       return circleMinSize;
     }
 
-    if (this.ctrl.data.valueRange == 0) {
+    if (this.ctrl.data.valueRange === 0) {
       return circleMaxSize;
     }
 
@@ -319,7 +319,7 @@ export default class WorldMap {
     }
     const label = `${locationName}: ${value} ${unit || ''}`.trim();
     circle.bindPopup(label, {
-      offset: (<any>window).L.point(0, -2),
+      offset: (window as any).L.point(0, -2),
       className: 'worldmap-popup',
       closeButton: this.ctrl.settings.stickyLabels,
       autoPan: this.ctrl.settings.autoPanLabels,
@@ -414,8 +414,8 @@ export default class WorldMap {
 
   addCircles(circles) {
     // Todo: Optionally add fixed custom attributions to the circle layer.
-    let attribution;
-    return (<any>window).L.layerGroup(circles, {attribution: attribution}).addTo(this.map);
+    const attribution;
+    return (window as any).L.layerGroup(circles, {attribution: attribution}).addTo(this.map);
   }
 
   removeCircles() {

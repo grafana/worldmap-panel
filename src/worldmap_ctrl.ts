@@ -146,7 +146,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     // Establish a virtual settings property accessible through `this.settings.center`.
     const _this = this;
     Object.defineProperty(this.settings, 'center', {
-      get: function() { return _this.core.getMapDimensions() },
+      get: function() { return _this.core.getMapDimensions(); },
       enumerable: true,
     });
 
@@ -237,7 +237,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
   }
 
-  setLocations(res:Array<any> = []) {
+  setLocations(res: any[] = []) {
     /*
      * Will be called when location information arrived.
      */
@@ -333,7 +333,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     try {
       const decodedData = this.core.decodeData(dataList, this.dataInfo.type);
       this.data = decodedData.data;
-      if (decodedData.series) this.series = decodedData.series;
+      if (decodedData.series) { this.series = decodedData.series; }
 
     } catch (ex) {
       //this.resetDataErrors();
@@ -505,7 +505,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
-  updateMapCenter(render:boolean = true) {
+  updateMapCenter(render = true) {
     // Signal `panToMapCenter()` and trigger rendering.
     this.mapCenterMoved = true;
     render && this.render();
@@ -540,8 +540,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       if (!this.panel.customAttributionText) {
 
         // Collect active attributions.
-        const entries:Array<any> = [];
-        for (let key in attributionControl._attributions) {
+        const entries: any[] = [];
+        for (const key in attributionControl._attributions) {
           entries.push(key);
         }
 
@@ -582,12 +582,12 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   getSelectedLocationType() {
-    const locationSource:any = _.find(LocationSources, {id: this.settings.locationData });
+    const locationSource: any = _.find(LocationSources, {id: this.settings.locationData });
     return locationSource.type ? locationSource.type.replace('Format: ', '') : undefined;
   }
 
   getSelectedLocationFormat() {
-    const locationSource:any = _.find(LocationSources, {id: this.settings.locationData });
+    const locationSource: any = _.find(LocationSources, {id: this.settings.locationData });
     if (_.isArray(locationSource.format)) {
       return locationSource.format.join(' or ');
     } else {
@@ -600,7 +600,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   getSelectedMapCenter() {
-    const mapCenter:any = _.find(MapCenters, {id: this.settings.mapCenter });
+    const mapCenter: any = _.find(MapCenters, {id: this.settings.mapCenter });
     return mapCenter && mapCenter.data;
   }
 

@@ -15,11 +15,11 @@ export class WorldmapChrome {
     // Todo: Investigate whether it would be better to override `getInfoContent()` right away.
     // Todo: How to open the tooltip right away?
 
-    if (_.isEmpty(messages)) return;
+    if (_.isEmpty(messages)) { return; }
     const tooltipMessage = messages.join('\n');
 
     const _this = this;
-    this.ctrl.$scope.$apply(function () {
+    this.ctrl.$scope.$apply(() => {
       _this.ctrl.error = tooltipMessage;
 
       // Colorize the tooltip corner in a different color to indicate its not a native exception.
