@@ -1,0 +1,7 @@
+{
+  "extends": "./node_modules/@grafana/toolkit/src/config/tslint.plugin.json",
+  "rules": {
+    "no-console": false
+  }
+}
+
