@@ -7,3 +7,7 @@ npm-debug.log
 dist/
 coverage/
 artifacts/
+
+.venv*
+bin/
+build/

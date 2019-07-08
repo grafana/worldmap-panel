@@ -1,9 +1,15 @@
 # Changelog
 
 
+## In progress
+- Fix release tooling.
+
+
 ## v0.4.0
 - Rename to `grafana-worldmap-panel-ng` to allow side-by-side installation
   with upstream *Grafana Worldmap Panel 0.2.0*.
+- Remove `/dist` folder from source code repository.
+- Add release tooling.
 
 
 ## v0.3.0
@@ -23,7 +29,7 @@
     - `showZoomControl: false`
     - `showAttribution: false`
     - `legendContainerSelector`
-- Add `Makefile` for macOS/Homebrew.
+- Add `Makefile` as entrypoint for repository tooling.
 - Fix popover labels text color for light theme ([#169](https://github.com/grafana/worldmap-panel/issues/169)).
   Thanks, [@dtheb](https://github.com/dtheb).
 - Add clickthrough option for circles, use fixed url ([#129](https://github.com/grafana/worldmap-panel/pull/129)).
