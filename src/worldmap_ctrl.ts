@@ -1,8 +1,8 @@
 import {loadPluginCss, MetricsPanelCtrl} from "grafana/app/plugins/sdk";
 
 import * as _ from "lodash";
-import "./css/worldmap-panel.css";
-import "./css/leaflet.css";
+import "./styles/worldmap-panel.css";
+import "./styles/leaflet.css";
 import PluginSettings from "./settings";
 import WorldMap from "./worldmap";
 import {LocationSources, MapCenters} from "./model";
@@ -128,8 +128,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
   loadCss() {
     loadPluginCss({
-      dark: `plugins/${this.pluginId}/css/worldmap.dark.css`,
-      light: `plugins/${this.pluginId}/css/worldmap.light.css`
+      dark: `plugins/${this.pluginId}/styles/dark.css`,
+      light: `plugins/${this.pluginId}/styles/light.css`
     });
 
   }
