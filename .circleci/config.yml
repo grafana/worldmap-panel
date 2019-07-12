@@ -30,4 +30,4 @@ jobs:
           paths:
             - node_modules
       - store_artifacts:
-          path: artifacts
+          path: ci/artifacts
