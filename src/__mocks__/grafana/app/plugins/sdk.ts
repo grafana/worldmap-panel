@@ -1,7 +1,3 @@
-export function loadPluginCss() {
+export function loadPluginCss() {}
 
-}
-
-export class MetricsPanelCtrl {
-
-}
+export class MetricsPanelCtrl {}

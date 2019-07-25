@@ -1,6 +1,6 @@
 import WorldMap from './worldmap';
 import DataBuilder from '../test/data_builder';
-import $ from "jquery";
+import $ from 'jquery';
 
 describe('Worldmap', () => {
   let worldMap;
@@ -261,9 +261,9 @@ describe('Worldmap', () => {
       expect(worldMap.legend).toBeDefined();
       expect(worldMap.legend._div.outerHTML).toBe(
         '<div class="info legend leaflet-control">' +
-        '<div class="legend-item">' +
-        '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2+</div>' +
-        '</div>'
+          '<div class="legend-item">' +
+          '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2+</div>' +
+          '</div>'
       );
     });
   });
@@ -290,8 +290,8 @@ describe('Worldmap', () => {
       expect(worldMap.legend).toBeDefined();
       expect(worldMap.legend._div.outerHTML).toBe(
         '<div class="info legend leaflet-control"><div class="legend-item">' +
-        '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
-        '<div class="legend-item"><i style="background:green"></i> 4+</div></div>'
+          '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
+          '<div class="legend-item"><i style="background:green"></i> 4+</div></div>'
       );
     });
   });
@@ -306,9 +306,9 @@ describe('Worldmap', () => {
       expect(worldMap.legend).toBeDefined();
       expect(worldMap.legend._div.outerHTML).toBe(
         '<div class="info legend leaflet-control"><div class="legend-item">' +
-        '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
-        '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
-        '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
+          '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
+          '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
+          '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
       );
     });
   });
@@ -337,7 +337,7 @@ describe('Worldmap', () => {
     it('we should find the respective element at the appropriate place in the DOM', () => {
       expect(worldMap.legend).toBeDefined();
       expect($('.shared-map-legend')[0].innerHTML).toBe(
-          '<div class="info legend leaflet-control"><div class="legend-item">' +
+        '<div class="info legend leaflet-control"><div class="legend-item">' +
           '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
           '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
           '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
@@ -377,7 +377,6 @@ describe('Worldmap', () => {
   }
 });
 
-
 describe('WorldmapFoundation', () => {
   /*
    * Optimizations for small maps
@@ -409,7 +408,6 @@ describe('WorldmapFoundation', () => {
       expect(document.getElementsByClassName('leaflet-container')[0]).toBeDefined();
       expect(document.getElementsByClassName('leaflet-control-zoom')[0]).toBeDefined();
       expect(document.getElementsByClassName('leaflet-control-attribution')[0]).toBeDefined();
-
     });
   });
 
@@ -466,5 +464,4 @@ describe('WorldmapFoundation', () => {
 
     worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
   }
-
 });

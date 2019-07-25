@@ -1,6 +1,6 @@
-import WorldmapCtrl from "./worldmap_ctrl";
-import * as _ from "lodash";
-import $ from "jquery";
+import WorldmapCtrl from './worldmap_ctrl';
+import * as _ from 'lodash';
+import $ from 'jquery';
 
 export class WorldmapChrome {
   settings: any;
@@ -10,12 +10,13 @@ export class WorldmapChrome {
   }
 
   updatePanelCorner(messages) {
-
     // Display multiple messages in panel corner.
     // Todo: Investigate whether it would be better to override `getInfoContent()` right away.
     // Todo: How to open the tooltip right away?
 
-    if (_.isEmpty(messages)) { return; }
+    if (_.isEmpty(messages)) {
+      return;
+    }
     const tooltipMessage = messages.join('\n');
 
     const _this = this;
@@ -25,7 +26,7 @@ export class WorldmapChrome {
       // Colorize the tooltip corner in a different color to indicate its not a native exception.
       // .panel-info-corner-inner » border-left-color
       const color = 'orange';
-      _this.ctrl.$element.find('.panel-info-corner-inner').css({'border-left-color': color});
+      _this.ctrl.$element.find('.panel-info-corner-inner').css({ 'border-left-color': color });
 
       // Failed attempt to colorize the drop content.
       // .drop-content » background-color + border-color
@@ -41,7 +42,6 @@ export class WorldmapChrome {
         drop.trigger('open');
       }
       */
-
     });
   }
 
@@ -81,5 +81,4 @@ export class WorldmapChrome {
   restoreTimePickerNav() {
     $('.gf-timepicker-nav').show();
   }
-
 }

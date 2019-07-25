@@ -1,6 +1,6 @@
 import DataFormatter from './data_formatter';
-import {ErrorManager} from "./errors";
-import * as jQuery from "jquery";
+import { ErrorManager } from './errors';
+import * as jQuery from 'jquery';
 
 describe('DataFormatter', () => {
   let ctrl;
@@ -11,7 +11,7 @@ describe('DataFormatter', () => {
     const errors = new ErrorManager();
     errors.registerDomains('data', 'location');
     ctrl = {
-      errors: errors
+      errors: errors,
     };
   });
 
@@ -22,9 +22,9 @@ describe('DataFormatter', () => {
           tableQueryOptions: {
             queryType: 'coordinates',
             latitudeField: 'latitude',
-            longitudeField: 'longitude'
-          }
-        }
+            longitudeField: 'longitude',
+          },
+        },
       });
       dataFormatter = new DataFormatter(ctrl);
     });
@@ -34,13 +34,13 @@ describe('DataFormatter', () => {
         [
           {
             latitude: 1,
-            longitude: 2
+            longitude: 2,
           },
           {
             latitude: 3,
-            longitude: 4
-          }
-        ]
+            longitude: 4,
+          },
+        ],
       ];
       const data: any[] = [];
 
@@ -60,8 +60,8 @@ describe('DataFormatter', () => {
           tableQueryOptions: {
             queryType: 'geohash',
             geohashField: 'geohash',
-          }
-        }
+          },
+        },
       };
       dataFormatter = new DataFormatter(ctrl);
     });
@@ -72,14 +72,14 @@ describe('DataFormatter', () => {
           {
             latitude: 1,
             longitude: 2,
-            geohash: 'stq4s3x' // 29.9796, 31.1345
+            geohash: 'stq4s3x', // 29.9796, 31.1345
           },
           {
             latitude: 3,
             longitude: 4,
-            geohash: 'p05010r' // -89.997, 139.273
-          }
-        ]
+            geohash: 'p05010r', // -89.997, 139.273
+          },
+        ],
       ];
       const data: any[] = [];
 
@@ -115,24 +115,24 @@ describe('DataFormatter', () => {
             queryType: 'geohash',
             geohashField: 'geohash',
             labelLocationKeyField: 'station_id',
-          }
+          },
         },
         // Location enrichment data is ingested from a JSON(P) response.
         locations: [
           {
-            "key": "28",
-            "name": "Ulmer Stra\u00dfe, Wangen, Stuttgart, Baden-W\u00fcrttemberg, DE"
+            key: '28',
+            name: 'Ulmer Stra\u00dfe, Wangen, Stuttgart, Baden-W\u00fcrttemberg, DE',
           },
           {
-            "key": "1071",
-            "name": "Gerichtstra\u00dfe, Gesundbrunnen, Mitte, Berlin, DE"
+            key: '1071',
+            name: 'Gerichtstra\u00dfe, Gesundbrunnen, Mitte, Berlin, DE',
           },
-        ]
+        ],
       };
       dataFormatter = new DataFormatter(ctrl);
     });
 
-    it('should use the value from table\'s labelLocationKeyField as a key to lookup the designated locationName from the JSON/JSONP result', () => {
+    it("should use the value from table's labelLocationKeyField as a key to lookup the designated locationName from the JSON/JSONP result", () => {
       // Main Location Data is coming from table data.
       // However, the humanized string is resolved by mapping e.g.
       // "station_id == 28" to "key == 28", in turn yielding the
@@ -141,20 +141,20 @@ describe('DataFormatter', () => {
         [
           {
             station_id: '28',
-            geohash: 'u0wt6pv2qqhz'
+            geohash: 'u0wt6pv2qqhz',
           },
           {
             station_id: '1071',
-            geohash: 'u33dbm6duz90'
+            geohash: 'u33dbm6duz90',
           },
-        ]
+        ],
       ];
       const data: any[] = [];
 
       dataFormatter.setTableValues(tableData, data);
 
       expect(data[0].locationLatitude).toBeCloseTo(48.7779);
-      expect(data[0].locationLongitude).toBeCloseTo(9.23600);
+      expect(data[0].locationLongitude).toBeCloseTo(9.236);
       expect(data[0].locationName).toEqual('Ulmer Straße, Wangen, Stuttgart, Baden-Württemberg, DE');
 
       expect(data[1].locationLatitude).toBeCloseTo(52.544);
@@ -167,16 +167,10 @@ describe('DataFormatter', () => {
     beforeEach(() => {
       jQuery.extend(ctrl, {
         panel: {
-          valueName: 'total'
+          valueName: 'total',
         },
-        locations: [
-          {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
-          {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
-        ],
-        series: [
-          {alias: 'IE', datapoints: [1, 2], stats: {total: 3}},
-          {alias: 'SE', datapoints: [2, 3], stats: {total: 5}},
-        ]
+        locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }, { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 }],
+        series: [{ alias: 'IE', datapoints: [1, 2], stats: { total: 3 } }, { alias: 'SE', datapoints: [2, 3], stats: { total: 5 } }],
       });
       dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
@@ -201,16 +195,10 @@ describe('DataFormatter', () => {
     beforeEach(() => {
       jQuery.extend(ctrl, {
         panel: {
-          valueName: 'total'
+          valueName: 'total',
         },
-        locations: [
-          {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
-          {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
-        ],
-        series: [
-          {alias: 'ie', datapoints: [1, 2], stats: {total: 3}},
-          {alias: 'se', datapoints: [2, 3], stats: {total: 5}},
-        ]
+        locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }, { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 }],
+        series: [{ alias: 'ie', datapoints: [1, 2], stats: { total: 3 } }, { alias: 'se', datapoints: [2, 3], stats: { total: 5 } }],
       });
       dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
@@ -235,13 +223,10 @@ describe('DataFormatter', () => {
     beforeEach(() => {
       jQuery.extend(ctrl, {
         panel: {
-          valueName: 'total'
+          valueName: 'total',
         },
-        locations: [{key: 'IE', name: 'Ireland', latitude: 1, longitude: 1}],
-        series: [
-          {alias: 'SX', datapoints: [1, 2], stats: {total: 3}},
-          {alias: 'IE', datapoints: [1, 2], stats: {total: 3}}
-        ]
+        locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }],
+        series: [{ alias: 'SX', datapoints: [1, 2], stats: { total: 3 } }, { alias: 'IE', datapoints: [1, 2], stats: { total: 3 } }],
       });
       dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
@@ -258,16 +243,13 @@ describe('DataFormatter', () => {
         jQuery.extend(ctrl, {
           panel: {
             valueName: 'total',
-            decimals: 2
+            decimals: 2,
           },
-          locations: [
-            {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
-            {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
-          ],
+          locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }, { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 }],
           series: [
-            {alias: 'IE', datapoints: [1.11, 2.22], stats: {total: 3.33}},
-            {alias: 'SE', datapoints: [2.221, 3.331], stats: {total: 5.552}},
-          ]
+            { alias: 'IE', datapoints: [1.11, 2.22], stats: { total: 3.33 } },
+            { alias: 'SE', datapoints: [2.221, 3.331], stats: { total: 5.552 } },
+          ],
         });
         dataFormatter = new DataFormatter(ctrl);
         dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
@@ -283,16 +265,13 @@ describe('DataFormatter', () => {
         jQuery.extend(ctrl, {
           panel: {
             valueName: 'total',
-            decimals: '2'
+            decimals: '2',
           },
-          locations: [
-            {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
-            {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
-          ],
+          locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }, { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 }],
           series: [
-            {alias: 'IE', datapoints: [1.11, 2.22], stats: {total: 3.33}},
-            {alias: 'SE', datapoints: [2.221, 3.331], stats: {total: 5.552}},
-          ]
+            { alias: 'IE', datapoints: [1.11, 2.22], stats: { total: 3.33 } },
+            { alias: 'SE', datapoints: [2.221, 3.331], stats: { total: 5.552 } },
+          ],
         });
         dataFormatter = new DataFormatter(ctrl);
         dataFormatter.setTimeseriesValues(ctrl.series, formattedData);

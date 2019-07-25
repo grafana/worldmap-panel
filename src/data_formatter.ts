@@ -2,8 +2,8 @@ import * as _ from 'lodash';
 import decodeGeoHash from './geohash';
 import kbn from 'grafana/app/core/utils/kbn';
 import TimeSeries from 'grafana/app/core/time_series2';
-import {DataError, MappingError} from "./core";
-import WorldmapCtrl from "./worldmap_ctrl";
+import { DataError, MappingError } from './core';
+import WorldmapCtrl from './worldmap_ctrl';
 
 interface DataInfo {
   /*
@@ -22,7 +22,6 @@ export enum DataFormat {
 }
 
 export default class DataFormatter {
-
   settings: any;
 
   constructor(private ctrl: any | WorldmapCtrl) {
@@ -56,11 +55,9 @@ export default class DataFormatter {
       if (metric0.type === DataFormat.Table) {
         dataInfo.type = DataFormat.Table;
         dataInfo.count = metric0.rows.length;
-
       } else if (metric0.datapoints) {
         dataInfo.type = DataFormat.Timeseries;
         dataInfo.count = dataList.length;
-
       } else {
         throw new DataError('Todo: Implement "analyzeData" for other data sources');
       }
@@ -71,7 +68,7 @@ export default class DataFormatter {
   seriesHandler(seriesData) {
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
-      alias: seriesData.target
+      alias: seriesData.target,
     });
 
     series.flotpairs = series.getFlotPairs(this.settings.nullPointMode);
@@ -139,7 +136,7 @@ export default class DataFormatter {
       value: value,
       valueFormatted: value,
       valueRounded: 0,
-      link: link
+      link: link,
     };
 
     dataValue.valueRounded = kbn.roundValue(dataValue.value, this.settings.decimals || 0);
@@ -166,7 +163,6 @@ export default class DataFormatter {
   }
 
   setGeohashValues(dataList, data) {
-
     if (!this.settings.esGeoPoint) {
       throw new MappingError('geohash field not configured');
     }
@@ -176,10 +172,8 @@ export default class DataFormatter {
       let lowestValue = Number.MAX_VALUE;
 
       dataList.forEach(result => {
-
         // Process table format data.
         if (result.type === 'table') {
-
           const geoHashField = this.settings.esGeoPoint;
 
           // Sanity check: Croak if the designated geohash column does not exist in ingress data.
@@ -194,20 +188,17 @@ export default class DataFormatter {
           });
 
           result.rows.forEach(row => {
-
             const encodedGeohash = row[columnNames[geoHashField]];
 
             // Safely decode the geohash value.
             const decodedGeohash = this.decodeGeohashSafe(encodedGeohash);
-            if (!decodedGeohash) { return; }
+            if (!decodedGeohash) {
+              return;
+            }
 
-            const locationName = this.settings.esLocationName
-              ? row[columnNames[this.settings.esLocationName]]
-              : encodedGeohash;
+            const locationName = this.settings.esLocationName ? row[columnNames[this.settings.esLocationName]] : encodedGeohash;
             const value = row[columnNames[this.settings.esMetric]];
-            const link = this.settings.esLink
-              ? row[columnNames[this.settings.esLink]]
-              : null;
+            const link = this.settings.esLink ? row[columnNames[this.settings.esLink]] : null;
 
             const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
             if (dataValue.value > highestValue) {
@@ -225,22 +216,20 @@ export default class DataFormatter {
           data.lowestValue = lowestValue;
           data.valueRange = highestValue - lowestValue;
 
-        // Process timeseries format data.
+          // Process timeseries format data.
         } else {
           result.datapoints.forEach(datapoint => {
             const encodedGeohash = datapoint[this.settings.esGeoPoint];
 
             // Safely decode the geohash value.
             const decodedGeohash = this.decodeGeohashSafe(encodedGeohash);
-            if (!decodedGeohash) { return; }
+            if (!decodedGeohash) {
+              return;
+            }
 
-            const locationName = this.settings.esLocationName
-              ? datapoint[this.settings.esLocationName]
-              : encodedGeohash;
+            const locationName = this.settings.esLocationName ? datapoint[this.settings.esLocationName] : encodedGeohash;
             const value = datapoint[this.settings.esMetric];
-            const link = this.settings.esLink
-              ? datapoint[this.settings.esLink]
-              : null;
+            const link = this.settings.esLink ? datapoint[this.settings.esLink] : null;
 
             const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
             if (dataValue.value > highestValue) {
@@ -313,12 +302,13 @@ export default class DataFormatter {
 
           // Safely decode the geohash value.
           const decodedGeohash = this.decodeGeohashSafe(encodedGeohash);
-          if (!decodedGeohash) { return; }
+          if (!decodedGeohash) {
+            return;
+          }
 
           latitude = decodedGeohash.latitude;
           longitude = decodedGeohash.longitude;
           key = encodedGeohash;
-
         } else {
           latitude = datapoint[this.settings.tableQueryOptions.latitudeField];
           longitude = datapoint[this.settings.tableQueryOptions.longitudeField];
@@ -330,8 +320,8 @@ export default class DataFormatter {
 
         // For improved labelling, attempt to resolve value from table's "labelLocationKeyField" against JSON location key.
         const labelJsonKey = datapoint[this.settings.tableQueryOptions.labelLocationKeyField];
-        const location = _.find(this.ctrl.locations, (loc) => {
-            return loc.key === labelJsonKey;
+        const location = _.find(this.ctrl.locations, loc => {
+          return loc.key === labelJsonKey;
         });
 
         // Assign link.
@@ -339,11 +329,10 @@ export default class DataFormatter {
 
         // Compute effective location name.
         const locationNameFromTable = label;
-        const locationNameFromJson  = location ? location.name : undefined;
+        const locationNameFromJson = location ? location.name : undefined;
         const locationNameEffective = locationNameFromJson || locationNameFromTable || key;
 
         const dataValue = {
-
           // Add location information.
           key: key,
           locationName: locationNameEffective,
@@ -382,7 +371,6 @@ export default class DataFormatter {
       data.highestValue = highestValue;
       data.lowestValue = lowestValue;
       data.valueRange = highestValue - lowestValue;
-
     } else {
       this.addWarning('No data in table format received');
     }
@@ -415,14 +403,12 @@ export default class DataFormatter {
       data.highestValue = highestValue;
       data.lowestValue = lowestValue;
       data.valueRange = highestValue - lowestValue;
-
     } else {
       this.addWarning('No data in JSON format received');
     }
   }
 
   addWarning(message) {
-    this.ctrl.errors.add(message, {level: 'warning', domain: 'data'});
+    this.ctrl.errors.add(message, { level: 'warning', domain: 'data' });
   }
-
 }

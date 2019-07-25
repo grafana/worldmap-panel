@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import $ from "jquery";
+import $ from 'jquery';
 import * as L from './libs/leaflet';
 import WorldmapCtrl from './worldmap_ctrl';
 
@@ -7,15 +7,13 @@ const tileServers = {
   'CartoDB Positron': {
     url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
     attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
-      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' + '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
     subdomains: 'abcd',
   },
   'CartoDB Dark': {
     url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
     attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
-      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' + '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
     subdomains: 'abcd',
   },
 };
@@ -36,10 +34,7 @@ export default class WorldMap {
 
   createMap() {
     const center = this.ctrl.settings.center;
-    const mapCenter = (window as any).L.latLng(
-      center.mapCenterLatitude,
-      center.mapCenterLongitude
-    );
+    const mapCenter = (window as any).L.latLng(center.mapCenterLatitude, center.mapCenterLongitude);
 
     const zoomLevel = this.getEffectiveZoomLevel(center.mapZoomLevel);
 
@@ -61,20 +56,18 @@ export default class WorldMap {
       detectRetina: true,
       attribution: selectedTileServer.attribution,
     }).addTo(this.map);
-
   }
 
   renderMapFirst() {
     const _this = this;
     this.map.whenReady((ctx, options) => {
-      _this.renderMap({animate: false});
+      _this.renderMap({ animate: false });
     });
   }
 
   renderMap(options?: {}) {
-
     options = options || {};
-    _.defaults(options, {animate: true});
+    _.defaults(options, { animate: true });
 
     if (!this.legend && this.ctrl.settings.showLegend) {
       this.createLegend();
@@ -88,7 +81,6 @@ export default class WorldMap {
     setTimeout(() => {
       this.drawMap(options);
     }, 1);
-
   }
 
   drawMap(options?: {}) {
@@ -118,13 +110,7 @@ export default class WorldMap {
     this.legend.update = () => {
       const thresholds = this.ctrl.data.thresholds;
       let legendHtml = '';
-      legendHtml +=
-        '<div class="legend-item"><i style="background:' +
-        this.ctrl.settings.colors[0] +
-        '"></i> ' +
-        '&lt; ' +
-        thresholds[0] +
-        '</div>';
+      legendHtml += '<div class="legend-item"><i style="background:' + this.ctrl.settings.colors[0] + '"></i> ' + '&lt; ' + thresholds[0] + '</div>';
       for (let index = 0; index < thresholds.length; index += 1) {
         legendHtml +=
           '<div class="legend-item"><i style="background:' +
@@ -141,11 +127,9 @@ export default class WorldMap {
     if (this.ctrl.settings.legendContainerSelector) {
       $(this.ctrl.settings.legendContainerSelector).append(this.legend._div);
     }
-
   }
 
   needToRedrawCircles(data) {
-
     console.info(`Data points ${data.length}. Circles on map ${this.circles.length}.`);
 
     if (this.circles.length === 0 && data.length > 0) {
@@ -300,7 +284,7 @@ export default class WorldMap {
     // Attach "onclick" event to data point linking.
     if (linkUrl) {
       const clickthroughOptions = this.ctrl.settings.clickthroughOptions;
-      circle.on('click', (evt) => {
+      circle.on('click', evt => {
         if (clickthroughOptions.windowName) {
           window.open(linkUrl, clickthroughOptions.windowName);
         } else {
@@ -326,7 +310,7 @@ export default class WorldMap {
       autoWidth: this.ctrl.settings.autoWidthLabels,
     });
 
-    circle.on('mouseover', (evt) => {
+    circle.on('mouseover', evt => {
       const layer = evt.target;
       layer.bringToFront();
       circle.openPopup();
@@ -353,7 +337,6 @@ export default class WorldMap {
   }
 
   panToMapCenter(options?: any) {
-
     // Get a bunch of metadata from settings and data which
     // controls the map centering and zoom level.
     const mapDimensions = this.ctrl.settings.center;
@@ -374,7 +357,6 @@ export default class WorldMap {
           zoomLevel = this.map.getBoundsZoom(bounds);
         }
       }
-
     } else if (mapDimensions.mapZoomByRadius) {
       // Compute zoom level based on current coordinates and given radius in kilometers.
       // This is done by temporarily adding a circle with the respective radius and
@@ -383,7 +365,7 @@ export default class WorldMap {
       // frame will not trigger any animations, see
       // https://github.com/Leaflet/Leaflet/issues/5357#issuecomment-282023917
       const radius = mapDimensions.mapZoomByRadius * 1000.0;
-      const circle = L.circle(coordinates, {radius: radius}).addTo(this.map);
+      const circle = L.circle(coordinates, { radius: radius }).addTo(this.map);
       const bounds = circle.getBounds();
       circle.remove();
       coordinates = bounds.getCenter();
@@ -415,7 +397,7 @@ export default class WorldMap {
   addCircles(circles) {
     // Todo: Optionally add fixed custom attributions to the circle layer.
     const attribution = undefined;
-    return (window as any).L.layerGroup(circles, {attribution: attribution}).addTo(this.map);
+    return (window as any).L.layerGroup(circles, { attribution: attribution }).addTo(this.map);
   }
 
   removeCircles() {
@@ -440,7 +422,6 @@ export default class WorldMap {
   drawCustomAttribution() {
     // The operator wants a custom attribution.
     if (this.ctrl.settings.customAttribution) {
-
       // The custom attribution text.
       const attribution = this.ctrl.settings.customAttributionText;
 
@@ -450,5 +431,4 @@ export default class WorldMap {
       attributionControl.addAttribution(attribution);
     }
   }
-
 }

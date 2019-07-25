@@ -88,7 +88,6 @@ export const LocationSources = [
   },
 ];
 
-
 export class MapCenterType {
   static readonly Other: string = 'Others';
   static readonly Region: string = 'Regions';
@@ -186,5 +185,4 @@ export const MapCenters = [
     type: MapCenterType.City,
     data: { mapCenterLatitude: 59.32549, mapCenterLongitude: 18.07109, initialZoom: 11 },
   },
-
 ];
