@@ -1,22 +1,11 @@
 # Changelog
 
 
-## In progress
-- Fix release tooling.
-
-
-## v0.4.0
-- Rename to `grafana-worldmap-panel-ng` to allow side-by-side installation
-  with upstream *Grafana Worldmap Panel 0.2.0*.
-- Remove `/dist` folder from source code repository.
-- Add release tooling.
-
-
 ## v0.3.0
 
 - Add new mapping options `table+json` and `table+jsonp` to retrieve
   location information from JSON endpoint, even for table data.
-  The lookup key is the value obtained from the database field 
+  The lookup key is the value obtained from the database field
   designated by `tableQueryOptions.labelLocationKeyField`.
 - Add `autoPanLabels` and `autoWidthLabels` to visual option settings.
 - Add `zoomControl` and `attributionControl` to visual option settings.
@@ -87,7 +76,7 @@
 ## v0.1.0
 
 - Configuration option for turning mouse wheel zoom on or off. [#140](https://github.com/grafana/worldmap-panel/issues/140) Thanks [@Perlovka](https://github.com/Perlovka)
-- Upgrade to Leaflet JS [#132](https://github.com/grafana/worldmap-panel/pull/132) Thanks [@cbarbier](https://github.com/cbarbier)  
+- Upgrade to Leaflet JS [#132](https://github.com/grafana/worldmap-panel/pull/132) Thanks [@cbarbier](https://github.com/cbarbier)
 
 ## v0.0.21
 

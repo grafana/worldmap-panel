@@ -1,7 +1,7 @@
 {
   "type": "panel",
-  "name": "Worldmap Panel NG",
-  "id": "grafana-worldmap-ng-panel",
+  "name": "Worldmap Panel",
+  "id": "grafana-worldmap-panel",
 
   "info": {
     "description": "World Map panel for Grafana. Displays time series data or geohash data on a world map.",
