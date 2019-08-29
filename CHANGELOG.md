@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.2.1
+
+- Fixes partial (not full height) map on first render [#212](https://github.com/grafana/worldmap-panel/issues/212)
+
+## v0.2.0
+
+- Convert to TypeScript, webpack and Jest
+- Use Yarn on CircleCI
+- Add missing dev dependencies
+- Tweak for incorrect height on render
+  which occurs more frequently in Grafana 6.0
+
 ## v0.1.2
 
 - Map centering ignores configured location [#149](https://github.com/grafana/worldmap-panel/issues/149) Thanks [@clompsy](https://github.com/clompsy)
@@ -13,7 +25,7 @@
 ## v0.1.0
 
 - Configuration option for turning mouse wheel zoom on or off. [#140](https://github.com/grafana/worldmap-panel/issues/140) Thanks [@Perlovka](https://github.com/Perlovka)
-- Upgrade to Leaflet JS [#132](https://github.com/grafana/worldmap-panel/pull/132) Thanks [@cbarbier](https://github.com/cbarbier)  
+- Upgrade to Leaflet JS [#132](https://github.com/grafana/worldmap-panel/pull/132) Thanks [@cbarbier](https://github.com/cbarbier)
 
 ## v0.0.21
 

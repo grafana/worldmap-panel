@@ -1,5 +1,6 @@
 import { MetricsPanelCtrl } from "grafana/app/plugins/sdk";
 import TimeSeries from "grafana/app/core/time_series2";
+import appEvents from 'grafana/app/core/app_events';
 
 import * as _ from "lodash";
 import DataFormatter from "./data_formatter";
@@ -182,32 +183,36 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       return;
     }
 
-    if (this.dashboard.snapshot && this.locations) {
-      this.panel.snapshotLocationData = this.locations;
-    }
+    try {
+      if (this.dashboard.snapshot && this.locations) {
+        this.panel.snapshotLocationData = this.locations;
+      }
 
-    const data = [];
+      const data = [];
 
-    if (this.panel.locationData === "geohash") {
-      this.dataFormatter.setGeohashValues(dataList, data);
-    } else if (this.panel.locationData === "table") {
-      const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
-      this.dataFormatter.setTableValues(tableData, data);
-    } else if (this.panel.locationData === "json result") {
-      this.series = dataList;
-      this.dataFormatter.setJsonValues(data);
-    } else {
-      this.series = dataList.map(this.seriesHandler.bind(this));
-      this.dataFormatter.setValues(data);
-    }
-    this.data = data;
+      if (this.panel.locationData === "geohash") {
+        this.dataFormatter.setGeohashValues(dataList, data);
+      } else if (this.panel.locationData === "table") {
+        const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
+        this.dataFormatter.setTableValues(tableData, data);
+      } else if (this.panel.locationData === "json result") {
+        this.series = dataList;
+        this.dataFormatter.setJsonValues(data);
+      } else {
+        this.series = dataList.map(this.seriesHandler.bind(this));
+        this.dataFormatter.setValues(data);
+      }
+      this.data = data;
 
-    this.updateThresholdData();
+      this.updateThresholdData();
 
-    if (this.data.length && this.panel.mapCenter === "Last GeoHash") {
-      this.centerOnLastGeoHash();
-    } else {
-      this.render();
+      if (this.data.length && this.panel.mapCenter === "Last GeoHash") {
+        this.centerOnLastGeoHash();
+      } else {
+        this.render();
+      }
+    } catch (err) {
+      appEvents.emit('alert-error', ['Data error', err.toString()])
     }
   }
 
@@ -295,13 +300,22 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   link(scope, elem, attrs, ctrl) {
+    let firstRender = true;
+
     ctrl.events.on("render", () => {
       render();
       ctrl.renderingCompleted();
     });
 
-    function render() {
+     function render() {
       if (!ctrl.data) {
+        return;
+      }
+
+      // delay first render as the map panel sizing is bugged first render even though the element has correct height
+      if (firstRender) {
+        firstRender = false;
+        setTimeout(render, 100);
         return;
       }
 
@@ -317,9 +331,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         ctrl.map = map;
       }
 
-      setTimeout(() => {
-        ctrl.map.resize();
-      }, 1);
+      ctrl.map.resize();
 
       if (ctrl.mapCenterMoved) {
         ctrl.map.panToMapCenter();
