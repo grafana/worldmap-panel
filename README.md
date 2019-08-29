@@ -206,9 +206,9 @@ The Table Data format also works with two columns for latitude and longitude ins
 
 Supported Databases:
 
-- Warp&nbsp;10 via [grafana-warp10-datasource](https://github.com/cityzendata/grafana-warp10) plugin  
+- Warp&nbsp;10 via [grafana-warp10-datasource](https://github.com/cityzendata/grafana-warp10) plugin
 
-It supports any datasource capable of generating a JSON response with a  a custom list of locations (the same format that for the JSON enpoint).
+It supports any datasource capable of generating a JSON response with a custom list of locations (the same format that for the JSON endpoint).
 
 ### Map Data Options
 

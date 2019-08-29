@@ -1,9 +1,61 @@
 # Changelog
 
-## v0.2.1
+## v0.3.0
 
 - Fixes error handling that made everything disappear in edit mode, [#213](https://github.com/grafana/worldmap-panel/issues/213)
 - Fixes partial (not full height) map on first render [#212](https://github.com/grafana/worldmap-panel/issues/212)
+- Add new mapping options `table+json` and `table+jsonp` to retrieve
+  location information from JSON endpoint, even for table data.
+  The lookup key is the value obtained from the database field
+  designated by `tableQueryOptions.labelLocationKeyField`.
+- Add `autoPanLabels` and `autoWidthLabels` to visual option settings.
+- Add `zoomControl` and `attributionControl` to visual option settings.
+- Optionally display legend in different DOM element.
+- Increase form field width for JSON endpoint url settings.
+- Fix conditional table options display in settings editor.
+- Add `showTableOptions()` conditional for signalling any type of table source.
+- Add software tests covering new control options
+    - `locationData: "table+json"`
+    - `showZoomControl: false`
+    - `showAttribution: false`
+    - `legendContainerSelector`
+- Add `Makefile` as entrypoint for repository tooling.
+- Fix popover labels text color for light theme ([#169](https://github.com/grafana/worldmap-panel/issues/169)).
+  Thanks, [@dtheb](https://github.com/dtheb).
+- Add clickthrough option for circles, use fixed url ([#129](https://github.com/grafana/worldmap-panel/pull/129)).
+  Thanks, [@ryft](https://github.com/ryft).
+- Add clickthrough option for circles, use urls from data ([#190](https://github.com/grafana/worldmap-panel/pull/190)).
+  Thanks, [@leonhardhaas](https://github.com/leonhardhaas).
+- Combine both clickthrough link implementations #129 and #190,
+  add basic variable interpolation based on keys from `dataPoint`.
+- Introduce the regular Grafana templating mechanism for interpolating variables
+  into clickthrough links. As we are now interpolating dashboard **and** `dataPoint`
+  variables, the latter one will get prefixed with `__field_` to avoid collisions.
+- Apply Grafana-style variable interpolation to **all** panel settings.
+- Add query parameters into the interpolation dictionary, prefixed by `request_`.
+- Use request parameters prefixed with "panel-" to optionally override the
+  respective control options.
+- Improve map center control handling.
+- Improve `clickthroughUrl` interpolation.
+- Add control option `clickthroughOptions.windowName` to open clickthrough target in designated window.
+- Improve centering on `Last Geohash`.
+- Add support for `First Geohash` centering ([#156](https://github.com/grafana/worldmap-panel/pull/156)).
+  Thanks, [@fabienpomerol](https://github.com/fabienpomerol).
+- Add control options `mapFitData` and `mapZoomByRadius`.
+- Repaint user interface.
+- Refactor machinery and user interface.
+- Add options `ignoreEmptyGeohashValues` and `ignoreInvalidGeohashValues`.
+- Add `ignoreEscapeKey` option.
+- Add `hideTimepickerNavigation` option.
+- Add `circleOptions.strokeEnabled` and `circleOptions.strokeWeight`.
+- Add options `customAttribution` and `customAttributionText`.
+- Rename `point_` prefix to `__field_` when interpolating datapoint field values
+- Remove automatic key suffix for popover texts
+- Limit effective zoom level by new "Maximum zoom level" option
+- Fix transformation machinery for data in timeseries format
+- Acquire location data again after being cleared out when hitting an empty dataset
+- Improve initialisation and refresh behaviour
+
 
 ## v0.2.0
 

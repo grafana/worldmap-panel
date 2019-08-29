@@ -1,16 +1,86 @@
 import * as _ from 'lodash';
 import decodeGeoHash from './geohash';
 import kbn from 'grafana/app/core/utils/kbn';
+import TimeSeries from 'grafana/app/core/time_series2';
+import { DataError, MappingError } from './core';
+import WorldmapCtrl from './worldmap_ctrl';
+
+interface DataInfo {
+  /*
+   * Result from introspecting ingress data through `analyzeData`.
+   * "type" is either "table" or "timeseries" or "json".
+   */
+  type: DataFormat;
+  count: number;
+}
+
+export enum DataFormat {
+  Table = 'table',
+  Timeseries = 'timeseries',
+  // Fixme: Add detection for other data formats.
+  //Json = 'json',
+}
 
 export default class DataFormatter {
-  constructor(private ctrl) {}
+  settings: any;
 
-  setValues(data) {
-    if (this.ctrl.series && this.ctrl.series.length > 0) {
+  constructor(private ctrl: any | WorldmapCtrl) {
+    this.settings = ctrl.settings;
+
+    // Backward compatibility for tests after adding the `PluginSettings` proxy.
+    // Todo: Don't worry, this will go away.
+    if (!this.settings) {
+      this.settings = ctrl.panel;
+    }
+  }
+
+  static analyzeData(dataList): DataInfo {
+    /*
+     * Introspect the ingress data and try to heuristically
+     * find out about its data format and character.
+     *
+     * This is still in its infancy but should be improved to make
+     * the plugin more robust wrt. to applying the correct mapping
+     * flavors to the corresponding ingress data format.
+     *
+     * Todo: Implement decoding from multiple queries.
+     *
+     */
+
+    const dataInfo = {} as DataInfo;
+    if (!_.isEmpty(dataList)) {
+      const metric0 = dataList[0];
+      dataInfo.type = metric0.type;
+
+      if (metric0.type === DataFormat.Table) {
+        dataInfo.type = DataFormat.Table;
+        dataInfo.count = metric0.rows.length;
+      } else if (metric0.datapoints) {
+        dataInfo.type = DataFormat.Timeseries;
+        dataInfo.count = dataList.length;
+      } else {
+        throw new DataError('Todo: Implement "analyzeData" for other data sources');
+      }
+    }
+    return dataInfo;
+  }
+
+  seriesHandler(seriesData) {
+    const series = new TimeSeries({
+      datapoints: seriesData.datapoints,
+      alias: seriesData.target,
+    });
+
+    series.flotpairs = series.getFlotPairs(this.settings.nullPointMode);
+    return series;
+  }
+
+  setTimeseriesValues(seriesData, data) {
+    if (seriesData && seriesData.length > 0) {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.ctrl.series.forEach(serie => {
+      seriesData.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
         const location = _.find(this.ctrl.locations, loc => {
@@ -24,12 +94,13 @@ export default class DataFormatter {
         if (_.isString(lastValue)) {
           data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
         } else {
+          // Todo: Bring this up to speed with the current state in `setTableValues`.
           const dataValue = {
             key: serie.alias,
             locationName: location.name,
             locationLatitude: location.latitude,
             locationLongitude: location.longitude,
-            value: serie.stats[this.ctrl.panel.valueName],
+            value: serie.stats[this.settings.valueName],
             valueFormatted: lastValue,
             valueRounded: 0,
           };
@@ -42,7 +113,7 @@ export default class DataFormatter {
             lowestValue = dataValue.value;
           }
 
-          dataValue.valueRounded = kbn.roundValue(dataValue.value, parseInt(this.ctrl.panel.decimals, 10) || 0);
+          dataValue.valueRounded = kbn.roundValue(dataValue.value, parseInt(this.settings.decimals, 10) || 0);
           data.push(dataValue);
         }
       });
@@ -50,10 +121,13 @@ export default class DataFormatter {
       data.highestValue = highestValue;
       data.lowestValue = lowestValue;
       data.valueRange = highestValue - lowestValue;
+    } else {
+      this.addWarning('No data in timeseries format received');
     }
   }
 
-  createDataValue(encodedGeohash, decodedGeohash, locationName, value) {
+  createDataValue(encodedGeohash, decodedGeohash, locationName, value, link) {
+    // Todo: Bring this up to speed with the current state in `setTableValues`.
     const dataValue = {
       key: encodedGeohash,
       locationName: locationName,
@@ -62,15 +136,35 @@ export default class DataFormatter {
       value: value,
       valueFormatted: value,
       valueRounded: 0,
+      link: link,
     };
 
-    dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+    dataValue.valueRounded = kbn.roundValue(dataValue.value, this.settings.decimals || 0);
     return dataValue;
   }
 
-  setGeohashValues(dataList, data) {
-    if (!this.ctrl.panel.esGeoPoint || !this.ctrl.panel.esMetric) {
+  decodeGeohashSafe(encodedGeohash) {
+    // Safely decode the geohash value, either by raising an exception or by ignoring it.
+    if (!encodedGeohash) {
+      if (!this.settings.ignoreEmptyGeohashValues) {
+        throw new DataError('geohash value missing or empty');
+      }
       return;
+    }
+    try {
+      const decodedGeohash = decodeGeoHash(encodedGeohash);
+      return decodedGeohash;
+    } catch (e) {
+      if (!this.settings.ignoreInvalidGeohashValues) {
+        throw e;
+      }
+      return;
+    }
+  }
+
+  setGeohashValues(dataList, data) {
+    if (!this.settings.esGeoPoint) {
+      throw new MappingError('geohash field not configured');
     }
 
     if (dataList && dataList.length > 0) {
@@ -78,7 +172,15 @@ export default class DataFormatter {
       let lowestValue = Number.MAX_VALUE;
 
       dataList.forEach(result => {
+        // Process table format data.
         if (result.type === 'table') {
+          const geoHashField = this.settings.esGeoPoint;
+
+          // Sanity check: Croak if the designated geohash column does not exist in ingress data.
+          if (!_.includes(_.map(result.columns, 'text'), geoHashField)) {
+            throw new MappingError(`Field "${this.settings.esGeoPoint}" not found in database`);
+          }
+
           const columnNames = {};
 
           result.columns.forEach((column, columnIndex) => {
@@ -86,14 +188,19 @@ export default class DataFormatter {
           });
 
           result.rows.forEach(row => {
-            const encodedGeohash = row[columnNames[this.ctrl.panel.esGeoPoint]];
-            const decodedGeohash = decodeGeoHash(encodedGeohash);
-            const locationName = this.ctrl.panel.esLocationName
-              ? row[columnNames[this.ctrl.panel.esLocationName]]
-              : encodedGeohash;
-            const value = row[columnNames[this.ctrl.panel.esMetric]];
+            const encodedGeohash = row[columnNames[geoHashField]];
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            // Safely decode the geohash value.
+            const decodedGeohash = this.decodeGeohashSafe(encodedGeohash);
+            if (!decodedGeohash) {
+              return;
+            }
+
+            const locationName = this.settings.esLocationName ? row[columnNames[this.settings.esLocationName]] : encodedGeohash;
+            const value = row[columnNames[this.settings.esMetric]];
+            const link = this.settings.esLink ? row[columnNames[this.settings.esLink]] : null;
+
+            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }
@@ -108,16 +215,23 @@ export default class DataFormatter {
           data.highestValue = highestValue;
           data.lowestValue = lowestValue;
           data.valueRange = highestValue - lowestValue;
+
+          // Process timeseries format data.
         } else {
           result.datapoints.forEach(datapoint => {
-            const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
-            const decodedGeohash = decodeGeoHash(encodedGeohash);
-            const locationName = this.ctrl.panel.esLocationName
-              ? datapoint[this.ctrl.panel.esLocationName]
-              : encodedGeohash;
-            const value = datapoint[this.ctrl.panel.esMetric];
+            const encodedGeohash = datapoint[this.settings.esGeoPoint];
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            // Safely decode the geohash value.
+            const decodedGeohash = this.decodeGeohashSafe(encodedGeohash);
+            if (!decodedGeohash) {
+              return;
+            }
+
+            const locationName = this.settings.esLocationName ? datapoint[this.settings.esLocationName] : encodedGeohash;
+            const value = datapoint[this.settings.esMetric];
+            const link = this.settings.esLink ? datapoint[this.settings.esLink] : null;
+
+            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }
@@ -132,6 +246,8 @@ export default class DataFormatter {
           data.valueRange = highestValue - lowestValue;
         }
       });
+    } else {
+      this.addWarning('No data received from geohash query');
     }
   }
 
@@ -165,34 +281,82 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
+      // Todo: Using hardcoded `tableData[0]` means
+      //  this will only use the first active query?
       tableData[0].forEach(datapoint => {
         let key;
         let longitude;
         let latitude;
 
-        if (this.ctrl.panel.tableQueryOptions.queryType === 'geohash') {
-          const encodedGeohash = datapoint[this.ctrl.panel.tableQueryOptions.geohashField];
-          const decodedGeohash = decodeGeoHash(encodedGeohash);
+        // Todo: Think about introducing a "Ignore decoding errors" control option
+        //  in order to compensate for anything in here where the shit might hit the fan.
+        //  Essentially, this would mask all exceptions raised from this code.
+
+        // Assign value.
+        const value = datapoint[this.settings.tableQueryOptions.metricField];
+        const valueRounded = kbn.roundValue(value, this.settings.decimals || 0);
+
+        // Assign latitude and longitude, either directly or by decoding from geohash.
+        if (this.settings.tableQueryOptions.queryType === 'geohash') {
+          const encodedGeohash = datapoint[this.settings.tableQueryOptions.geohashField];
+
+          // Safely decode the geohash value.
+          const decodedGeohash = this.decodeGeohashSafe(encodedGeohash);
+          if (!decodedGeohash) {
+            return;
+          }
 
           latitude = decodedGeohash.latitude;
           longitude = decodedGeohash.longitude;
           key = encodedGeohash;
         } else {
-          latitude = datapoint[this.ctrl.panel.tableQueryOptions.latitudeField];
-          longitude = datapoint[this.ctrl.panel.tableQueryOptions.longitudeField];
+          latitude = datapoint[this.settings.tableQueryOptions.latitudeField];
+          longitude = datapoint[this.settings.tableQueryOptions.longitudeField];
           key = `${latitude}_${longitude}`;
         }
 
+        // Assign label.
+        const label = datapoint[this.settings.tableQueryOptions.labelField];
+
+        // For improved labelling, attempt to resolve value from table's "labelLocationKeyField" against JSON location key.
+        const labelJsonKey = datapoint[this.settings.tableQueryOptions.labelLocationKeyField];
+        const location = _.find(this.ctrl.locations, loc => {
+          return loc.key === labelJsonKey;
+        });
+
+        // Assign link.
+        const link = datapoint[this.settings.tableQueryOptions.linkField] || null;
+
+        // Compute effective location name.
+        const locationNameFromTable = label;
+        const locationNameFromJson = location ? location.name : undefined;
+        const locationNameEffective = locationNameFromJson || locationNameFromTable || key;
+
         const dataValue = {
+          // Add location information.
           key: key,
-          locationName: datapoint[this.ctrl.panel.tableQueryOptions.labelField] || 'n/a',
+          locationName: locationNameEffective,
           locationLatitude: latitude,
           locationLongitude: longitude,
-          value: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
-          valueFormatted: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
-          valueRounded: 0,
+
+          // Add metric name and values.
+          label: label,
+          value: value,
+          valueFormatted: value,
+          valueRounded: valueRounded,
+
+          // Add link.
+          link: link,
         };
 
+        // Add all values from the original datapoint as attributes prefixed with `__field_`.
+        for (let key in datapoint) {
+          const value = datapoint[key];
+          key = '__field_' + key;
+          dataValue[key] = value;
+        }
+
+        // Bookkeeping for computing valueRange.
         if (dataValue.value > highestValue) {
           highestValue = dataValue.value;
         }
@@ -201,13 +365,14 @@ export default class DataFormatter {
           lowestValue = dataValue.value;
         }
 
-        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
         data.push(dataValue);
       });
 
       data.highestValue = highestValue;
       data.lowestValue = lowestValue;
       data.valueRange = highestValue - lowestValue;
+    } else {
+      this.addWarning('No data in table format received');
     }
   }
 
@@ -217,6 +382,7 @@ export default class DataFormatter {
       let lowestValue = Number.MAX_VALUE;
 
       this.ctrl.series.forEach(point => {
+        // Todo: Bring this up to speed with the current state in `setTableValues`.
         const dataValue = {
           key: point.key,
           locationName: point.name,
@@ -237,6 +403,12 @@ export default class DataFormatter {
       data.highestValue = highestValue;
       data.lowestValue = lowestValue;
       data.valueRange = highestValue - lowestValue;
+    } else {
+      this.addWarning('No data in JSON format received');
     }
+  }
+
+  addWarning(message) {
+    this.ctrl.errors.add(message, { level: 'warning', domain: 'data' });
   }
 }
