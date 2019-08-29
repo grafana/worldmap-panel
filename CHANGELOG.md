@@ -2,6 +2,7 @@
 
 ## v0.2.1
 
+- Fixes error handling that made everything disappear in edit mode, [#213](https://github.com/grafana/worldmap-panel/issues/213)
 - Fixes partial (not full height) map on first render [#212](https://github.com/grafana/worldmap-panel/issues/212)
 
 ## v0.2.0
