@@ -1,33 +1,127 @@
 version: 2
 jobs:
-  build:
+  build_plugin:
     docker:
-      # specify the version you desire here
-      - image: circleci/node:10
-
+    - image: circleci/node:10
     working_directory: ~/plugin
-
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
-      - run:
-          name: install yarn
-          command: 'sudo npm install -g yarn --quiet'
-      - run:
-          name: install dependencies
-          command: 'yarn install --pure-lockfile'
-      - run:
-          name: Run Toolkit Build
-          command: 'npx grafana-toolkit plugin:ci-build'
-      - run:
-          name: Bundle Plugin
-          command: 'npx grafana-toolkit plugin:ci-bundle'
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules
-      - store_artifacts:
-          path: ci/artifacts
+    - checkout
+    - restore_cache:
+        keys:
+        - yarn-packages-{{ checksum "yarn.lock" }}
+    - run:
+        name: Install yarn
+        command: |
+          sudo npm install -g yarn --quiet
+          yarn install --pure-lockfile
+    - run:
+        name: Run Toolkit Build
+        command: npx grafana-toolkit plugin:ci-build
+    - save_cache:
+        paths:
+        - node_modules
+        key: yarn-packages-{{ checksum "yarn.lock" }}
+    - persist_to_workspace:
+        root: .
+        paths:
+        - ci
+  build_docs:
+    docker:
+    - image: circleci/node:10
+    working_directory: ~/plugin
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - yarn-packages-{{ checksum "yarn.lock" }}
+    - run:
+        name: Install yarn
+        command: |
+          sudo npm install -g yarn --quiet
+          yarn install --pure-lockfile
+          mkdir ci # Avoid error if not exists
+    - run:
+        name: Build Docs
+        command: npx grafana-toolkit plugin:ci-docs
+    - save_cache:
+        paths:
+        - node_modules
+        key: yarn-packages-{{ checksum "yarn.lock" }}
+    - persist_to_workspace:
+        root: .
+        paths:
+        - ci
+  build_osx:
+    docker:
+    - image: circleci/node:10
+    working_directory: ~/plugin
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - yarn-packages-{{ checksum "yarn.lock" }}
+    - run:
+        name: Install yarn
+        command: |
+          sudo npm install -g yarn --quiet
+          yarn install --pure-lockfile
+    - run:
+        name: Run Toolkit CI
+        command: npx grafana-toolkit plugin:ci-build --backend osx
+    - save_cache:
+        paths:
+        - node_modules
+        key: yarn-packages-{{ checksum "yarn.lock" }}
+    - persist_to_workspace:
+        root: .
+        paths:
+        - ci/jobs/build_osx
+  build_win64:
+    docker:
+    - image: circleci/node:10
+    working_directory: ~/plugin
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - yarn-packages-{{ checksum "yarn.lock" }}
+    - run:
+        name: Install yarn
+        command: |
+          sudo npm install -g yarn --quiet
+          yarn install --pure-lockfile
+    - run:
+        name: Run Toolkit CI
+        command: npx grafana-toolkit plugin:ci-build --backend win64
+    - save_cache:
+        paths:
+        - node_modules
+        key: yarn-packages-{{ checksum "yarn.lock" }}
+    - persist_to_workspace:
+        root: .
+        paths:
+        - ci/jobs/build_win64
+  package:
+    docker:
+    - image: circleci/node:10
+    working_directory: ~/plugin
+    steps:
+    - checkout
+    - attach_workspace:
+        at: .
+    - restore_cache:
+        keys:
+        - yarn-packages-{{ checksum "yarn.lock" }}
+    - run:
+        name: Package Distribution
+        command: npx grafana-toolkit plugin:ci-package
+    - store_artifacts:
+        path: ci
+workflows:
+  version: 2
+  plugin_workflow:
+    jobs:
+    - build_plugin
+    - package:
+        requires:
+        - build_plugin
