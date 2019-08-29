@@ -1,8 +1,9 @@
 # Changelog
 
-
 ## v0.3.0
 
+- Fixes error handling that made everything disappear in edit mode, [#213](https://github.com/grafana/worldmap-panel/issues/213)
+- Fixes partial (not full height) map on first render [#212](https://github.com/grafana/worldmap-panel/issues/212)
 - Add new mapping options `table+json` and `table+jsonp` to retrieve
   location information from JSON endpoint, even for table data.
   The lookup key is the value obtained from the database field
@@ -54,6 +55,7 @@
 - Fix transformation machinery for data in timeseries format
 - Acquire location data again after being cleared out when hitting an empty dataset
 - Improve initialisation and refresh behaviour
+
 
 ## v0.2.0
 

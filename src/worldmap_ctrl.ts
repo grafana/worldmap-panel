@@ -10,6 +10,7 @@ import { WorldmapCore } from './core';
 import { WorldmapChrome } from './chrome';
 import { ErrorManager } from './errors';
 import DataFormatter from './data_formatter';
+import appEvents from 'grafana/app/core/app_events';
 
 const panelDefaults = {
   maxDataPoints: 1,
@@ -264,13 +265,16 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
      * Obtain data from the Grafana data source,
      * decode appropriately and render the map.
      */
-
     console.info('Data received:', dataList);
 
     // Is this the right place to indicate the plugin has been initialized?
     this.initializing = false;
 
     try {
+      if (this.dashboard.snapshot && this.locations) {
+        this.panel.snapshotLocationData = this.locations;
+      }
+
       this.processData(dataList);
 
       this.updateThresholdData();
@@ -280,9 +284,9 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       if (this.data.length && autoCenterMap) {
         this.updateMapCenter(false);
       }
-    } catch (e) {
-      this.errors.add(e, { domain: 'data' });
-      throw e;
+    } catch (err) {
+      this.errors.add(err, { domain: 'data' });
+      appEvents.emit('alert-error', ['Data error', err.toString()]);
     } finally {
       this.render();
     }
@@ -370,23 +374,22 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   link(scope, elem, attrs, ctrl) {
-    /*
-     * Hook the panel into the rendering phase.
-     */
+    let firstRender = true;
 
-    ctrl.events.on('render', ev => {
-      // Perform rendering.
+    ctrl.events.on('render', () => {
       render();
       ctrl.renderingCompleted();
-      console.info('Rendering panel completed');
-
-      // Propagate warnings and errors to tooltip in panel corner.
-      ctrl.propagateWarningsAndErrors();
     });
 
     function render() {
-      console.info('Rendering panel');
       if (!ctrl.data) {
+        return;
+      }
+
+      // delay first render as the map panel sizing is bugged first render even though the element has correct height
+      if (firstRender) {
+        firstRender = false;
+        setTimeout(render, 100);
         return;
       }
 
@@ -396,22 +399,23 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         return;
       }
 
-      console.info('Rendering map');
       if (!ctrl.map) {
-        // Create map.
         const map = new WorldMap(ctrl, mapContainer[0]);
         map.createMap();
         ctrl.map = map;
-
-        // When rendering the first time, make sure to signal `panToMapCenter()`.
-        ctrl.mapCenterMoved = true;
-
-        // Render the map the first time, timing-safe.
-        ctrl.map.renderMapFirst();
-      } else {
-        // Invoke regular map rendering.
-        ctrl.map.renderMap();
       }
+
+      ctrl.map.resize();
+
+      if (ctrl.mapCenterMoved) {
+        ctrl.map.panToMapCenter();
+      }
+
+      if (!ctrl.map.legend && ctrl.panel.showLegend) {
+        ctrl.map.createLegend();
+      }
+
+      ctrl.map.drawCircles();
     }
   }
 
