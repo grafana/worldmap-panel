@@ -2,6 +2,7 @@
 
 ## v0.3.0
 
+- Reflect move to "panodata" organization on GitHub
 - Fixes error handling that made everything disappear in edit mode, [#213](https://github.com/grafana/worldmap-panel/issues/213)
 - Fixes partial (not full height) map on first render [#212](https://github.com/grafana/worldmap-panel/issues/212)
 - Add new mapping options `table+json` and `table+jsonp` to retrieve

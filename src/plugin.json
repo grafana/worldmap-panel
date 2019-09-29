@@ -15,8 +15,8 @@
       "large": "images/worldmap_logo.svg"
     },
     "links": [
-      {"name": "Project site", "url": "https://github.com/hiveeyes/grafana-worldmap-panel"},
-      {"name": "MIT License", "url": "https://github.com/hiveeyes/grafana-worldmap-panel/blob/master/LICENSE"}
+      {"name": "Project site", "url": "https://github.com/panodata/grafana-worldmap-panel"},
+      {"name": "MIT License", "url": "https://github.com/panodata/grafana-worldmap-panel/blob/master/LICENSE"}
     ],
     "screenshots": [
       {"name": "World", "path": "images/worldmap-world.png"},
