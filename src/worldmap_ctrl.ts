@@ -284,10 +284,17 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       if (this.data.length && autoCenterMap) {
         this.updateMapCenter(false);
       }
+
     } catch (err) {
       this.errors.add(err, { domain: 'data' });
       appEvents.emit('alert-error', ['Data error', err.toString()]);
+
     } finally {
+
+      // Propagate warnings and errors to tooltip in panel corner.
+      this.propagateWarningsAndErrors();
+
+      // Trigger the rendering process.
       this.render();
     }
   }
