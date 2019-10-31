@@ -1,10 +1,16 @@
 # Changelog
 
+## development
+
+- Ignore "ci/" subfolder
+
+
 ## v0.5.0
 
 - Enable propagation of user warnings again
 - Reflect move to "panodata" organization on GitHub
 - Integrate "with-toolkit" by [Ryan McKinley](https://github.com/ryantxu). Thanks a bunch!
+
 
 ## v0.4.0
 
