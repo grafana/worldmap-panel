@@ -3,6 +3,7 @@
 ## development
 
 - Ignore "ci/" subfolder
+- Use "canary" variant of @grafana/toolkit. Thanks @dprokop!
 
 
 ## v0.5.0
