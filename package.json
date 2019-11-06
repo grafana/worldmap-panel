@@ -1,7 +1,7 @@
 {
-  "name": "worldmap-panel",
-  "version": "0.5.0",
-  "description": "Worldmap Panel Plugin for Grafana",
+  "name": "grafana-map-panel",
+  "version": "0.6.0",
+  "description": "Grafana Map Panel",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
@@ -9,10 +9,11 @@
     "watch": "grafana-toolkit plugin:dev --watch"
   },
   "keywords": [
-    "worldmap",
     "grafana",
+    "map",
+    "panel",
     "plugin",
-    "panel"
+    "worldmap"
   ],
   "author": "Grafana Labs",
   "license": "MIT",
@@ -23,7 +24,7 @@
     "@types/moment": "^2.13.0"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
-    "jquery": "^3.2.1"
+    "jquery": "^3.2.1",
+    "lodash": "^4.17.11"
   }
 }

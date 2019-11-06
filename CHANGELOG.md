@@ -4,6 +4,7 @@
 
 - Ignore "ci/" subfolder
 - Use "canary" variant of @grafana/toolkit. Thanks @dprokop!
+- Update plugin name to "grafana-map-panel"
 
 
 ## v0.5.0

@@ -1,10 +1,10 @@
 {
   "type": "panel",
-  "name": "Worldmap Panel",
-  "id": "grafana-worldmap-panel",
+  "name": "Grafana Map Panel",
+  "id": "grafana-map-panel",
 
   "info": {
-    "description": "World Map panel for Grafana. Displays time series data or geohash data on a world map.",
+    "description": "Grafana Map Panel. Displays time series data or geohash data on a world map.",
     "author": {
       "name": "Grafana Labs",
       "url": "https://grafana.com"
