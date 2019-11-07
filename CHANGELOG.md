@@ -1,6 +1,7 @@
 # Changelog
 
 ## development
+- Update yarn.lock
 
 
 ## v0.6.0
