@@ -2,7 +2,7 @@
 
 ## development
 - Update yarn.lock
-
+- Update documentation
 
 ## v0.6.0
 - Ignore "ci/" subfolder

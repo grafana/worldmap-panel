@@ -13,3 +13,9 @@ Grafana will read in the `dist` folder first so to see your changes in
 Grafana, you will have to build the plugin once. However, you do not 
 need to restart your local Grafana server after every change, just 
 refreshing the page will be sufficient.
+
+For packaging this plugin, invoke::
+
+    npx grafana-toolkit plugin:ci-package
+
+When this process succeeds, packages can be found within the `ci/packages/` folder.
