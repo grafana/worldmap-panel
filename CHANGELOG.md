@@ -1,6 +1,8 @@
 # Changelog
 
 ## development
+
+## v0.6.1
 - Update yarn.lock
 - Update documentation
 - Add Grafana 6.4.4 to CircleCI recipe
