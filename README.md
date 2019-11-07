@@ -1,4 +1,4 @@
-# Grafana Map Panel
+# Grafana Map Panel %VERSION%
 
 The Grafana Map Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or data in the Table format.
 
@@ -279,4 +279,4 @@ The threshold field also accepts 2 or more comma-separated values. For example, 
 
 ### CHANGELOG
 
-The latest changes can be found here: [CHANGELOG.md](https://github.com/grafana/worldmap-panel/blob/master/CHANGELOG.md)
+The latest changes can be found here: [CHANGELOG.md](https://github.com/panodata/grafana-map-panel/blob/master/CHANGELOG.md)

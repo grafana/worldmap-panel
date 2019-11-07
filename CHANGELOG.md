@@ -2,16 +2,24 @@
 
 ## development
 
+
+## v0.6.4
+- Update documentation
+
+
 ## v0.6.3
 - Remove ci/ directory from .gitignore again
 
+
 ## v0.6.2
 - Fix CircleCI recipe
+
 
 ## v0.6.1
 - Update yarn.lock
 - Update documentation
 - Add Grafana 6.4.4 to CircleCI recipe
+
 
 ## v0.6.0
 - Ignore "ci/" subfolder

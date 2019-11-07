@@ -1,7 +1,7 @@
 {
   "name": "grafana-map-panel",
-  "version": "0.6.1",
-  "description": "Grafana Map Panel",
+  "version": "0.6.4",
+  "description": "Map Panel",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
