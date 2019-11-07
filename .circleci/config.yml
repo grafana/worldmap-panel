@@ -265,10 +265,14 @@ workflows:
     - test_6_2_5:
         requires:
         - package
-    - test_6_3_0_beta1:
+    - test_6_3_6:
         requires:
         - package
+    - test_6_4_4:
+        requires:
+          - package
     - report:
         requires:
         - test_6_2_5
-        - test_6_3_0_beta1
+        - test_6_3_6
+        - test_6_4_4

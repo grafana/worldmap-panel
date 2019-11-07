@@ -2,6 +2,9 @@
 
 ## development
 
+## v0.6.2
+- Fix CircleCI recipe
+
 ## v0.6.1
 - Update yarn.lock
 - Update documentation
