@@ -3,6 +3,7 @@
 ## development
 - Update yarn.lock
 - Update documentation
+- Add Grafana 6.4.4 to CircleCI recipe
 
 ## v0.6.0
 - Ignore "ci/" subfolder

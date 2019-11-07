@@ -160,7 +160,7 @@ jobs:
         path: ci/jobs/test_6_2_5
     - store_artifacts:
         path: ci/jobs/test_6_2_5
-  test_6_3_0_beta1:
+  test_6_3_6:
     docker:
     - image: circleci/node:10-browsers
     working_directory: ~/plugin
@@ -174,9 +174,9 @@ jobs:
     - run:
         name: Setup Grafana (local install)
         command: |
-          wget https://dl.grafana.com/oss/release/grafana_6.3.0-beta1_amd64.deb
+          wget https://dl.grafana.com/oss/release/grafana_6.3.6_amd64.deb
           sudo apt-get install -y adduser libfontconfig1
-          sudo dpkg -i grafana_6.3.0-beta1_amd64.deb
+          sudo dpkg -i grafana_6.3.6_amd64.deb
           sudo apt-get install locate
           sudo updatedb
           sudo locate grafana
@@ -193,11 +193,49 @@ jobs:
     - persist_to_workspace:
         root: .
         paths:
-        - ci/jobs/test_6_3_0_beta1
+        - ci/jobs/test_6_3_6
     - store_test_results:
-        path: ci/jobs/test_6_3_0_beta1
+        path: ci/jobs/test_6_3_6
     - store_artifacts:
-        path: ci/jobs/test_6_3_0_beta1
+        path: ci/jobs/test_6_3_6
+  test_6_4_4:
+    docker:
+      - image: circleci/node:10-browsers
+    working_directory: ~/plugin
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Setup Grafana (local install)
+          command: |
+            wget https://dl.grafana.com/oss/release/grafana_6.4.4_amd64.deb
+            sudo apt-get install -y adduser libfontconfig1
+            sudo dpkg -i grafana_6.4.4_amd64.deb
+            sudo apt-get install locate
+            sudo updatedb
+            sudo locate grafana
+            sudo cat /etc/grafana/grafana.ini
+            sudo echo ------------------------
+            sudo cp ci/grafana-test-env/custom.ini /usr/share/grafana/conf/custom.ini
+            sudo cp ci/grafana-test-env/custom.ini /etc/grafana/grafana.ini
+            sudo service grafana-server start
+            sudo grafana-cli --version
+      - run:
+          name: Run e2e tests
+          command: |
+            npx grafana-toolkit plugin:ci-test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ci/jobs/test_6_4_4
+      - store_test_results:
+          path: ci/jobs/test_6_4_4
+      - store_artifacts:
+          path: ci/jobs/test_6_4_4
   report:
     docker:
     - image: circleci/node:10
