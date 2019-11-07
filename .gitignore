@@ -11,4 +11,3 @@ artifacts/
 .venv*
 bin/
 build/
-ci/

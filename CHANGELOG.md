@@ -2,6 +2,9 @@
 
 ## development
 
+## v0.6.3
+- Remove ci/ directory from .gitignore again
+
 ## v0.6.2
 - Fix CircleCI recipe
 
