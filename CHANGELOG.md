@@ -1,6 +1,8 @@
 # Changelog
 
 ## development
+- Improve tooltip error message if location data coming from
+  an external resource is invalid JSON (#19).
 
 
 ## v0.6.4

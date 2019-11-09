@@ -227,7 +227,11 @@ export class WorldmapCore {
 
   signalLocationRequestError(jqXHR, textStatus, errorThrown) {
     const message =
-      `Unable to load locations in JSON format from "${jqXHR.url}".\n` + `The response status was "${jqXHR.status} ${jqXHR.statusText}"`;
+      `Unable to load locations in JSON format from "${jqXHR.url}".\n` +
+      `  - The response status was \`${jqXHR.status} ${jqXHR.statusText}\`.\n` +
+      `  - The content type was \`${jqXHR.getResponseHeader('Content-Type')}\`.\n` +
+      `  - The error name was "${textStatus}".\n` +
+      `  - The full error was "${errorThrown}".`;
     this.signalLocationError(message);
   }
 }

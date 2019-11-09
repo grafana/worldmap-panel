@@ -89,7 +89,7 @@ export class ErrorManager {
     const messages: string[] = [];
     this.getAll().forEach(item => {
       const suffix = item.name && item.name !== 'Error' ? ` (${item.name})` : '';
-      const message = `- ${item.message}${suffix}.`;
+      const message = `- ${item.message}${suffix}`;
       messages.push(message);
     });
     return messages;
