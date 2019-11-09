@@ -1,6 +1,6 @@
 {
   "type": "panel",
-  "name": "Grafana Map Panel",
+  "name": "Map Panel",
   "id": "grafana-map-panel",
 
   "info": {

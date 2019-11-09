@@ -1,4 +1,4 @@
-# Grafana Map Panel %VERSION%
+# Grafana Map Panel
 
 The Grafana Map Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or data in the Table format.
 
