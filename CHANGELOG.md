@@ -1,6 +1,9 @@
 # Changelog
 
 ## development
+
+
+## v0.7.0
 - Improve tooltip error message if location data coming from
   an external resource is invalid JSON (#19).
 - Add `ci/` directory to `.gitignore` again
