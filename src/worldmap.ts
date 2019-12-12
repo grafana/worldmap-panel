@@ -337,6 +337,9 @@ export default class WorldMap {
   }
 
   panToMapCenter(options?: any) {
+
+    console.log('panToMapCenter');
+
     // Get a bunch of metadata from settings and data which
     // controls the map centering and zoom level.
     const mapDimensions = this.ctrl.settings.center;

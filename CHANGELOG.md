@@ -1,6 +1,7 @@
 # Changelog
 
 ## development
+- Fix "Fit to data" zooming (#25)
 
 
 ## v0.7.0

@@ -411,15 +411,16 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
       ctrl.map.resize();
 
-      if (ctrl.mapCenterMoved) {
-        ctrl.map.panToMapCenter();
-      }
-
       if (!ctrl.map.legend && ctrl.panel.showLegend) {
         ctrl.map.createLegend();
       }
 
       ctrl.map.drawCircles();
+
+      if (ctrl.mapCenterMoved) {
+        ctrl.map.panToMapCenter();
+      }
+
     }
   }
 
