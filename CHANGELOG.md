@@ -1,6 +1,9 @@
 # Changelog
 
 ## development
+
+
+## v0.8.0
 - Fix "Fit to data" zooming (#25)
 - Display multiple entries from the same location within single popup (#27).
 
