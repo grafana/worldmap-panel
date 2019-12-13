@@ -181,13 +181,26 @@ export default class WorldMap {
   createCircles(data) {
     console.log('createCircles: begin');
     const circles: any[] = [];
+    const circles_by_key = {};
     data.forEach(dataPoint => {
       // Todo: Review: Is a "locationName" really required
-      //  just for displaying a circle on a map?
+      //       just for displaying a circle on a map?
       if (!dataPoint.locationName) {
         return;
       }
-      circles.push(this.createCircle(dataPoint));
+      let circle;
+
+      // Create circle.
+      if (circles_by_key[dataPoint.key] == undefined) {
+        circle = this.createCircle(dataPoint);
+        circles_by_key[dataPoint.key] = circle;
+
+        // Amend popup content if circle has been created already.
+      } else {
+        circle = circles_by_key[dataPoint.key];
+        this.extendPopupContent(circle, dataPoint);
+      }
+      circles.push(circle);
     });
     this.circlesLayer = this.addCircles(circles);
     this.circles = circles;
@@ -195,26 +208,25 @@ export default class WorldMap {
   }
 
   updateCircles(data) {
+    const circles_by_key = {};
     data.forEach(dataPoint => {
+      // Todo: Review: Is a "locationName" really required
+      //       just for displaying a circle on a map?
       if (!dataPoint.locationName) {
         return;
       }
 
-      const circle = _.find(this.circles, cir => {
-        return cir.options.location === dataPoint.key;
-      });
+      // Update circle.
+      if (circles_by_key[dataPoint.key] == undefined) {
+        const circle = this.updateCircle(dataPoint);
+        if (circle) {
+          circles_by_key[dataPoint.key] = circle;
+        }
 
-      if (circle) {
-        circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
-        circle.setStyle({
-          color: this.getColor(dataPoint.value),
-          fillColor: this.getColor(dataPoint.value),
-          fillOpacity: 0.5,
-          location: dataPoint.key,
-        });
-        circle.unbindPopup();
-        this.createClickthrough(circle, dataPoint);
-        this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
+        // Amend popup content if circle has been updated already.
+      } else {
+        const circle = circles_by_key[dataPoint.key];
+        this.extendPopupContent(circle, dataPoint);
       }
     });
   }
@@ -231,8 +243,36 @@ export default class WorldMap {
     });
 
     this.createClickthrough(circle, dataPoint);
-    this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
+    const content = this.getPopupContent(dataPoint.locationName, dataPoint.valueRounded);
+    this.createPopup(circle, content);
     return circle;
+  }
+
+  updateCircle(dataPoint) {
+    // Find back circle object by data point key.
+    const circle = _.find(this.circles, cir => {
+      return cir.options.location === dataPoint.key;
+    });
+
+    if (circle) {
+      circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
+      circle.setStyle({
+        color: this.getColor(dataPoint.value),
+        fillColor: this.getColor(dataPoint.value),
+        fillOpacity: 0.5,
+        location: dataPoint.key,
+      });
+
+      // Re-create popup.
+      circle.unbindPopup();
+      const content = this.getPopupContent(dataPoint.locationName, dataPoint.valueRounded);
+      this.createPopup(circle, content);
+
+      // Re-create clickthrough-link.
+      this.createClickthrough(circle, dataPoint);
+
+      return circle;
+    }
   }
 
   calcCircleSize(dataPointValue) {
@@ -294,14 +334,7 @@ export default class WorldMap {
     }
   }
 
-  createPopup(circle, locationName, value) {
-    let unit;
-    if (_.isNaN(value)) {
-      value = 'n/a';
-    } else {
-      unit = value && value === 1 ? this.ctrl.settings.unitSingular : this.ctrl.settings.unitPlural;
-    }
-    const label = `${locationName}: ${value} ${unit || ''}`.trim();
+  createPopup(circle, label) {
     circle.bindPopup(label, {
       offset: (window as any).L.point(0, -2),
       className: 'worldmap-popup',
@@ -323,6 +356,24 @@ export default class WorldMap {
     }
   }
 
+  extendPopupContent(circle, dataPoint) {
+    const popup = circle.getPopup();
+    let popupContent = popup._content;
+    popupContent += `\n${this.getPopupContent(dataPoint.locationName, dataPoint.valueRounded)}`;
+    circle.setPopupContent(popupContent);
+  }
+
+  getPopupContent(locationName, value) {
+    let unit;
+    if (_.isNaN(value)) {
+      value = 'n/a';
+    } else {
+      unit = value && value === 1 ? this.ctrl.settings.unitSingular : this.ctrl.settings.unitPlural;
+    }
+    const label = `${locationName}: ${value} ${unit || ''}`.trim();
+    return label;
+  }
+
   getColor(value) {
     for (let index = this.ctrl.data.thresholds.length; index > 0; index -= 1) {
       if (value >= this.ctrl.data.thresholds[index - 1]) {
@@ -337,7 +388,6 @@ export default class WorldMap {
   }
 
   panToMapCenter(options?: any) {
-
     console.log('panToMapCenter');
 
     // Get a bunch of metadata from settings and data which

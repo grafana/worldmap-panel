@@ -420,7 +420,6 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       if (ctrl.mapCenterMoved) {
         ctrl.map.panToMapCenter();
       }
-
     }
   }
 
