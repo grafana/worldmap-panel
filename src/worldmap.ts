@@ -193,6 +193,7 @@ export default class WorldMap {
       // Create circle.
       if (circles_by_key[dataPoint.key] == undefined) {
         circle = this.createCircle(dataPoint);
+        circles.push(circle);
         circles_by_key[dataPoint.key] = circle;
 
         // Amend popup content if circle has been created already.
@@ -200,7 +201,6 @@ export default class WorldMap {
         circle = circles_by_key[dataPoint.key];
         this.extendPopupContent(circle, dataPoint);
       }
-      circles.push(circle);
     });
     this.circlesLayer = this.addCircles(circles);
     this.circles = circles;

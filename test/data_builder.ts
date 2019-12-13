@@ -35,6 +35,8 @@ export default class DataBuilder {
         value: value,
         valueRounded: value,
       };
+    } else {
+      throw new Error(`Unable to create fixture for country code ${countryCode}`);
     }
     this.data.push(dataPoint);
 

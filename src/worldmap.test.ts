@@ -345,6 +345,49 @@ describe('Worldmap', () => {
     });
   });
 
+  describe('when the data has two points at the same spot', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .withCountryAndValue('SE', 2)
+        .build();
+      worldMap.drawCircles();
+    });
+
+    it('should draw just one circle on the map', () => {
+      expect(worldMap.circles.length).toBe(1);
+    });
+
+    it('should create a single circle popup with both data point values', () => {
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden: 1\nSweden: 2');
+    });
+  });
+
+  describe('when the data is updated with two points at the same spot', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .withCountryAndValue('IE', 1)
+        .build();
+      worldMap.drawCircles();
+
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .withCountryAndValue('IE', 1)
+        .withCountryAndValue('SE', 2)
+        .build();
+      worldMap.drawCircles();
+    });
+
+    it('should draw just one circle on the map', () => {
+      expect(worldMap.circles.length).toBe(2);
+    });
+
+    it('should create a single circle popup with both data point values', () => {
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden: 1\nSweden: 2');
+    });
+  });
+
   afterEach(() => {
     const fixture: HTMLElement = document.getElementById('fixture')!;
     document.body.removeChild(fixture);
