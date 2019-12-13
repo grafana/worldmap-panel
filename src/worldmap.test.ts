@@ -1,13 +1,22 @@
-import WorldMap from './worldmap';
 import DataBuilder from '../test/data_builder';
+import {createBasicMap} from '../test/map_builder';
 import $ from 'jquery';
 
+
 describe('Worldmap', () => {
+
   let worldMap;
   let ctrl;
 
   beforeEach(() => {
-    setupWorldmapFixture();
+    worldMap = createBasicMap();
+    ctrl = worldMap.ctrl;
+    worldMap.createMap();
+  });
+
+  afterEach(() => {
+    const fixture: HTMLElement = document.getElementById('fixture')!;
+    document.body.removeChild(fixture);
   });
 
   describe('when a Worldmap is created', () => {
@@ -388,49 +397,18 @@ describe('Worldmap', () => {
     });
   });
 
-  afterEach(() => {
-    const fixture: HTMLElement = document.getElementById('fixture')!;
-    document.body.removeChild(fixture);
-  });
-
-  function setupWorldmapFixture() {
-    const fixture = '<div id="fixture" class="mapcontainer"></div>';
-    document.body.insertAdjacentHTML('afterbegin', fixture);
-
-    ctrl = {
-      panel: {
-        center: {
-          mapCenterLatitude: 0,
-          mapCenterLongitude: 0,
-          initialZoom: 1,
-        },
-        colors: ['red', 'blue', 'green'],
-        circleOptions: {},
-      },
-      tileServer: 'CartoDB Positron',
-    };
-
-    // This mimics the `ctrl.panel` proxying established
-    // by `PluginSettings` to make the tests happy.
-    // Todo: Don't worry, this will go away.
-    ctrl.settings = ctrl.panel;
-
-    worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
-    worldMap.createMap();
-  }
 });
 
 describe('WorldmapFoundation', () => {
   /*
-   * Optimizations for small maps
-   *
-   * In order to test the `createMap()` method,
-   * we need to pass a half-configured `WorldMap`
+   * In order to individually configure the map before the `createMap()`
+   * method will be invoked, we need to pass a half-configured `WorldMap`
    * instance into the test cases.
    *
    * We are testing the "showZoomControl" and "showAttribution"
    * options here to proof they actually toggle the visibility
-   * of the respective control elements.
+   * of the respective control elements. These have been introduced
+   * to optimize Worldmap for small maps.
    *
    * See also https://community.hiveeyes.org/t/grafana-worldmap-panel-ng/1824/3
    */
@@ -439,7 +417,13 @@ describe('WorldmapFoundation', () => {
   let ctrl;
 
   beforeEach(() => {
-    setupWorldmapHalfFixture();
+    worldMap = createBasicMap();
+    ctrl = worldMap.ctrl;
+  });
+
+  afterEach(() => {
+    const fixture: HTMLElement = document.getElementById('fixture')!;
+    document.body.removeChild(fixture);
   });
 
   describe('when a Worldmap is created with default parameters', () => {
@@ -476,35 +460,4 @@ describe('WorldmapFoundation', () => {
     });
   });
 
-  afterEach(() => {
-    const fixture: HTMLElement = document.getElementById('fixture')!;
-    document.body.removeChild(fixture);
-  });
-
-  function setupWorldmapHalfFixture() {
-    const fixture = '<div id="fixture" class="mapcontainer"></div>';
-    document.body.insertAdjacentHTML('afterbegin', fixture);
-
-    ctrl = {
-      panel: {
-        center: {
-          mapCenterLatitude: 0,
-          mapCenterLongitude: 0,
-          initialZoom: 1,
-        },
-        colors: ['red', 'blue', 'green'],
-        circleOptions: {},
-        showZoomControl: true,
-        showAttribution: true,
-      },
-      tileServer: 'CartoDB Positron',
-    };
-
-    // This mimics the `ctrl.panel` proxying established
-    // by `PluginSettings` to make the tests happy.
-    // Todo: Don't worry, this will go away.
-    ctrl.settings = ctrl.panel;
-
-    worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
-  }
 });
