@@ -111,6 +111,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.errors = new ErrorManager();
     this.errors.registerDomains('data', 'location');
 
+    this.settings = undefined;
     this.loadSettings();
 
     this.core = new WorldmapCore(this);

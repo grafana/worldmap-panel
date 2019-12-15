@@ -325,7 +325,7 @@ export default class WorldMap {
     if (linkUrl) {
       const clickthroughOptions = this.ctrl.settings.clickthroughOptions;
       circle.on('click', evt => {
-        if (clickthroughOptions.windowName) {
+        if (clickthroughOptions && clickthroughOptions.windowName) {
           window.open(linkUrl, clickthroughOptions.windowName);
         } else {
           window.location.assign(linkUrl);

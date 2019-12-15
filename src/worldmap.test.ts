@@ -1,6 +1,8 @@
 import DataBuilder from '../test/data_builder';
 import {createBasicMap} from '../test/map_builder';
 import $ from 'jquery';
+import PluginSettings from "./settings";
+import { TemplateSrv } from 'grafana/app/features/templating/template_srv';
 
 
 describe('Worldmap', () => {
@@ -458,6 +460,111 @@ describe('WorldmapFoundation', () => {
     it('the element should not be present in DOM', () => {
       expect(document.getElementsByClassName('leaflet-control-attribution')[0]).toBeUndefined();
     });
+  });
+
+});
+
+
+describe('ClickthroughLinks', () => {
+  /*
+   * These tests proof the clickthrough link works.
+   *
+   * See also https://community.hiveeyes.org/t/developing-grafana-worldmap-ng/1824/13
+   */
+
+  let worldMap;
+  let ctrl;
+
+  // https://github.com/grafana/grafana/blob/v6.5.2/public/app/plugins/datasource/loki/datasource.test.ts#L28-L31
+  const templateSrvMock = ({
+    getAdhocFilters: (): any[] => [],
+    replace: (a: string) => a,
+  } as unknown) as TemplateSrv;
+
+  beforeEach(() => {
+    worldMap = createBasicMap();
+    ctrl = worldMap.ctrl;
+    //ctrl.loadSettings();
+  });
+
+  afterEach(() => {
+    const fixture: HTMLElement = document.getElementById('fixture')!;
+    document.body.removeChild(fixture);
+  });
+
+  describe('when a Worldmap is created with clickthrough-links enabled', () => {
+    beforeEach(() => {
+
+      // Create map.
+      ctrl.panel.clickthroughUrl = 'http://foo.bar';
+      ctrl.settings = new PluginSettings(ctrl.panel, templateSrvMock, {});
+      worldMap.createMap();
+
+      // Load data and draw circles.
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .build();
+      worldMap.drawCircles();
+
+    });
+
+    it('should have registered a second click event', () => {
+      expect(worldMap.circles.length).toBe(1);
+      expect(worldMap.circles[0]._events.click.length).toBe(2);
+    });
+
+    it('should do its job when actually clicked', () => {
+
+      // Setup interaction mock for "window.location.assign".
+      // https://remarkablemark.org/blog/2018/11/17/mock-window-location/
+      Object.defineProperty(window.location, 'assign', {
+        configurable: true,
+      });
+      window.location.assign = jest.fn();
+
+      // Capture interaction.
+      worldMap.circles[0].fire('click');
+      expect(window.location.assign).toHaveBeenCalledWith('http://foo.bar');
+    });
+
+  });
+
+  describe('when a Worldmap is created with clickthrough-links enabled to another window', () => {
+    beforeEach(() => {
+
+      // Create map.
+      ctrl.panel.clickthroughUrl = 'http://foo.bar';
+      ctrl.panel.clickthroughOptions = {windowName: 'test' };
+      ctrl.settings = new PluginSettings(ctrl.panel, templateSrvMock, {});
+      worldMap.createMap();
+
+      // Load data and draw circles.
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .build();
+      worldMap.drawCircles();
+
+    });
+
+    it('should have registered a second click event', () => {
+      expect(worldMap.circles.length).toBe(1);
+      expect(worldMap.circles[0]._events.click.length).toBe(2);
+    });
+
+    it('should do its job when actually clicked', () => {
+
+      // Setup interaction mock for "window.open".
+      // https://remarkablemark.org/blog/2018/11/17/mock-window-location/
+      Object.defineProperty(window, 'open', {
+        configurable: true,
+      });
+      window.open = jest.fn();
+
+      // Capture interaction.
+      worldMap.circles[0].fire('click');
+      expect(window.open).toHaveBeenCalledWith('http://foo.bar', 'test');
+    });
+
   });
 
 });
