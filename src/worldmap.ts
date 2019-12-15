@@ -181,7 +181,7 @@ export default class WorldMap {
   createCircles(data) {
     console.log('createCircles: begin');
     const circles: any[] = [];
-    const circles_by_key = {};
+    const circlesByKey = {};
     data.forEach(dataPoint => {
       // Todo: Review: Is a "locationName" really required
       //       just for displaying a circle on a map?
@@ -190,15 +190,14 @@ export default class WorldMap {
       }
       let circle;
 
-      // Create circle.
-      if (circles_by_key[dataPoint.key] == undefined) {
+      if (circlesByKey[dataPoint.key] === undefined) {
+        // Create circle.
         circle = this.createCircle(dataPoint);
         circles.push(circle);
-        circles_by_key[dataPoint.key] = circle;
-
-        // Amend popup content if circle has been created already.
+        circlesByKey[dataPoint.key] = circle;
       } else {
-        circle = circles_by_key[dataPoint.key];
+        // Amend popup content if circle has been created already.
+        circle = circlesByKey[dataPoint.key];
         this.extendPopupContent(circle, dataPoint);
       }
     });
@@ -208,7 +207,7 @@ export default class WorldMap {
   }
 
   updateCircles(data) {
-    const circles_by_key = {};
+    const circlesByKey = {};
     data.forEach(dataPoint => {
       // Todo: Review: Is a "locationName" really required
       //       just for displaying a circle on a map?
@@ -216,16 +215,15 @@ export default class WorldMap {
         return;
       }
 
-      // Update circle.
-      if (circles_by_key[dataPoint.key] == undefined) {
+      if (circlesByKey[dataPoint.key] === undefined) {
+        // Update circle.
         const circle = this.updateCircle(dataPoint);
         if (circle) {
-          circles_by_key[dataPoint.key] = circle;
+          circlesByKey[dataPoint.key] = circle;
         }
-
-        // Amend popup content if circle has been updated already.
       } else {
-        const circle = circles_by_key[dataPoint.key];
+        // Amend popup content if circle has been updated already.
+        const circle = circlesByKey[dataPoint.key];
         this.extendPopupContent(circle, dataPoint);
       }
     });
