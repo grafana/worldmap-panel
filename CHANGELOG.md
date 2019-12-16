@@ -1,7 +1,7 @@
 # Changelog
 
 ## development
-
+- Fix CircleCI reporting. Thanks, @ryantxu!
 
 ## v0.8.0
 - Fix "Fit to data" zooming (#25)
