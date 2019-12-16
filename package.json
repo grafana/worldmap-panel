@@ -18,7 +18,7 @@
   "author": "Grafana Labs",
   "license": "MIT",
   "devDependencies": {
-    "@grafana/toolkit": "canary",
+    "@grafana/toolkit": "next",
     "@types/grafana": "https://git@github.com/CorpGlory/types-grafana.git",
     "@types/lodash": "^4.14.118",
     "@types/moment": "^2.13.0"
