@@ -169,8 +169,14 @@ describe('DataFormatter', () => {
         panel: {
           valueName: 'total',
         },
-        locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }, { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 }],
-        series: [{ alias: 'IE', datapoints: [1, 2], stats: { total: 3 } }, { alias: 'SE', datapoints: [2, 3], stats: { total: 5 } }],
+        locations: [
+          { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 },
+          { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 },
+        ],
+        series: [
+          { alias: 'IE', datapoints: [1, 2], stats: { total: 3 } },
+          { alias: 'SE', datapoints: [2, 3], stats: { total: 5 } },
+        ],
       });
       dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
@@ -197,8 +203,14 @@ describe('DataFormatter', () => {
         panel: {
           valueName: 'total',
         },
-        locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }, { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 }],
-        series: [{ alias: 'ie', datapoints: [1, 2], stats: { total: 3 } }, { alias: 'se', datapoints: [2, 3], stats: { total: 5 } }],
+        locations: [
+          { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 },
+          { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 },
+        ],
+        series: [
+          { alias: 'ie', datapoints: [1, 2], stats: { total: 3 } },
+          { alias: 'se', datapoints: [2, 3], stats: { total: 5 } },
+        ],
       });
       dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
@@ -226,7 +238,10 @@ describe('DataFormatter', () => {
           valueName: 'total',
         },
         locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }],
-        series: [{ alias: 'SX', datapoints: [1, 2], stats: { total: 3 } }, { alias: 'IE', datapoints: [1, 2], stats: { total: 3 } }],
+        series: [
+          { alias: 'SX', datapoints: [1, 2], stats: { total: 3 } },
+          { alias: 'IE', datapoints: [1, 2], stats: { total: 3 } },
+        ],
       });
       dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setTimeseriesValues(ctrl.series, formattedData);
@@ -245,7 +260,10 @@ describe('DataFormatter', () => {
             valueName: 'total',
             decimals: 2,
           },
-          locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }, { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 }],
+          locations: [
+            { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 },
+            { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 },
+          ],
           series: [
             { alias: 'IE', datapoints: [1.11, 2.22], stats: { total: 3.33 } },
             { alias: 'SE', datapoints: [2.221, 3.331], stats: { total: 5.552 } },
@@ -267,7 +285,10 @@ describe('DataFormatter', () => {
             valueName: 'total',
             decimals: '2',
           },
-          locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }, { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 }],
+          locations: [
+            { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 },
+            { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 },
+          ],
           series: [
             { alias: 'IE', datapoints: [1.11, 2.22], stats: { total: 3.33 } },
             { alias: 'SE', datapoints: [2.221, 3.331], stats: { total: 5.552 } },

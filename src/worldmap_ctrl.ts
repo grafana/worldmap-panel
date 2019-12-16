@@ -251,7 +251,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     console.info('Refreshing panel. initializing=', this.initializing);
     this.errors.reset('data');
 
-    if (!this.loading && !this.initializing && (_.isEmpty(this.locations) && _.isEmpty(this.panel.snapshotLocationData))) {
+    if (!this.loading && !this.initializing && _.isEmpty(this.locations) && _.isEmpty(this.panel.snapshotLocationData)) {
       this.loadLocationData(true);
     }
   }
