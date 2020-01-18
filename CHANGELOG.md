@@ -1,8 +1,12 @@
 # Changelog
 
 ## development
+
+
+## v0.8.1
 - Fix CircleCI reporting. Thanks, @ryantxu!
 - Add South Sudan to ``countries*.json``. Thanks, @Hipska and @javl!
+
 
 ## v0.8.0
 - Fix "Fit to data" zooming (#25)
