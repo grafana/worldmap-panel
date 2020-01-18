@@ -1254,6 +1254,12 @@
     "name": "Suriname"
   },
   {
+    "key": "SS",
+    "latitude": 6.876992,
+    "longitude": 31.306978,
+    "name": "South Sudan"
+  },
+  {
     "key": "ST",
     "latitude": 0.18636,
     "longitude": 6.613081,
