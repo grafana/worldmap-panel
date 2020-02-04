@@ -45,6 +45,7 @@ export default class WorldMap {
       zoom: parseInt(this.ctrl.panel.initialZoom, 10) || 1,
     });
     this.setMouseWheelZoom();
+    this.setDragging();
 
     const selectedTileServer = tileServers[this.ctrl.tileServer];
     (<any>window).L.tileLayer(selectedTileServer.url, {
@@ -238,6 +239,14 @@ export default class WorldMap {
       this.map.scrollWheelZoom.disable();
     } else {
       this.map.scrollWheelZoom.enable();
+    }
+  }
+
+  setDragging() {
+    if (!this.ctrl.panel.dragging) {
+      this.map.dragging.disable();
+    } else {
+      this.map.dragging.enable();
     }
   }
 

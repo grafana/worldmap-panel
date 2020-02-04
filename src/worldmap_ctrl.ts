@@ -29,6 +29,7 @@ const panelDefaults = {
   unitPlural: "",
   showLegend: true,
   mouseWheelZoom: false,
+  dragging: false,
   esMetric: "Count",
   decimals: 0,
   hideEmpty: false,
@@ -262,6 +263,11 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
   toggleMouseWheelZoom() {
     this.map.setMouseWheelZoom();
+    this.render();
+  }
+
+  toggleDragging() {
+    this.map.setDragging();
     this.render();
   }
 
