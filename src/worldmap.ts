@@ -47,6 +47,8 @@ export default class WorldMap {
       attributionControl: this.ctrl.settings.showAttribution,
     });
     this.setMouseWheelZoom();
+    this.setDragging();
+    this.setDoubleClickZoom();
 
     const selectedTileServer = tileServers[this.ctrl.tileServer];
     (window as any).L.tileLayer(selectedTileServer.url, {
@@ -442,6 +444,22 @@ export default class WorldMap {
       this.map.scrollWheelZoom.disable();
     } else {
       this.map.scrollWheelZoom.enable();
+    }
+  }
+
+  setDragging() {
+    if (!this.ctrl.settings.dragging) {
+      this.map.dragging.disable();
+    } else {
+      this.map.dragging.enable();
+    }
+  }
+
+  setDoubleClickZoom() {
+    if (!this.ctrl.settings.doubleClickZoom) {
+      this.map.doubleClickZoom.disable();
+    } else {
+      this.map.doubleClickZoom.enable();
     }
   }
 
