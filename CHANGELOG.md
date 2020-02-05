@@ -3,6 +3,10 @@
 ## development
 
 
+## v0.9.0
+- Add a toggle to disable panning/dragging on the map. Thanks, @gdunstone.
+
+
 ## v0.8.1
 - Fix CircleCI reporting. Thanks, @ryantxu!
 - Add South Sudan to ``countries*.json``. Thanks, @Hipska and @javl!
