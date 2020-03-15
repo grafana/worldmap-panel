@@ -163,6 +163,46 @@ describe('DataFormatter', () => {
     });
   });
 
+  describe('when some fields are given in table data', () => {
+
+    const data: any[] = [];
+
+    beforeEach(() => {
+
+      jQuery.extend(ctrl, {
+        panel: {
+          tableQueryOptions: {
+          },
+        },
+      });
+
+      const tableData = [
+        [
+          {
+            foo: "42.42",
+            bar: 42.42,
+          },
+          {
+            foo: "43.43",
+            bar: 43.43,
+          },
+        ],
+      ];
+
+      const dataFormatter = new DataFormatter(ctrl);
+      dataFormatter.setTableValues(tableData, data);
+
+    });
+
+    it('the fields should be available within transformed data', () => {
+      expect(data[0].__field_foo).toEqual("42.42");
+      expect(data[0].__field_bar).toEqual(42.42);
+      expect(data[1].__field_foo).toEqual("43.43");
+      expect(data[1].__field_bar).toEqual(43.43);
+    });
+
+  });
+
   describe('when the time series data matches the location', () => {
     beforeEach(() => {
       jQuery.extend(ctrl, {

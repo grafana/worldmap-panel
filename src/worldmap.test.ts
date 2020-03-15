@@ -3,6 +3,7 @@ import { createBasicMap } from '../test/map_builder';
 import $ from 'jquery';
 import PluginSettings from './settings';
 import { TemplateSrv } from 'grafana/app/features/templating/template_srv';
+import DataFormatter from "./data_formatter";
 
 describe('Worldmap', () => {
   let worldMap;
@@ -488,9 +489,21 @@ describe('ClickthroughLinks', () => {
   let ctrl;
 
   // https://github.com/grafana/grafana/blob/v6.5.2/public/app/plugins/datasource/loki/datasource.test.ts#L28-L31
+  // https://github.com/grafana/grafana/blob/v6.5.2/public/app/features/templating/template_srv.ts#L261
+  const variableRegex = /\$(\w+)|\[\[([\s\S]+?)(?::(\w+))?\]\]|\${(\w+)(?:\.([^:^\}]+))?(?::(\w+))?}/g;
   const templateSrvMock = ({
     getAdhocFilters: (): any[] => [],
-    replace: (a: string) => a,
+    replace: (target: any, scopedVars?: any, format?: any) => {
+      return target.replace(variableRegex, (match, var1, var2, fmt2, var3, fieldPath, fmt3) => {
+        const variableName = var1 || var2 || var3;
+        if (scopedVars[variableName]) {
+          const value = scopedVars[variableName].value;
+          if (value !== null && value !== undefined) {
+            return value;
+          }
+        }
+      })
+    },
   } as unknown) as TemplateSrv;
 
   beforeEach(() => {
@@ -562,4 +575,74 @@ describe('ClickthroughLinks', () => {
     });
 
   });
+
+  describe('when using fields with clickthrough-links on table data', () => {
+    beforeEach(() => {
+
+      // Create map.
+      ctrl.panel.clickthroughUrl = 'http://foo.bar/?foo=$__field_foo&value=$value';
+
+      ctrl.panel.tableQueryOptions = {
+        queryType: 'coordinates',
+        latitudeField: 'latitude',
+        longitudeField: 'longitude',
+        metricField: 'metric',
+        labelField: 'name',
+        labelLocationKeyField: 'key',
+        linkField: null,
+      };
+
+      // Load settings and create map.
+      ctrl.settings = new PluginSettings(ctrl.panel, templateSrvMock, {});
+      worldMap.createMap();
+
+      // Define fixture.
+      const tableData = [
+        [
+          {
+            key: 'SE',
+            name: 'Sweden',
+            latitude: 60,
+            longitude: 18,
+            metric: 123.456,
+
+            foo: "42.42",
+            bar: 42.42,
+          },
+          {
+            key: 'IE',
+            name: 'Ireland',
+            latitude: 53,
+            longitude: 8,
+            metric: 45.678,
+
+            foo: "43.43",
+            bar: 43.43,
+          },
+        ],
+      ];
+
+      // Apply data as table format.
+      const dataFormatter = new DataFormatter(ctrl);
+      const data: any[] = [];
+      dataFormatter.setTableValues(tableData, data);
+      data.thresholds = [];
+
+      // Draw circles.
+      ctrl.data = data;
+      worldMap.drawCircles();
+
+    });
+
+    it('the fields within transformed data should interpolate well into clickthrough links', () => {
+      // Prepare interaction with window object.
+      setupInteractionMocks();
+
+      // Capture interaction.
+      worldMap.circles[0].fire('click');
+      expect(window.location.assign).toHaveBeenCalledWith('http://foo.bar/?foo=42.42&value=123.456');
+    });
+
+  });
+
 });

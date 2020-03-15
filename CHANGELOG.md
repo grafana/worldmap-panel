@@ -1,6 +1,7 @@
 # Changelog
 
 ## development
+- Improve tests for checking "clickthroughUrl" interpolation
 
 
 ## v0.9.0
