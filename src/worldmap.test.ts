@@ -460,9 +460,26 @@ describe('WorldmapFoundation', () => {
   });
 });
 
+function setupInteractionMocks() {
+
+  // Setup interaction mock for "window.location.assign".
+  // https://remarkablemark.org/blog/2018/11/17/mock-window-location/
+  Object.defineProperty(window.location, 'assign', {
+    configurable: true,
+  });
+  window.location.assign = jest.fn();
+
+  // Setup interaction mock for "window.open".
+  Object.defineProperty(window, 'open',{
+    configurable: true,
+  });
+  window.open = jest.fn();
+
+}
+
 describe('ClickthroughLinks', () => {
   /*
-   * These tests proof the clickthrough link works.
+   * These tests proof that "clickthrough links" work.
    *
    * See also https://community.hiveeyes.org/t/developing-grafana-worldmap-ng/1824/13
    */
@@ -505,17 +522,15 @@ describe('ClickthroughLinks', () => {
     });
 
     it('should do its job when actually clicked', () => {
-      // Setup interaction mock for "window.location.assign".
-      // https://remarkablemark.org/blog/2018/11/17/mock-window-location/
-      Object.defineProperty(window.location, 'assign', {
-        configurable: true,
-      });
-      window.location.assign = jest.fn();
+
+      // Prepare interaction with window object.
+      setupInteractionMocks();
 
       // Capture interaction.
       worldMap.circles[0].fire('click');
       expect(window.location.assign).toHaveBeenCalledWith('http://foo.bar');
     });
+
   });
 
   describe('when a Worldmap is created with clickthrough-links enabled to another window', () => {
@@ -537,16 +552,14 @@ describe('ClickthroughLinks', () => {
     });
 
     it('should do its job when actually clicked', () => {
-      // Setup interaction mock for "window.open".
-      // https://remarkablemark.org/blog/2018/11/17/mock-window-location/
-      Object.defineProperty(window, 'open', {
-        configurable: true,
-      });
-      window.open = jest.fn();
+
+      // Prepare interaction with window object.
+      setupInteractionMocks();
 
       // Capture interaction.
       worldMap.circles[0].fire('click');
       expect(window.open).toHaveBeenCalledWith('http://foo.bar', 'test');
     });
+
   });
 });

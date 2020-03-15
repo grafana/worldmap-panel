@@ -18,7 +18,7 @@ refreshing the page will be sufficient.
 2. Bundle plugin in dev mode: `npx yarn dev`
 3. Bundle plugin in dev mode and start a watcher: `npx yarn watch`
 4. Run the tests before submitting a PR: `npx yarn test`
-
+5. Run specific tests: `npx yarn test --testNamePattern "when some fields"`
 
 # Building the Grafana Map Panel
 1. Install packages: `npx yarn install`
