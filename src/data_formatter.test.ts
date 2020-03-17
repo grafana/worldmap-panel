@@ -344,7 +344,97 @@ describe('DataFormatter', () => {
     });
   });
 
+  describe('when elasticsearch geohash query result is in table format', () => {
+
+    const data: any[] = [];
+
+    beforeEach(() => {
+
+      jQuery.extend(ctrl, {
+        panel: {
+          esGeoPoint: 'geopoint',
+          esMetric: 'metric',
+          //esLocationName: 'location',
+          //esLink: 'link',
+        },
+      });
+
+      const esdata = [
+        {
+          'type': 'table',
+          'columns': [
+            {text: 'geopoint'},
+            {text: 'metric'},
+          ],
+          'rows': [
+            [
+              'u0wt6pv2qqhz',
+              123.45,
+            ],
+            [
+              'u33dbm6duz90',
+              67.890,
+            ],
+          ],
+        },
+      ];
+
+      const dataFormatter = new DataFormatter(ctrl);
+      dataFormatter.setGeohashValues(esdata, data);
+
+    });
+
+    it('the fields should be available within transformed data', () => {
+      expect(data[0].value).toEqual(123.45);
+      expect(data[1].value).toEqual(67.890);
+    });
+
+  });
+
+  describe('when elasticsearch geohash query result is in timeseries format', () => {
+
+    const data: any[] = [];
+
+    beforeEach(() => {
+
+      jQuery.extend(ctrl, {
+        panel: {
+          esGeoPoint: 'geopoint',
+          esMetric: 'metric',
+          //esLocationName: 'location',
+          //esLink: 'link',
+        },
+      });
+
+      const esdata = [
+        {
+          'datapoints': [
+            {
+              geopoint: 'u0wt6pv2qqhz',
+              metric: 123.45,
+            },
+            {
+              geopoint: 'u33dbm6duz90',
+              metric: 67.890,
+            },
+          ],
+        },
+      ];
+
+      const dataFormatter = new DataFormatter(ctrl);
+      dataFormatter.setGeohashValues(esdata, data);
+
+    });
+
+    it('the fields should be available within transformed data', () => {
+      expect(data[0].value).toEqual(123.45);
+      expect(data[1].value).toEqual(67.890);
+    });
+
+  });
+
   afterEach(() => {
     formattedData = [];
   });
+
 });

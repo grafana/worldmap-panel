@@ -2,6 +2,7 @@
 
 ## development
 - Improve tests for checking "clickthroughUrl" interpolation
+- Add tests for elasticsearch query results, both for table- and timeseries-data
 
 
 ## v0.9.0
