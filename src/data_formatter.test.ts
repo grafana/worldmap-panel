@@ -164,26 +164,23 @@ describe('DataFormatter', () => {
   });
 
   describe('when some fields are given in table data', () => {
-
     const data: any[] = [];
 
     beforeEach(() => {
-
       jQuery.extend(ctrl, {
         panel: {
-          tableQueryOptions: {
-          },
+          tableQueryOptions: {},
         },
       });
 
       const tableData = [
         [
           {
-            foo: "42.42",
+            foo: '42.42',
             bar: 42.42,
           },
           {
-            foo: "43.43",
+            foo: '43.43',
             bar: 43.43,
           },
         ],
@@ -191,16 +188,14 @@ describe('DataFormatter', () => {
 
       const dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setTableValues(tableData, data);
-
     });
 
     it('the fields should be available within transformed data', () => {
-      expect(data[0].__field_foo).toEqual("42.42");
+      expect(data[0].__field_foo).toEqual('42.42');
       expect(data[0].__field_bar).toEqual(42.42);
-      expect(data[1].__field_foo).toEqual("43.43");
+      expect(data[1].__field_foo).toEqual('43.43');
       expect(data[1].__field_bar).toEqual(43.43);
     });
-
   });
 
   describe('when the time series data matches the location', () => {
@@ -345,11 +340,9 @@ describe('DataFormatter', () => {
   });
 
   describe('when elasticsearch geohash query result is in table format', () => {
-
     const data: any[] = [];
 
     beforeEach(() => {
-
       jQuery.extend(ctrl, {
         panel: {
           esGeoPoint: 'geopoint',
@@ -361,52 +354,33 @@ describe('DataFormatter', () => {
 
       const esdata = [
         {
-          'type': 'table',
-          'columns': [
-            {text: 'geopoint'},
-            {text: 'metric'},
-            {text: 'foo'},
-            {text: 'bar'},
-          ],
-          'rows': [
-            [
-              'u0wt6pv2qqhz',
-              123.45,
-              "42.42",
-              42.42,
-            ],
-            [
-              'u33dbm6duz90',
-              67.890,
-              "43.43",
-              43.43,
-            ],
+          type: 'table',
+          columns: [{ text: 'geopoint' }, { text: 'metric' }, { text: 'foo' }, { text: 'bar' }],
+          rows: [
+            ['u0wt6pv2qqhz', 123.45, '42.42', 42.42],
+            ['u33dbm6duz90', 67.89, '43.43', 43.43],
           ],
         },
       ];
 
       const dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setGeohashValues(esdata, data);
-
     });
 
     it('the fields should be available within transformed data', () => {
       expect(data[0].value).toEqual(123.45);
-      expect(data[0].__field_foo).toEqual("42.42");
+      expect(data[0].__field_foo).toEqual('42.42');
       expect(data[0].__field_bar).toEqual(42.42);
-      expect(data[1].value).toEqual(67.890);
-      expect(data[1].__field_foo).toEqual("43.43");
+      expect(data[1].value).toEqual(67.89);
+      expect(data[1].__field_foo).toEqual('43.43');
       expect(data[1].__field_bar).toEqual(43.43);
     });
-
   });
 
   describe('when elasticsearch geohash query result is in timeseries format', () => {
-
     const data: any[] = [];
 
     beforeEach(() => {
-
       jQuery.extend(ctrl, {
         panel: {
           esGeoPoint: 'geopoint',
@@ -418,17 +392,17 @@ describe('DataFormatter', () => {
 
       const esdata = [
         {
-          'datapoints': [
+          datapoints: [
             {
               geopoint: 'u0wt6pv2qqhz',
               metric: 123.45,
-              foo: "42.42",
+              foo: '42.42',
               bar: 42.42,
             },
             {
               geopoint: 'u33dbm6duz90',
-              metric: 67.890,
-              foo: "43.43",
+              metric: 67.89,
+              foo: '43.43',
               bar: 43.43,
             },
           ],
@@ -437,22 +411,19 @@ describe('DataFormatter', () => {
 
       const dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setGeohashValues(esdata, data);
-
     });
 
     it('the fields should be available within transformed data', () => {
       expect(data[0].value).toEqual(123.45);
-      expect(data[0].__field_foo).toEqual("42.42");
+      expect(data[0].__field_foo).toEqual('42.42');
       expect(data[0].__field_bar).toEqual(42.42);
-      expect(data[1].value).toEqual(67.890);
-      expect(data[1].__field_foo).toEqual("43.43");
+      expect(data[1].value).toEqual(67.89);
+      expect(data[1].__field_foo).toEqual('43.43');
       expect(data[1].__field_bar).toEqual(43.43);
     });
-
   });
 
   afterEach(() => {
     formattedData = [];
   });
-
 });

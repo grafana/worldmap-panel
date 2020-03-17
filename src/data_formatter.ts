@@ -204,7 +204,7 @@ export default class DataFormatter {
             const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
 
             // Add all values from the original datapoint as attributes prefixed with `__field_`.
-            for (let columnName in columnNames) {
+            for (const columnName in columnNames) {
               const value = row[columnNames[columnName]];
               const key = '__field_' + columnName;
               dataValue[key] = value;

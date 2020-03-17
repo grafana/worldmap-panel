@@ -3,7 +3,7 @@ import { createBasicMap } from '../test/map_builder';
 import $ from 'jquery';
 import PluginSettings from './settings';
 import { TemplateSrv } from 'grafana/app/features/templating/template_srv';
-import DataFormatter from "./data_formatter";
+import DataFormatter from './data_formatter';
 
 describe('Worldmap', () => {
   let worldMap;
@@ -462,7 +462,6 @@ describe('WorldmapFoundation', () => {
 });
 
 function setupInteractionMocks() {
-
   // Setup interaction mock for "window.location.assign".
   // https://remarkablemark.org/blog/2018/11/17/mock-window-location/
   Object.defineProperty(window.location, 'assign', {
@@ -471,11 +470,10 @@ function setupInteractionMocks() {
   window.location.assign = jest.fn();
 
   // Setup interaction mock for "window.open".
-  Object.defineProperty(window, 'open',{
+  Object.defineProperty(window, 'open', {
     configurable: true,
   });
   window.open = jest.fn();
-
 }
 
 describe('ClickthroughLinks', () => {
@@ -502,7 +500,7 @@ describe('ClickthroughLinks', () => {
             return value;
           }
         }
-      })
+      });
     },
   } as unknown) as TemplateSrv;
 
@@ -535,7 +533,6 @@ describe('ClickthroughLinks', () => {
     });
 
     it('should do its job when actually clicked', () => {
-
       // Prepare interaction with window object.
       setupInteractionMocks();
 
@@ -543,7 +540,6 @@ describe('ClickthroughLinks', () => {
       worldMap.circles[0].fire('click');
       expect(window.location.assign).toHaveBeenCalledWith('http://foo.bar');
     });
-
   });
 
   describe('when a Worldmap is created with clickthrough-links enabled to another window', () => {
@@ -565,7 +561,6 @@ describe('ClickthroughLinks', () => {
     });
 
     it('should do its job when actually clicked', () => {
-
       // Prepare interaction with window object.
       setupInteractionMocks();
 
@@ -573,12 +568,10 @@ describe('ClickthroughLinks', () => {
       worldMap.circles[0].fire('click');
       expect(window.open).toHaveBeenCalledWith('http://foo.bar', 'test');
     });
-
   });
 
   describe('when using fields with clickthrough-links on table data', () => {
     beforeEach(() => {
-
       // Create map.
       ctrl.panel.clickthroughUrl = 'http://foo.bar/?foo=$__field_foo&value=$value';
 
@@ -606,7 +599,7 @@ describe('ClickthroughLinks', () => {
             longitude: 18,
             metric: 123.456,
 
-            foo: "42.42",
+            foo: '42.42',
             bar: 42.42,
           },
           {
@@ -616,7 +609,7 @@ describe('ClickthroughLinks', () => {
             longitude: 8,
             metric: 45.678,
 
-            foo: "43.43",
+            foo: '43.43',
             bar: 43.43,
           },
         ],
@@ -631,7 +624,6 @@ describe('ClickthroughLinks', () => {
       // Draw circles.
       ctrl.data = data;
       worldMap.drawCircles();
-
     });
 
     it('the fields within transformed data should interpolate well into clickthrough links', () => {
@@ -642,7 +634,5 @@ describe('ClickthroughLinks', () => {
       worldMap.circles[0].fire('click');
       expect(window.location.assign).toHaveBeenCalledWith('http://foo.bar/?foo=42.42&value=123.456');
     });
-
   });
-
 });
