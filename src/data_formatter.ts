@@ -87,6 +87,7 @@ export default class DataFormatter {
           return loc.key.toUpperCase() === serie.alias.toUpperCase();
         });
 
+        // Todo: Propagate user-level notification?
         if (!location) {
           return;
         }
@@ -201,6 +202,15 @@ export default class DataFormatter {
             const link = this.settings.esLink ? row[columnNames[this.settings.esLink]] : null;
 
             const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
+
+            // Add all values from the original datapoint as attributes prefixed with `__field_`.
+            for (let columnName in columnNames) {
+              const value = row[columnNames[columnName]];
+              const key = '__field_' + columnName;
+              dataValue[key] = value;
+            }
+
+            // Bookkeeping for computing valueRange.
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }
@@ -232,6 +242,15 @@ export default class DataFormatter {
             const link = this.settings.esLink ? datapoint[this.settings.esLink] : null;
 
             const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
+
+            // Add all values from the original datapoint as attributes prefixed with `__field_`.
+            for (let key in datapoint) {
+              const value = datapoint[key];
+              key = '__field_' + key;
+              dataValue[key] = value;
+            }
+
+            // Bookkeeping for computing valueRange.
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }

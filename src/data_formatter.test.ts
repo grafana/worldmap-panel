@@ -365,15 +365,21 @@ describe('DataFormatter', () => {
           'columns': [
             {text: 'geopoint'},
             {text: 'metric'},
+            {text: 'foo'},
+            {text: 'bar'},
           ],
           'rows': [
             [
               'u0wt6pv2qqhz',
               123.45,
+              "42.42",
+              42.42,
             ],
             [
               'u33dbm6duz90',
               67.890,
+              "43.43",
+              43.43,
             ],
           ],
         },
@@ -386,7 +392,11 @@ describe('DataFormatter', () => {
 
     it('the fields should be available within transformed data', () => {
       expect(data[0].value).toEqual(123.45);
+      expect(data[0].__field_foo).toEqual("42.42");
+      expect(data[0].__field_bar).toEqual(42.42);
       expect(data[1].value).toEqual(67.890);
+      expect(data[1].__field_foo).toEqual("43.43");
+      expect(data[1].__field_bar).toEqual(43.43);
     });
 
   });
@@ -412,10 +422,14 @@ describe('DataFormatter', () => {
             {
               geopoint: 'u0wt6pv2qqhz',
               metric: 123.45,
+              foo: "42.42",
+              bar: 42.42,
             },
             {
               geopoint: 'u33dbm6duz90',
               metric: 67.890,
+              foo: "43.43",
+              bar: 43.43,
             },
           ],
         },
@@ -428,7 +442,11 @@ describe('DataFormatter', () => {
 
     it('the fields should be available within transformed data', () => {
       expect(data[0].value).toEqual(123.45);
+      expect(data[0].__field_foo).toEqual("42.42");
+      expect(data[0].__field_bar).toEqual(42.42);
       expect(data[1].value).toEqual(67.890);
+      expect(data[1].__field_foo).toEqual("43.43");
+      expect(data[1].__field_bar).toEqual(43.43);
     });
 
   });
