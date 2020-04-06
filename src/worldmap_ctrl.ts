@@ -197,6 +197,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         this.dataFormatter.setTableValues(tableData, data);
       } else if (this.panel.locationData === "polyline") {
         this.series = dataList.map(c => ({
+          // Todo: Hard code for now, but this should eventually become configurable.
+          // But, it may make sense to convert to react first?
           polyline: c.meta.map.summary_polyline,
           name: c.meta.name,
         }));
