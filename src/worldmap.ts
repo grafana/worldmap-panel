@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
-import * as L from './libs/leaflet';
+import * as L from 'leaflet';
+import './libs/Polyline.encoded';
 import WorldmapCtrl from './worldmap_ctrl';
 
 const tileServers = {
@@ -26,6 +27,7 @@ export default class WorldMap {
   map: any;
   legend: any;
   circlesLayer: any;
+  polylineLayer: any;
 
   constructor(ctrl, mapContainer) {
     this.ctrl = ctrl;
@@ -45,6 +47,7 @@ export default class WorldMap {
       zoom: parseInt(this.ctrl.panel.initialZoom, 10) || 1,
     });
     this.setMouseWheelZoom();
+    this.polylineLayer = L.featureGroup();
 
     const selectedTileServer = tileServers[this.ctrl.tileServer];
     (<any>window).L.tileLayer(selectedTileServer.url, {
@@ -252,6 +255,23 @@ export default class WorldMap {
   setZoom(zoomFactor) {
     this.map.setZoom(parseInt(zoomFactor, 10));
   }
+
+  addPolyline(encoded) {
+    var coordinates = L.Polyline.fromEncoded(encoded).getLatLngs();
+    L.polyline(coordinates).addTo(this.polylineLayer);
+    this.polylineLayer.addTo(this.map);
+  }
+
+  addPolylines(series, doCenter) {
+    series.map(line => {
+      return this.addPolyline(line.polyline);  
+    });
+
+    if (doCenter) {
+      this.map.fitBounds(this.polylineLayer.getBounds());
+    }
+  }
+
 
   remove() {
     this.circles = [];
