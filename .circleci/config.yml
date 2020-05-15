@@ -69,11 +69,11 @@ jobs:
       - run:
           name: Move results to ci folder
           command: |
-            mkdir -pv ci/job/build
+            mkdir -pv ci/job/build_plugin
             mkdir -pv ci/packages
             mkdir -pv ci/jobs/package
             mkdir -pv ci/grafana-test-env
-            cp -rv dist ci/job/build
+            cp -rv dist ci/job/build_plugin
       - run:
           name: Package distribution
           command: |
@@ -121,4 +121,33 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            /usr/local/bin/grafana-toolkit plugin:github-publish
+            DATASOURCE_NAME=grafana-worldmap-panel
+            # copy ci dist
+            cp -r ci/jobs/build_plugin/dist .
+            # copy ci artifacts
+            mkdir -p artifacts
+            # skip for this type of build
+            # cp -r ci/packages/* artifacts
+            cp -r release/* artifacts
+            apk add --update --no-cache jq git-lfs
+            RELEASE_NOTES=`awk 'BEGIN {FS="##"; RS=""} FNR==4 {print; exit}' CHANGELOG.md`
+            VERSION=`cat dist/plugin.json|jq '.info.version'| sed s/\"//g`
+            git config user.email "eng@grafana.com"
+            git config user.name "CircleCI Automation"
+            git checkout -b release-${VERSION}
+            git add --force dist/
+            git add artifacts/
+            git commit -m "automated release $VERSION [skip ci]"
+            git push -f origin release-${VERSION}
+            git tag -f v${VERSION}
+            git push -f origin v${VERSION}
+            ghr \
+              -t ${GITHUB_TOKEN} \
+              -u ${CIRCLE_PROJECT_USERNAME} \
+              -r ${CIRCLE_PROJECT_REPONAME} \
+              -c ${CIRCLE_SHA1} \
+              -n "${DATASOURCE_NAME} v${VERSION}" \
+              -b "${RELEASE_NOTES}" \
+              -delete \
+              v${VERSION} \
+              ./artifacts/
