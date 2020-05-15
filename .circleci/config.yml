@@ -65,12 +65,13 @@ jobs:
           key: cypress-cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
       - run:
           name: Build and test panel 
-          command: yarn build 
+          command: |
+            sed -e "s/%VERSION%/$(cat package.json | jq .version | tr -d '\"')/" -e "s/%TODAY%/$(date)/" ./src/plugin.json.tmpl > ./src/plugin.json
+            yarn build 
       - run:
           name: Move results to ci folder
           command: |
             # Update the plugin.json with up to date info
-            sed -e "s/%VERSION%/$(cat package.json | jq .version | tr -d '\"')/" -e "s/%TODAY%/$(date)/" ./src/plugin.json > ./dist/plugin.json
             mkdir -pv ci/job/build_plugin
             mkdir -pv ci/packages
             mkdir -pv ci/jobs/package
