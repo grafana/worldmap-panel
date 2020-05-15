@@ -125,14 +125,6 @@ jobs:
             tar zxvf "./ghr_v0.13.0_linux_amd64.tar.gz" -C /usr/local
             /bin/rm -rf "./ghr_v0.13.0_linux_amd64.tar.gz"
             DATASOURCE_NAME=grafana-worldmap-panel
-            # copy ci dist
-            cp -r ci/jobs/build_plugin/dist .
-            # copy ci artifacts
-            mkdir -p artifacts
-            # skip for this type of build
-            # cp -r ci/packages/* artifacts
-            cp -r release/* artifacts
-            apk add --update --no-cache jq git-lfs
             RELEASE_NOTES=`awk 'BEGIN {FS="##"; RS=""} FNR==4 {print; exit}' CHANGELOG.md`
             VERSION=`cat dist/plugin.json|jq '.info.version'| sed s/\"//g`
             git config user.email "eng@grafana.com"
@@ -153,4 +145,4 @@ jobs:
               -b "${RELEASE_NOTES}" \
               -delete \
               v${VERSION} \
-              ./artifacts/
+              ./ci/artifacts
