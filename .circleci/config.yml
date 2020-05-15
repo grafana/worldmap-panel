@@ -77,7 +77,7 @@ jobs:
       - run:
           name: Package distribution
           command: |
-            /usr/local/bin/grafana-toolkit plugin:ci-package
+            ./node_modules/.bin/grafana-toolkit plugin:ci-package
       - persist_to_workspace:
           root: .
           paths:
