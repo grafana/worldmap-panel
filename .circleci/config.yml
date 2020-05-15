@@ -68,7 +68,12 @@ jobs:
           command: yarn build 
       - run:
           name: Move results to ci folder
-          command: /usr/local/bin/grafana-toolkit plugin:ci-build --finish
+          command: |
+            mkdir -pv ci/job/build
+            mkdir -pv ci/packages
+            mkdir -pv ci/jobs/package
+            mkdir -pv ci/grafana-test-env
+            cp -rv dist ci/job/build
       - run:
           name: Package distribution
           command: |
