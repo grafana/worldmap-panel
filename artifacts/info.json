@@ -1,0 +1,14 @@
+{
+  "plugin": {
+    "name": "grafana-worldmap-panel-0.3.0.zip",
+    "size": 1286061,
+    "contents": {
+      "json": {
+        "bytes": 1396,
+        "count": 1
+      }
+    },
+    "sha1": "c525dfc3244484c165f4b86dee1546b6ba4f8b85",
+    "md5": "52c4a7082080be62f2b72fa285760c44"
+  }
+}
