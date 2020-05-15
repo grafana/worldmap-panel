@@ -1,7 +1,7 @@
 # Changelog
 ## Entries
 
-## v1.0.1
+## v0.3.0
 
 - Release for Grafana 7.0 with plugin signing
 
