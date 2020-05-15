@@ -101,7 +101,7 @@ jobs:
       - run:
           name: Toolkit report
           command: |
-            /usr/local/bin/grafana-toolkit plugin:ci-report
+            ./node_modules/.bin/grafana-toolkit plugin:ci-report
       - store_artifacts:
           path: ci
 
