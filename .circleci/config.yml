@@ -121,6 +121,9 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
+            wget "https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz"
+            tar zxvf "./ghr_v0.13.0_linux_amd64.tar.gz" -C /usr/local
+            /bin/rm -rf "./ghr_v0.13.0_linux_amd64.tar.gz"
             DATASOURCE_NAME=grafana-worldmap-panel
             # copy ci dist
             cp -r ci/jobs/build_plugin/dist .
@@ -141,7 +144,7 @@ jobs:
             git push -f origin release-${VERSION}
             git tag -f v${VERSION}
             git push -f origin v${VERSION}
-            ghr \
+            /usr/local/ghr_v0.13.0_linux_amd64/ghr \
               -t ${GITHUB_TOKEN} \
               -u ${CIRCLE_PROJECT_USERNAME} \
               -r ${CIRCLE_PROJECT_REPONAME} \
