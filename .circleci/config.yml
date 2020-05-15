@@ -125,7 +125,9 @@ jobs:
             tar zxvf "./ghr_v0.13.0_linux_amd64.tar.gz" -C /usr/local
             /bin/rm -rf "./ghr_v0.13.0_linux_amd64.tar.gz"
             mkdir -pv dist
+            mkfit -pv artifacts
             cp -r ci/dist/grafana-worldmap-panel/* dist/
+            cp -r ci/artifacts/* artifacts/*
             DATASOURCE_NAME=grafana-worldmap-panel
             RELEASE_NOTES=`awk 'BEGIN {FS="##"; RS=""} FNR==4 {print; exit}' CHANGELOG.md`
             VERSION=`cat ci/dist/plugin.json|jq '.info.version'| sed s/\"//g`
@@ -147,4 +149,4 @@ jobs:
               -b "${RELEASE_NOTES}" \
               -delete \
               v${VERSION} \
-              ./ci/artifacts
+              ./artifacts
