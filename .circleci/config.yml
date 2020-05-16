@@ -131,7 +131,6 @@ jobs:
             git config user.name "CircleCI Automation"
             git checkout -b release-${VERSION}
             git add --force dist/
-            git add --force artifacts/
             git commit -m "automated release $VERSION [skip ci]"
             git push -f origin release-${VERSION}
             git tag -f v${VERSION}
