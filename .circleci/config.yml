@@ -71,7 +71,7 @@ jobs:
       - run:
           name: Move results to ci folder
           command: |
-            ./node_modules/.bin/grafana-toolkit plugin-ci-build --finish
+            ./node_modules/.bin/grafana-toolkit plugin:ci-build --finish
       - run:
           name: Package distribution
           command: |
