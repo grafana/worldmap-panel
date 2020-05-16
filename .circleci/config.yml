@@ -71,12 +71,7 @@ jobs:
       - run:
           name: Move results to ci folder
           command: |
-            # Update the plugin.json with up to date info
-            mkdir -pv ci/job/build_plugin
-            mkdir -pv ci/packages
-            mkdir -pv ci/jobs/package
-            mkdir -pv ci/grafana-test-env
-            cp -rv dist ci/job/build_plugin
+            ./node_modules/.bin/grafana-toolkit plugin-ci-build --finish
       - run:
           name: Package distribution
           command: |
@@ -128,9 +123,7 @@ jobs:
             tar zxvf "./ghr_v0.13.0_linux_amd64.tar.gz" -C /usr/local
             /bin/rm -rf "./ghr_v0.13.0_linux_amd64.tar.gz"
             mkdir -pv dist
-            mkdir -pv artifacts
-            cp -r ci/dist/grafana-worldmap-panel/* dist/
-            cp -r ci/packages/* artifacts/
+            cp -r ci/dist/grafana-worldmap-panel/* dist
             DATASOURCE_NAME=grafana-worldmap-panel
             RELEASE_NOTES=`awk 'BEGIN {FS="##"; RS=""} FNR==4 {print; exit}' CHANGELOG.md`
             VERSION=`cat ci/dist/plugin.json|jq '.info.version'| sed s/\"//g`
@@ -152,4 +145,4 @@ jobs:
               -b "${RELEASE_NOTES}" \
               -delete \
               v${VERSION} \
-              ./artifacts
+              ci/packages
