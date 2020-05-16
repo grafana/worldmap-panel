@@ -122,15 +122,15 @@ jobs:
             wget "https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz"
             tar zxvf "./ghr_v0.13.0_linux_amd64.tar.gz" -C /usr/local
             /bin/rm -rf "./ghr_v0.13.0_linux_amd64.tar.gz"
-            mkdir -pv dist
-            cp -r ci/dist/grafana-worldmap-panel/* dist
             DATASOURCE_NAME=grafana-worldmap-panel
             RELEASE_NOTES=`awk 'BEGIN {FS="##"; RS=""} FNR==4 {print; exit}' CHANGELOG.md`
             VERSION=`cat ci/dist/plugin.json|jq '.info.version'| sed s/\"//g`
             git config user.email "eng@grafana.com"
             git config user.name "CircleCI Automation"
             git checkout -b release-${VERSION}
-            git add --force dist/
+            [ -z dist ] && mkdir -pv dist
+            cp -r ci/dist/grafana-worldmap-panel/* dist
+            git add --force dist
             git commit -m "automated release $VERSION [skip ci]"
             git push -f origin release-${VERSION}
             git tag -f v${VERSION}
