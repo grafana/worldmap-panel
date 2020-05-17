@@ -29,7 +29,7 @@
       { "name": "USA", "path": "images/worldmap-usa.png" },
       { "name": "Light Theme", "path": "images/worldmap-light-theme.png" }
     ],
-    "version": "0.3.1",
+    "version": "0.3.2",
     "updated": "Sat May 16 21:43 CEST 2020"
   },
 
