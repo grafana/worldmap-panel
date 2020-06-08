@@ -429,14 +429,15 @@ describe('DataFormatter', () => {
       const ctrl = {
         panel: {
           locationData: 'json result',
+          decimals: 2,
         },
         series: [
-          { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1, value: 3.3 },
-          { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2, value: 5.5 },
+          { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1, value: 3.333 },
+          { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2, value: 5.555 },
         ],
       };
       dataFormatter = new DataFormatter(ctrl);
-      dataFormatter.setJsonValues(data);
+      dataFormatter.setJsonValues(ctrl.series, data);
     });
 
     it('the fields should be available within transformed data', () => {
@@ -444,19 +445,59 @@ describe('DataFormatter', () => {
       expect(data[0].locationName).toEqual('Ireland');
       expect(data[0].locationLatitude).toEqual(1);
       expect(data[0].locationLongitude).toEqual(1);
-      expect(data[0].value).toEqual(3.3);
-      expect(data[0].valueRounded).toEqual(3);
+      expect(data[0].value).toEqual(3.333);
+      expect(data[0].valueRounded).toEqual(3.33);
 
       expect(data[1].key).toEqual('SE');
       expect(data[1].locationName).toEqual('Sweden');
       expect(data[1].locationLatitude).toEqual(2);
       expect(data[1].locationLongitude).toEqual(2);
-      expect(data[1].value).toEqual(5.5);
-      expect(data[1].valueRounded).toEqual(6);
+      expect(data[1].value).toEqual(5.555);
+      expect(data[1].valueRounded).toEqual(5.56);
 
-      expect(data.highestValue).toEqual(5.5);
-      expect(data.lowestValue).toEqual(3.3);
-      expect(data.valueRange).toEqual(2.2);
+      expect(data.highestValue).toEqual(5.555);
+      expect(data.lowestValue).toEqual(3.333);
+      expect(data.valueRange).toEqual(2.2219999999999995);
+
+    });
+
+  });
+
+  describe('when data is coming from "json result" (dataframe)', () => {
+    const data: any[] = [];
+    beforeEach(() => {
+      const ctrl = {
+        panel: {
+          locationData: 'json result',
+          decimals: 2,
+        },
+        series: [
+          {datapoints: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1, value: 3.333 }]},
+          {datapoints: [{ key: 'SE', name: 'Sweden', latitude: 2, longitude: 2, value: 5.555 }]},
+        ],
+      };
+      dataFormatter = new DataFormatter(ctrl);
+      dataFormatter.setJsonValues(ctrl.series, data);
+    });
+
+    it('the fields should be available within transformed data', () => {
+      expect(data[0].key).toEqual('IE');
+      expect(data[0].locationName).toEqual('Ireland');
+      expect(data[0].locationLatitude).toEqual(1);
+      expect(data[0].locationLongitude).toEqual(1);
+      expect(data[0].value).toEqual(3.333);
+      expect(data[0].valueRounded).toEqual(3.33);
+
+      expect(data[1].key).toEqual('SE');
+      expect(data[1].locationName).toEqual('Sweden');
+      expect(data[1].locationLatitude).toEqual(2);
+      expect(data[1].locationLongitude).toEqual(2);
+      expect(data[1].value).toEqual(5.555);
+      expect(data[1].valueRounded).toEqual(5.56);
+
+      expect(data.highestValue).toEqual(5.555);
+      expect(data.lowestValue).toEqual(3.333);
+      expect(data.valueRange).toEqual(2.2219999999999995);
 
     });
 

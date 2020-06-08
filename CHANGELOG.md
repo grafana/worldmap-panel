@@ -6,6 +6,7 @@
 - Interpolate datapoint field values with `__field_` prefix into transformation
   data, now also for elasticsearch queries.
 - Add data formatter test for "json result"
+- Add handling for data coming from datasources using dataframes. Thanks, @sarahleon!
 
 
 ## v0.9.0
