@@ -145,7 +145,8 @@ export class WorldmapCore {
       // Todo: Don't misuse `this.series` for this as it is a completely different format.
       //  Better pass the payload to `setJsonValues()` like seen with `setTableValues()`.
       series = dataList;
-      this.dataFormatter.setJsonValues(data);
+      // we need to pass series here, because setJsonValues accesses the series in the ctrl which is not set at this moment
+      this.dataFormatter.setJsonValues(series, data);
     } else if (this.settings.locationData) {
       this.assertDataFormat(dataFormat === DataFormat.Timeseries, dataFormat, DataFormat.Timeseries);
       console.info('Interpreting data as timeseries format');
