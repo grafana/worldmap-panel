@@ -127,7 +127,7 @@ export default class DataFormatter {
     }
   }
 
-  createDataValue(encodedGeohash, decodedGeohash, locationName, value, link) {
+  createDataValueWithGeohash(encodedGeohash, decodedGeohash, locationName, value, link) {
     // Todo: Bring this up to speed with the current state in `setTableValues`.
     const dataValue = {
       key: encodedGeohash,
@@ -141,6 +141,21 @@ export default class DataFormatter {
     };
 
     dataValue.valueRounded = kbn.roundValue(dataValue.value, this.settings.decimals || 0);
+    return dataValue;
+  }
+
+  createDataValueFromPoint(point) {
+    const dataValue = {
+      key: point.key,
+      locationName: point.name,
+      locationLatitude: point.latitude,
+      locationLongitude: point.longitude,
+      value: point.value !== undefined ? point.value : 1,
+      valueRounded: 0,
+    };
+
+    dataValue.valueRounded = kbn.roundValue(dataValue.value, this.settings.decimals || 0);
+
     return dataValue;
   }
 
@@ -201,7 +216,7 @@ export default class DataFormatter {
             const value = row[columnNames[this.settings.esMetric]];
             const link = this.settings.esLink ? row[columnNames[this.settings.esLink]] : null;
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
+            const dataValue = this.createDataValueWithGeohash(encodedGeohash, decodedGeohash, locationName, value, link);
 
             // Add all values from the original datapoint as attributes prefixed with `__field_`.
             for (const columnName in columnNames) {
@@ -241,7 +256,7 @@ export default class DataFormatter {
             const value = datapoint[this.settings.esMetric];
             const link = this.settings.esLink ? datapoint[this.settings.esLink] : null;
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, link);
+            const dataValue = this.createDataValueWithGeohash(encodedGeohash, decodedGeohash, locationName, value, link);
 
             // Add all values from the original datapoint as attributes prefixed with `__field_`.
             for (let key in datapoint) {
@@ -395,36 +410,38 @@ export default class DataFormatter {
     }
   }
 
-  setJsonValues(data) {
-    if (this.ctrl.series && this.ctrl.series.length > 0) {
-      let highestValue = 0;
-      let lowestValue = Number.MAX_VALUE;
-
-      this.ctrl.series.forEach(point => {
-        // Todo: Bring this up to speed with the current state in `setTableValues`.
-        const dataValue = {
-          key: point.key,
-          locationName: point.name,
-          locationLatitude: point.latitude,
-          locationLongitude: point.longitude,
-          value: point.value !== undefined ? point.value : 1,
-          valueRounded: 0,
-        };
-        if (dataValue.value > highestValue) {
-          highestValue = dataValue.value;
+  setJsonValues(series, data) {
+    if (series && series.length > 0) {
+      series.forEach(serie => {
+        if (serie.datapoints && serie.datapoints.length > 0) {
+          serie.datapoints.forEach(point => {
+            // Todo: Bring this up to speed with the current state in `setTableValues`.
+            data.push(this.createDataValueFromPoint(point));
+          });
+        } else {
+          // Todo: Bring this up to speed with the current state in `setTableValues`.
+          data.push(this.createDataValueFromPoint(serie));
         }
-        if (dataValue.value < lowestValue) {
-          lowestValue = dataValue.value;
-        }
-        dataValue.valueRounded = Math.round(dataValue.value);
-        data.push(dataValue);
       });
-      data.highestValue = highestValue;
-      data.lowestValue = lowestValue;
-      data.valueRange = highestValue - lowestValue;
+
+      this.computeValueRange(data);
     } else {
       this.addWarning('No data in JSON format received');
     }
+  }
+
+  computeValueRange(data) {
+    const sortedValues = data.map(datapoint => {
+      return datapoint.value;
+    });
+
+    sortedValues.sort((a, b) => a - b);
+
+    data.highestValue = sortedValues[sortedValues.length - 1];
+    data.lowestValue = sortedValues[0];
+    data.valueRange = data.highestValue - data.lowestValue;
+
+    return data;
   }
 
   addWarning(message) {
