@@ -5,6 +5,7 @@
 - Add tests for elasticsearch query results, both for table- and timeseries-data
 - Interpolate datapoint field values with `__field_` prefix into transformation
   data, now also for elasticsearch queries.
+- Add data formatter test for "json result"
 
 
 ## v0.9.0

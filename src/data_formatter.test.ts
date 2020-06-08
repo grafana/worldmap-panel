@@ -423,7 +423,47 @@ describe('DataFormatter', () => {
     });
   });
 
+  describe('when data is coming from "json result" (regular)', () => {
+    const data: any[] = [];
+    beforeEach(() => {
+      const ctrl = {
+        panel: {
+          locationData: 'json result',
+        },
+        series: [
+          { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1, value: 3.3 },
+          { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2, value: 5.5 },
+        ],
+      };
+      dataFormatter = new DataFormatter(ctrl);
+      dataFormatter.setJsonValues(data);
+    });
+
+    it('the fields should be available within transformed data', () => {
+      expect(data[0].key).toEqual('IE');
+      expect(data[0].locationName).toEqual('Ireland');
+      expect(data[0].locationLatitude).toEqual(1);
+      expect(data[0].locationLongitude).toEqual(1);
+      expect(data[0].value).toEqual(3.3);
+      expect(data[0].valueRounded).toEqual(3);
+
+      expect(data[1].key).toEqual('SE');
+      expect(data[1].locationName).toEqual('Sweden');
+      expect(data[1].locationLatitude).toEqual(2);
+      expect(data[1].locationLongitude).toEqual(2);
+      expect(data[1].value).toEqual(5.5);
+      expect(data[1].valueRounded).toEqual(6);
+
+      expect(data.highestValue).toEqual(5.5);
+      expect(data.lowestValue).toEqual(3.3);
+      expect(data.valueRange).toEqual(2.2);
+
+    });
+
+  });
+
   afterEach(() => {
     formattedData = [];
   });
+
 });
