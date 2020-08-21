@@ -239,4 +239,58 @@ export default class DataFormatter {
       data.valueRange = highestValue - lowestValue;
     }
   }
+
+  setStringValues(dataList, data) {
+    if (!this.ctrl.panel.esGeoPoint || !this.ctrl.panel.esMetric) {
+      return;
+    }
+
+    if (dataList && dataList.length > 0) {
+      let highestValue = 0;
+      let lowestValue = Number.MAX_VALUE;
+
+      dataList.forEach(result => {
+        if (result.type === 'table') {
+          const columnNames = {};
+
+          result.columns.forEach((column, columnIndex) => {
+            columnNames[column.text] = columnIndex;
+          });
+
+          result.rows.forEach(row => {
+            const coordinatesField = row[columnNames[this.ctrl.panel.esGeoPoint]];
+            const geoPoint = coordinatesField.split(',');
+            const latitude = geoPoint[0];
+            const longitude = geoPoint[1];
+            const value = row[columnNames[this.ctrl.panel.esMetric]];
+            const locationName = this.ctrl.panel.esLocationName
+              ? row[columnNames[this.ctrl.panel.esLocationName]]
+              : latitude + ', ' + longitude;
+
+            const dataValue = {
+              key: geoPoint,
+              locationName: locationName,
+              locationLatitude: latitude,
+              locationLongitude: longitude,
+              value: value,
+              valueFormatted: value,
+              valueRounded: 0,
+            };
+            if (dataValue.value > highestValue) {
+              highestValue = dataValue.value;
+            }
+            if (dataValue.value < lowestValue) {
+              lowestValue = dataValue.value;
+            }
+            dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+            data.push(dataValue);
+          });
+
+          data.highestValue = highestValue;
+          data.lowestValue = lowestValue;
+          data.valueRange = highestValue - lowestValue;
+        }
+      });
+    }
+  }
 }

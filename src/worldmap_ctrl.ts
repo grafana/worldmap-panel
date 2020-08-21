@@ -198,6 +198,9 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       } else if (this.panel.locationData === "json result") {
         this.series = dataList;
         this.dataFormatter.setJsonValues(data);
+      } else if (this.panel.locationData === "string") {
+        this.series = dataList;
+        this.dataFormatter.setStringValues(dataList, data);
       } else {
         this.series = dataList.map(this.seriesHandler.bind(this));
         this.dataFormatter.setValues(data);
