@@ -458,9 +458,7 @@ describe('DataFormatter', () => {
       expect(data.highestValue).toEqual(5.555);
       expect(data.lowestValue).toEqual(3.333);
       expect(data.valueRange).toEqual(2.2219999999999995);
-
     });
-
   });
 
   describe('when data is coming from "json result" (dataframe)', () => {
@@ -472,8 +470,8 @@ describe('DataFormatter', () => {
           decimals: 2,
         },
         series: [
-          {datapoints: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1, value: 3.333 }]},
-          {datapoints: [{ key: 'SE', name: 'Sweden', latitude: 2, longitude: 2, value: 5.555 }]},
+          { datapoints: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1, value: 3.333 }] },
+          { datapoints: [{ key: 'SE', name: 'Sweden', latitude: 2, longitude: 2, value: 5.555 }] },
         ],
       };
       dataFormatter = new DataFormatter(ctrl);
@@ -498,13 +496,10 @@ describe('DataFormatter', () => {
       expect(data.highestValue).toEqual(5.555);
       expect(data.lowestValue).toEqual(3.333);
       expect(data.valueRange).toEqual(2.2219999999999995);
-
     });
-
   });
 
   afterEach(() => {
     formattedData = [];
   });
-
 });
