@@ -3,6 +3,16 @@
 ## development
 
 
+## v0.11.0
+- Add categorical colors. Thanks, @JonasProgrammer!
+  - Color mode can be switched between threshold (default/fallback) and categories
+  - Categories are based on the datapoint's locationName field
+- Add absolute circle size. Thanks, @JonasProgrammer!
+  - Add option for absolute circle size, rather than using a dynamic range (disabled by default and as fallback)
+  - Use prefactor for absolute values, defaulting to 1.0
+  - Absolute circles are still being clamped by min/max settings
+
+
 ## v0.10.0
 - Improve tests for checking "clickthroughUrl" interpolation
 - Add tests for elasticsearch query results, both for table- and timeseries-data
