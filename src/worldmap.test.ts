@@ -87,11 +87,11 @@ describe('Worldmap', () => {
   describe('when the data has three points and absolute mode is enabled', () => {
     beforeEach(() => {
       ctrl.data = new DataBuilder()
-          .withCountryAndValue('SE', 4)
-          .withCountryAndValue('IE', 1)
-          .withCountryAndValue('US', 8)
-          .withDataRange(0, 8, 8)
-          .build();
+        .withCountryAndValue('SE', 4)
+        .withCountryAndValue('IE', 1)
+        .withCountryAndValue('US', 8)
+        .withDataRange(0, 8, 8)
+        .build();
       ctrl.panel.circleMinSize = '3';
       ctrl.panel.circleMaxSize = '10';
       ctrl.panel.circleSizeAbsoluteEnabled = true;
