@@ -1,6 +1,9 @@
 # Changelog
 
 ## development
+
+
+## v0.10.0
 - Improve tests for checking "clickthroughUrl" interpolation
 - Add tests for elasticsearch query results, both for table- and timeseries-data
 - Interpolate datapoint field values with `__field_` prefix into transformation
