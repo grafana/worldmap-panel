@@ -517,6 +517,26 @@ describe('Worldmap', () => {
       expect(worldMap.circles[0]._popup._content).toBe('Sweden: 1\nSweden: 2');
     });
   });
+
+  describe('when a data point has a value of NaN', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', NaN)
+        .build();
+    });
+
+    it('should create a popup which contains n/a', () => {
+      worldMap.drawCircles();
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden: n/a');
+    });
+
+    it('should create a popup which should not contain n/a, when formatOmitEmptyValue is set', () => {
+      ctrl.panel.formatOmitEmptyValue = true;
+      worldMap.drawCircles();
+      expect(worldMap.circles[0]._popup._content).toBe('Sweden');
+    });
+  });
+
 });
 
 describe('WorldmapFoundation', () => {
