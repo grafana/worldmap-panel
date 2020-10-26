@@ -186,3 +186,14 @@ export const MapCenters = [
     data: { mapCenterLatitude: 59.32549, mapCenterLongitude: 18.07109, initialZoom: 11 },
   },
 ];
+
+export const ColorModes = {
+  threshold: {
+    id: 'threshold',
+    label: 'threshold',
+  },
+  categories: {
+    id: 'categories',
+    label: 'categories',
+  },
+};

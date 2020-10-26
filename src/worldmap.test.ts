@@ -4,6 +4,7 @@ import $ from 'jquery';
 import PluginSettings from './settings';
 import { TemplateSrv } from 'grafana/app/features/templating/template_srv';
 import DataFormatter from './data_formatter';
+import { ColorModes } from './model';
 
 describe('Worldmap', () => {
   let worldMap;
@@ -147,6 +148,56 @@ describe('Worldmap', () => {
       expect(worldMap.circles[0]._popup._content).toBe('Sweden: 1');
       expect(worldMap.circles[1]._popup._content).toBe('Ireland: 2');
       expect(worldMap.circles[2]._popup._content).toBe('United States: 3');
+    });
+  });
+
+  describe('when the data has three points and color mode is threshold', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .withCountryAndValue('IE', 2)
+        .withCountryAndValue('US', 3)
+        .withDataRange(1, 3, 2)
+        .withThresholdValues([2])
+        .build();
+      ctrl.panel.circleMinSize = '2';
+      ctrl.panel.circleMaxSize = '10';
+      ctrl.panel.colorMode = ColorModes.threshold.id;
+      worldMap.drawCircles();
+    });
+
+    it('should set red color on values under threshold', () => {
+      expect(worldMap.circles[0].options.color).toBe('red');
+    });
+
+    it('should set blue color on values equal to or over threshold', () => {
+      expect(worldMap.circles[1].options.color).toBe('blue');
+      expect(worldMap.circles[2].options.color).toBe('blue');
+    });
+  });
+
+  describe('when the data has three points and color mode is categories', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1)
+        .withCountryAndValue('IE', 2)
+        .withCountryAndValue('US', 3)
+        .withDataRange(1, 3, 2)
+        .withCategories(['Sweden'])
+        .build();
+      ctrl.panel.circleMinSize = '2';
+      ctrl.panel.circleMaxSize = '10';
+      ctrl.panel.colorMode = ColorModes.categories.id;
+      worldMap.drawCircles();
+    });
+
+    it('should set red color on locations not defined in categories', () => {
+      expect(worldMap.circles[1].options.color).toBe('red');
+      expect(worldMap.circles[2].options.color).toBe('red');
+    });
+
+    it('should set blue color on defined categories', () => {
+      expect(worldMap.circles[0].options.color).toBe('blue');
     });
   });
 
@@ -319,6 +370,42 @@ describe('Worldmap', () => {
           '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
           '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
           '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
+      );
+    });
+  });
+
+  describe('when three thresholds are set and color mode is threshold', () => {
+    beforeEach(() => {
+      ctrl.panel.colorMode = ColorModes.threshold.id;
+      ctrl.data = new DataBuilder().withThresholdValues([2, 4, 6]).build();
+      worldMap.createLegend();
+    });
+
+    it('should create a legend with four legend values', () => {
+      expect(worldMap.legend).toBeDefined();
+      expect(worldMap.legend._div.outerHTML).toBe(
+        '<div class="info legend leaflet-control"><div class="legend-item">' +
+          '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
+          '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
+          '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
+      );
+    });
+  });
+
+  describe('when three thresholds are set and color mode is categories', () => {
+    beforeEach(() => {
+      ctrl.panel.colorMode = ColorModes.categories.id;
+      ctrl.data = new DataBuilder().withCategories(['some cat', 'other cat', 'asdf']).build();
+      worldMap.createLegend();
+    });
+
+    it('should create a legend with four legend values', () => {
+      expect(worldMap.legend).toBeDefined();
+      expect(worldMap.legend._div.outerHTML).toBe(
+        '<div class="info legend leaflet-control"><div class="legend-item">' +
+          '<i style="background:red"></i> *</div><div class="legend-item"><i style="background:blue"></i> some cat</div>' +
+          '<div class="legend-item"><i style="background:green"></i> other cat</div>' +
+          '<div class="legend-item"><i style="background:undefined"></i> asdf</div></div>'
       );
     });
   });

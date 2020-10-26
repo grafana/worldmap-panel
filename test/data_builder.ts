@@ -4,6 +4,7 @@ export default class DataBuilder {
   constructor() {
     this.data = [];
     this.data.thresholds = [];
+    this.data.categories = [];
   }
 
   withCountryAndValue(countryCode, value) {
@@ -45,6 +46,12 @@ export default class DataBuilder {
 
   withThresholdValues(values) {
     this.data.thresholds = values;
+
+    return this;
+  }
+
+  withCategories(categories) {
+    this.data.categories = categories;
 
     return this;
   }

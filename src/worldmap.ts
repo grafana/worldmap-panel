@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import $ from 'jquery';
 import * as L from './libs/leaflet';
 import WorldmapCtrl from './worldmap_ctrl';
+import { ColorModes } from './model';
 
 const tileServers = {
   'CartoDB Positron': {
@@ -101,6 +102,35 @@ export default class WorldMap {
     return zoomLevel;
   }
 
+  private getLegendUpdateFunction() {
+    switch (this.ctrl.settings.colorMode) {
+      case ColorModes.categories.id:
+        return () => {
+          const legendHtml = this.ctrl.data.categories.reduce((html, cat, idx) => {
+            return html + '<div class="legend-item"><i style="background:' + this.ctrl.settings.colors[idx + 1] + '"></i> ' + cat + '</div>';
+          }, '<div class="legend-item"><i style="background:' + this.ctrl.settings.colors[0] + '"></i> *</div>');
+          this.legend._div.innerHTML = legendHtml;
+        };
+      case ColorModes.threshold.id:
+      default:
+        return () => {
+          const thresholds = this.ctrl.data.thresholds;
+          let legendHtml = '';
+          legendHtml +=
+            '<div class="legend-item"><i style="background:' + this.ctrl.settings.colors[0] + '"></i> ' + '&lt; ' + thresholds[0] + '</div>';
+          for (let index = 0; index < thresholds.length; index += 1) {
+            legendHtml +=
+              '<div class="legend-item"><i style="background:' +
+              this.ctrl.settings.colors[index + 1] +
+              '"></i> ' +
+              thresholds[index] +
+              (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '</div>' : '+');
+          }
+          this.legend._div.innerHTML = legendHtml;
+        };
+    }
+  }
+
   createLegend() {
     this.legend = (window as any).L.control({ position: 'bottomleft' });
     this.legend.onAdd = () => {
@@ -109,20 +139,7 @@ export default class WorldMap {
       return this.legend._div;
     };
 
-    this.legend.update = () => {
-      const thresholds = this.ctrl.data.thresholds;
-      let legendHtml = '';
-      legendHtml += '<div class="legend-item"><i style="background:' + this.ctrl.settings.colors[0] + '"></i> ' + '&lt; ' + thresholds[0] + '</div>';
-      for (let index = 0; index < thresholds.length; index += 1) {
-        legendHtml +=
-          '<div class="legend-item"><i style="background:' +
-          this.ctrl.settings.colors[index + 1] +
-          '"></i> ' +
-          thresholds[index] +
-          (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '</div>' : '+');
-      }
-      this.legend._div.innerHTML = legendHtml;
-    };
+    this.legend.update = this.getLegendUpdateFunction();
     this.legend.addTo(this.map);
 
     // Optionally display legend in different DOM element.
@@ -234,8 +251,8 @@ export default class WorldMap {
   createCircle(dataPoint) {
     const circle = (window as any).L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
       radius: this.calcCircleSize(dataPoint.value || 0),
-      color: this.getColor(dataPoint.value),
-      fillColor: this.getColor(dataPoint.value),
+      color: this.getColor(dataPoint),
+      fillColor: this.getColor(dataPoint),
       fillOpacity: 0.5,
       location: dataPoint.key,
       stroke: Boolean(this.ctrl.settings.circleOptions.strokeEnabled),
@@ -257,8 +274,8 @@ export default class WorldMap {
     if (circle) {
       circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
       circle.setStyle({
-        color: this.getColor(dataPoint.value),
-        fillColor: this.getColor(dataPoint.value),
+        color: this.getColor(dataPoint),
+        fillColor: this.getColor(dataPoint),
         fillOpacity: 0.5,
         location: dataPoint.key,
       });
@@ -374,13 +391,32 @@ export default class WorldMap {
     return label;
   }
 
-  getColor(value) {
+  private getCategoryColor(label) {
+    for (let index = 0; index !== this.ctrl.data.categories.length; index += 1) {
+      if (this.ctrl.data.categories[index] === label) {
+        return this.ctrl.settings.colors[index + 1];
+      }
+    }
+    return _.first(this.ctrl.settings.colors);
+  }
+
+  private getThresholdColor(value) {
     for (let index = this.ctrl.data.thresholds.length; index > 0; index -= 1) {
       if (value >= this.ctrl.data.thresholds[index - 1]) {
         return this.ctrl.settings.colors[index];
       }
     }
     return _.first(this.ctrl.settings.colors);
+  }
+
+  getColor(dataPoint) {
+    switch (this.ctrl.settings.colorMode) {
+      case ColorModes.categories.id:
+        return this.getCategoryColor(dataPoint.locationName);
+      case ColorModes.threshold.id:
+      default:
+        return this.getThresholdColor(dataPoint.value);
+    }
   }
 
   resize() {

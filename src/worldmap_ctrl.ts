@@ -5,7 +5,7 @@ import './styles/worldmap-panel.css';
 import './styles/leaflet.css';
 import PluginSettings from './settings';
 import WorldMap from './worldmap';
-import { LocationSources, MapCenters } from './model';
+import { ColorModes, LocationSources, MapCenters } from './model';
 import { WorldmapCore } from './core';
 import { WorldmapChrome } from './chrome';
 import { ErrorManager } from './errors';
@@ -31,6 +31,8 @@ const panelDefaults = {
   locationData: null,
   thresholds: '0,10',
   colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+  categories: 'a,b',
+  colorMode: ColorModes.threshold.id,
   unitSingular: '',
   unitPlural: '',
   showLegend: true,
@@ -280,7 +282,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
       this.processData(dataList);
 
-      this.updateThresholdData();
+      this.updateColorMode();
 
       const autoCenterMap = this.settings.mapCenter === 'First GeoHash' || this.settings.mapCenter === 'Last GeoHash' || this.settings.mapFitData;
 
@@ -337,19 +339,42 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     }
   }
 
+  private adjustColorCount(target: any[]) {
+    const targetSize = _.size(target) + 1; // +1 for catch-all case
+    while (_.size(this.settings.colors) > targetSize) {
+      // too many colors. remove the last one.
+      this.settings.colors.pop();
+    }
+    while (_.size(this.settings.colors) < targetSize) {
+      // not enough colors. add one.
+      const newColor = 'rgba(50, 172, 45, 0.97)';
+      this.settings.colors.push(newColor);
+    }
+  }
+
   updateThresholdData() {
     // FIXME: Isn't `this.data` actually an array?
     this.data.thresholds = this.settings.thresholds.split(',').map(strValue => {
       return Number(strValue.trim());
     });
-    while (_.size(this.settings.colors) > _.size(this.data.thresholds) + 1) {
-      // too many colors. remove the last one.
-      this.settings.colors.pop();
-    }
-    while (_.size(this.settings.colors) < _.size(this.data.thresholds) + 1) {
-      // not enough colors. add one.
-      const newColor = 'rgba(50, 172, 45, 0.97)';
-      this.settings.colors.push(newColor);
+    this.adjustColorCount(this.data.thresholds);
+  }
+
+  updateCategoricalData() {
+    // FIXME: Isn't `this.data` actually an array?
+    this.data.categories = this.settings.categories.split(',');
+    this.adjustColorCount(this.data.categories);
+  }
+
+  updateColorMode() {
+    switch (this.settings.colorMode) {
+      case ColorModes.categories.id:
+        this.updateCategoricalData();
+        break;
+      case ColorModes.threshold.id:
+      default:
+        // support existing legacy configurations (i.e. color mode is not set)
+        this.updateThresholdData();
     }
   }
 
@@ -548,8 +573,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
-  changeThresholds() {
-    this.updateThresholdData();
+  changeColorMode() {
+    this.updateColorMode();
     this.map.legend.update();
     this.render();
   }
@@ -578,6 +603,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
   getMapCenterChoices() {
     return MapCenters;
+  }
+
+  getColorModeChoices() {
+    return ColorModes;
   }
 
   getSelectedMapCenter() {
