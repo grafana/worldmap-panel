@@ -20,9 +20,10 @@ refreshing the page will be sufficient.
 4. Run the tests before submitting a PR: `npx yarn test`
 5. Run specific tests: `npx yarn test --testNamePattern "when some fields"`
 
-# Building the Grafana Map Panel
+## Releasing the Grafana Map Panel
 1. Install packages: `npx yarn install`
-2. Build into `dist/`, lint and run tests: `npx yarn build`
-3. Build plugin on CI: `npx grafana-toolkit plugin:ci-build`
-4. Create a zip package: `npx grafana-toolkit plugin:ci-package`
+2. Run prettier: `npx grafana-toolkit plugin:dev`
+3. Build into `dist/`, lint and run tests: `npx yarn build`
+4. Build plugin on CI: `npx grafana-toolkit plugin:ci-build`
+5. Create a zip package: `npx grafana-toolkit plugin:ci-package`
    When this process succeeds, packages can be found within the `ci/packages/` folder.
