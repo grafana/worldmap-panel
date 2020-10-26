@@ -293,8 +293,13 @@ export default class WorldMap {
   }
 
   calcCircleSize(dataPointValue) {
-    const circleMinSize = parseInt(this.ctrl.settings.circleMinSize, 10) || 1;
-    const circleMaxSize = parseInt(this.ctrl.settings.circleMaxSize, 10) || 10;
+    const circleMinSize = parseFloat(this.ctrl.settings.circleMinSize) || 1;
+    const circleMaxSize = parseFloat(this.ctrl.settings.circleMaxSize) || 10;
+
+    if (this.ctrl.settings.circleSizeAbsoluteEnabled) {
+      const size = dataPointValue * (parseFloat(this.ctrl.settings.circleSizeAbsoluteFactor) || 1.0);
+      return Math.min(circleMaxSize, Math.max(circleMinSize, size));
+    }
 
     // If measurement value equals zero, use minimum circle size.
     if (dataPointValue === 0) {

@@ -409,6 +409,16 @@
           placeholder="10" ng-model-onblur />
       </div>
       <div class="gf-form">
+        <label class="gf-form-label width-10">Absolute size</label>
+        <gf-form-switch checked="ctrl.panel.circleSizeAbsoluteEnabled" on-change="ctrl.render()">
+        </gf-form-switch>
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.circleSizeAbsoluteEnabled">
+        <label class="gf-form-label width-10">Size factor</label>
+        <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.circleSizeAbsoluteFactor" ng-change="ctrl.render()"
+               placeholder="1.0" ng-model-onblur />
+      </div>
+      <div class="gf-form">
         <label class="gf-form-label width-10">Enable strokes</label>
         <gf-form-switch checked="ctrl.panel.circleOptions.strokeEnabled" on-change="ctrl.redrawCircles()">
         </gf-form-switch>

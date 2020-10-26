@@ -61,6 +61,8 @@ describe('Worldmap', () => {
         .build();
       ctrl.panel.circleMinSize = '2';
       ctrl.panel.circleMaxSize = '10';
+      // Ensure factor is ignored
+      ctrl.panel.circleSizeAbsoluteFactor = '3';
       worldMap.drawCircles();
     });
 
@@ -79,6 +81,37 @@ describe('Worldmap', () => {
     it('should create two circle popups with the data point values', () => {
       expect(worldMap.circles[0]._popup._content).toBe('Sweden: 1');
       expect(worldMap.circles[1]._popup._content).toBe('Ireland: 2');
+    });
+  });
+
+  describe('when the data has three points and absolute mode is enabled', () => {
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+          .withCountryAndValue('SE', 4)
+          .withCountryAndValue('IE', 1)
+          .withCountryAndValue('US', 8)
+          .withDataRange(0, 8, 8)
+          .build();
+      ctrl.panel.circleMinSize = '3';
+      ctrl.panel.circleMaxSize = '10';
+      ctrl.panel.circleSizeAbsoluteEnabled = true;
+      ctrl.panel.circleSizeAbsoluteFactor = '1.5';
+      worldMap.drawCircles();
+    });
+
+    it('should three four circles on the map', () => {
+      expect(worldMap.circles.length).toBe(3);
+    });
+
+    it('should create a circle with the specified size times the factor', () => {
+      expect(worldMap.circles[0].options.radius).toBe(6);
+    });
+
+    it('should create a a circle with the minimum size if the factored absolute is too small', () => {
+      expect(worldMap.circles[1].options.radius).toBe(3);
+    });
+    it('should create a a circle with the maximum size if the factored absolute is too small', () => {
+      expect(worldMap.circles[2].options.radius).toBe(10);
     });
   });
 

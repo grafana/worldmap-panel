@@ -24,6 +24,8 @@ const panelDefaults = {
   valueName: 'total',
   circleMinSize: 2,
   circleMaxSize: 30,
+  circleSizeAbsoluteEnabled: false,
+  circleSizeAbsoluteFactor: 1.0,
   circleOptions: {
     strokeEnabled: true,
     strokeWeight: 3,
