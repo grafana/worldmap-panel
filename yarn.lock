@@ -1042,7 +1042,7 @@
     tiny-invariant "^1.0.1"
     tiny-warning "^0.0.3"
 
-"@grafana/toolkit@next":
+"@grafana/toolkit@^7.3.0":
   version "7.3.0-beta.2"
   resolved "https://registry.yarnpkg.com/@grafana/toolkit/-/toolkit-7.3.0-beta.2.tgz#a483f6a17dbb02165c9811289de0abc5e5f7c062"
   integrity sha512-0VqnSKsaTixqhwmh9EJr01VgMZUxn6UzQ9y8H7+Ef9KTtz/AUL5EAyBWmFzPhB4Aaf3VElcxOcMATe9nQERUrg==
