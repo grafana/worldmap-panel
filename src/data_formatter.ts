@@ -212,11 +212,19 @@ export default class DataFormatter {
               return;
             }
 
-            const locationName = this.settings.esLocationName ? row[columnNames[this.settings.esLocationName]] : encodedGeohash;
+            const locationName = this.settings.esLocationName
+              ? row[columnNames[this.settings.esLocationName]]
+              : encodedGeohash;
             const value = row[columnNames[this.settings.esMetric]];
             const link = this.settings.esLink ? row[columnNames[this.settings.esLink]] : null;
 
-            const dataValue = this.createDataValueWithGeohash(encodedGeohash, decodedGeohash, locationName, value, link);
+            const dataValue = this.createDataValueWithGeohash(
+              encodedGeohash,
+              decodedGeohash,
+              locationName,
+              value,
+              link
+            );
 
             // Add all values from the original datapoint as attributes prefixed with `__field_`.
             for (const columnName in columnNames) {
@@ -252,11 +260,19 @@ export default class DataFormatter {
               return;
             }
 
-            const locationName = this.settings.esLocationName ? datapoint[this.settings.esLocationName] : encodedGeohash;
+            const locationName = this.settings.esLocationName
+              ? datapoint[this.settings.esLocationName]
+              : encodedGeohash;
             const value = datapoint[this.settings.esMetric];
             const link = this.settings.esLink ? datapoint[this.settings.esLink] : null;
 
-            const dataValue = this.createDataValueWithGeohash(encodedGeohash, decodedGeohash, locationName, value, link);
+            const dataValue = this.createDataValueWithGeohash(
+              encodedGeohash,
+              decodedGeohash,
+              locationName,
+              value,
+              link
+            );
 
             // Add all values from the original datapoint as attributes prefixed with `__field_`.
             for (let key in datapoint) {

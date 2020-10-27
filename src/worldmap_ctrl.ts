@@ -258,7 +258,12 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     console.info('Refreshing panel. initializing=', this.initializing);
     this.errors.reset('data');
 
-    if (!this.loading && !this.initializing && _.isEmpty(this.locations) && _.isEmpty(this.panel.snapshotLocationData)) {
+    if (
+      !this.loading &&
+      !this.initializing &&
+      _.isEmpty(this.locations) &&
+      _.isEmpty(this.panel.snapshotLocationData)
+    ) {
       this.loadLocationData(true);
     }
   }
@@ -287,7 +292,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
       this.updateColorMode();
 
-      const autoCenterMap = this.settings.mapCenter === 'First GeoHash' || this.settings.mapCenter === 'Last GeoHash' || this.settings.mapFitData;
+      const autoCenterMap =
+        this.settings.mapCenter === 'First GeoHash' ||
+        this.settings.mapCenter === 'Last GeoHash' ||
+        this.settings.mapFitData;
 
       if (this.data.length && autoCenterMap) {
         this.updateMapCenter(false);
@@ -313,7 +321,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     if (_.isEmpty(dataList)) {
       this.resetData();
       this.resetLocations();
-      this.errors.add('No data received, please check data source and time range', { level: 'warning', domain: 'data' });
+      this.errors.add('No data received, please check data source and time range', {
+        level: 'warning',
+        domain: 'data',
+      });
       return;
     }
 

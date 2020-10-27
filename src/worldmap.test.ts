@@ -520,9 +520,7 @@ describe('Worldmap', () => {
 
   describe('when a data point has a value of NaN', () => {
     beforeEach(() => {
-      ctrl.data = new DataBuilder()
-        .withCountryAndValue('SE', NaN)
-        .build();
+      ctrl.data = new DataBuilder().withCountryAndValue('SE', NaN).build();
     });
 
     it('should create a popup which contains n/a', () => {
@@ -536,7 +534,6 @@ describe('Worldmap', () => {
       expect(worldMap.circles[0]._popup._content).toBe('Sweden');
     });
   });
-
 });
 
 describe('WorldmapFoundation', () => {

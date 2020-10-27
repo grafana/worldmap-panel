@@ -8,13 +8,15 @@ const tileServers = {
   'CartoDB Positron': {
     url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
     attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' + '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
     subdomains: 'abcd',
   },
   'CartoDB Dark': {
     url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
     attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' + '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
     subdomains: 'abcd',
   },
 };
@@ -107,7 +109,14 @@ export default class WorldMap {
       case ColorModes.categories.id:
         return () => {
           const legendHtml = this.ctrl.data.categories.reduce((html, cat, idx) => {
-            return html + '<div class="legend-item"><i style="background:' + this.ctrl.settings.colors[idx + 1] + '"></i> ' + cat + '</div>';
+            return (
+              html +
+              '<div class="legend-item"><i style="background:' +
+              this.ctrl.settings.colors[idx + 1] +
+              '"></i> ' +
+              cat +
+              '</div>'
+            );
           }, '<div class="legend-item"><i style="background:' + this.ctrl.settings.colors[0] + '"></i> *</div>');
           this.legend._div.innerHTML = legendHtml;
         };
@@ -117,7 +126,12 @@ export default class WorldMap {
           const thresholds = this.ctrl.data.thresholds;
           let legendHtml = '';
           legendHtml +=
-            '<div class="legend-item"><i style="background:' + this.ctrl.settings.colors[0] + '"></i> ' + '&lt; ' + thresholds[0] + '</div>';
+            '<div class="legend-item"><i style="background:' +
+            this.ctrl.settings.colors[0] +
+            '"></i> ' +
+            '&lt; ' +
+            thresholds[0] +
+            '</div>';
           for (let index = 0; index < thresholds.length; index += 1) {
             legendHtml +=
               '<div class="legend-item"><i style="background:' +
