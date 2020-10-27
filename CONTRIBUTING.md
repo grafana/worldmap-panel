@@ -11,19 +11,23 @@ need to restart your local Grafana server after every change, just
 refreshing the page will be sufficient.
 
 ## General
-1. Display all tasks from `grafana-toolkit`: `npx grafana-toolkit --help`
+- Display all tasks from `grafana-toolkit`: `npx grafana-toolkit --help`
 
 ## Development
-1. Install packages: `npx yarn install`
-2. Bundle plugin in dev mode: `npx yarn dev`
-3. Bundle plugin in dev mode and start a watcher: `npx yarn watch`
-4. Run the tests before submitting a PR: `npx yarn test`
-5. Run specific tests: `npx yarn test --testNamePattern "when some fields"`
+- Install packages: `npx yarn install`
+- Bundle plugin in dev mode: `npx yarn dev`
+- Bundle plugin in dev mode and start a watcher: `npx yarn watch`
+- Upgrade dependencies: `npx yarn upgrade`
 
-## Releasing the Grafana Map Panel
+### Before submitting a pull request
+- Run all tests: `npx yarn test`
+- Run specific tests: `npx yarn test --testNamePattern "when some fields"`
+
+## Release
 1. Install packages: `npx yarn install`
 2. Run prettier: `npx grafana-toolkit plugin:dev`
-3. Build into `dist/`, lint and run tests: `npx yarn build`
-4. Build plugin on CI: `npx grafana-toolkit plugin:ci-build`
-5. Create a zip package: `npx grafana-toolkit plugin:ci-package`
+3. Update `CHANGELOG.md` and bump version within `package.json`
+4. Build into `dist/`, lint and run tests: `npx yarn build`
+5. Build plugin on CI: `npx grafana-toolkit plugin:ci-build`
+6. Create a zip package: `npx grafana-toolkit plugin:ci-package`
    When this process succeeds, packages can be found within the `ci/packages/` folder.
