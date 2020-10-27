@@ -30,9 +30,9 @@ refreshing the page will be sufficient.
 4. Commit changes
 5. Tag repository: `git tag 0.xx.0`
 6. Push repository: `git push && git push --tags`
-7. Build plugin: `npx grafana-toolkit plugin:ci-build`
-8. Create package
-   - Create "jobs" folder: `mkdir -p ci/jobs`
-   - Create zip: `npx grafana-toolkit plugin:ci-package`
-     When this process succeeds, packages can be found within the `ci/packages/` folder.
-     The `Error signing manifest` warning can be ignored, YMMV.
+7. Build plugin:
+   - `npx grafana-toolkit plugin:ci-build`
+   - `npx grafana-toolkit plugin:ci-build --finish`
+8. Create zip package: `npx grafana-toolkit plugin:ci-package`
+   When this process succeeds, packages can be found within the `ci/packages/` folder.
+   The `Error signing manifest` warning can be ignored, YMMV.
