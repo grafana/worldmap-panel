@@ -27,7 +27,9 @@ refreshing the page will be sufficient.
 1. Install packages: `npx yarn install`
 2. Run prettier: `npx grafana-toolkit plugin:dev`
 3. Update `CHANGELOG.md` and bump version within `package.json`
-4. Build into `dist/`, lint and run tests: `npx yarn build`
-5. Build plugin on CI: `npx grafana-toolkit plugin:ci-build`
-6. Create a zip package: `npx grafana-toolkit plugin:ci-package`
+4. Tag repository: `git tag 0.xx.0`
+5. Push repository: `git push && git push --tags`
+6. Build into `dist/`, lint and run tests: `npx yarn build`
+7. Build plugin on CI: `npx grafana-toolkit plugin:ci-build`
+8. Create a zip package: `npx grafana-toolkit plugin:ci-package`
    When this process succeeds, packages can be found within the `ci/packages/` folder.
