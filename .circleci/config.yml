@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   build_plugin:
     docker:
-    - image: circleci/node:10
+    - image: circleci/node:14
     working_directory: ~/plugin
     steps:
     - checkout
@@ -28,7 +28,7 @@ jobs:
         - ci
   build_docs:
     docker:
-    - image: circleci/node:10
+    - image: circleci/node:14
     working_directory: ~/plugin
     steps:
     - checkout
@@ -54,7 +54,7 @@ jobs:
         - ci
   build_osx:
     docker:
-    - image: circleci/node:10
+    - image: circleci/node:14
     working_directory: ~/plugin
     steps:
     - checkout
@@ -79,7 +79,7 @@ jobs:
         - ci/jobs/build_osx
   build_win64:
     docker:
-    - image: circleci/node:10
+    - image: circleci/node:14
     working_directory: ~/plugin
     steps:
     - checkout
@@ -104,7 +104,7 @@ jobs:
         - ci/jobs/build_win64
   package:
     docker:
-    - image: circleci/node:10
+    - image: circleci/node:14
     working_directory: ~/plugin
     steps:
     - checkout
@@ -125,7 +125,7 @@ jobs:
         - ci/grafana-test-env
   test_6_7_4:
     docker:
-      - image: circleci/node:10-browsers
+      - image: circleci/node:14-browsers
     working_directory: ~/plugin
     steps:
       - checkout
@@ -163,7 +163,7 @@ jobs:
           path: ci/jobs/test_6_7_4
   test_7_2_2:
     docker:
-      - image: circleci/node:10-browsers
+      - image: circleci/node:14-browsers
     working_directory: ~/plugin
     steps:
       - checkout
@@ -201,7 +201,7 @@ jobs:
           path: ci/jobs/test_7_2_2
   report:
     docker:
-    - image: circleci/node:10
+    - image: circleci/node:14
     working_directory: ~/plugin
     steps:
     - checkout
