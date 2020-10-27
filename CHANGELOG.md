@@ -3,6 +3,15 @@
 ## development
 
 
+## v0.12.0
+- Add `formatOmitEmptyValue` settings parameter to hide `n/a` value. Thanks, @iruizr7!
+- Editor UI fixes. Thanks, @matschaffer!
+  - Avoid color & clickthrough sections overlap
+  - Display help section in full width
+- Upgrade development rig (`npx yarn upgrade`)
+- Adjust codebase to Typescript 4
+
+
 ## v0.11.0
 - Add categorical colors. Thanks, @JonasProgrammer!
   - Color mode can be switched between threshold (default/fallback) and categories
