@@ -17,7 +17,7 @@ export function createBasicMap() {
       showZoomControl: true,
       showAttribution: true,
     },
-    tileServer: 'CartoDB Positron',
+    tileServer: 'CARTO Positron',
   };
 
   // This mimics the `ctrl.panel` proxying established

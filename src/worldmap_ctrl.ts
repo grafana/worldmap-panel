@@ -197,7 +197,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     /*
      * Configure the Leaflet map widget.
      */
-    this.tileServer = contextSrv.user.lightTheme ? 'CartoDB Positron' : 'CartoDB Dark';
+    this.tileServer = contextSrv.user.lightTheme ? 'CARTO Positron' : 'CARTO Dark';
     this.setMapSaturationClass();
   }
 
@@ -205,7 +205,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
     /*
      * Configure the Leaflet map widget.
      */
-    if (this.tileServer === 'CartoDB Dark') {
+    if (this.tileServer === 'CARTO Dark') {
       this.saturationClass = 'map-darken';
     } else {
       this.saturationClass = '';

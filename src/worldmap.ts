@@ -5,18 +5,18 @@ import WorldmapCtrl from './worldmap_ctrl';
 import { ColorModes } from './model';
 
 const tileServers = {
-  'CartoDB Positron': {
-    url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+  'CARTO Positron': {
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
     attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
-      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> ' +
+      '&copy; <a href="https://carto.com/about-carto/" target="_blank" rel="noopener">CARTO</a>',
     subdomains: 'abcd',
   },
-  'CartoDB Dark': {
-    url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+  'CARTO Dark': {
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
     attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
-      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> ' +
+      '&copy; <a href="https://carto.com/about-carto/" target="_blank" rel="noopener">CARTO</a>',
     subdomains: 'abcd',
   },
 };
