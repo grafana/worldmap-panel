@@ -1,0 +1,6 @@
+{
+  "extends": "./node_modules/@grafana/toolkit/src/config/eslint.plugin.json",
+  "rules": {
+    "no-console": 0
+  }
+}
