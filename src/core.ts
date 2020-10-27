@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import * as _ from 'lodash';
 import WorldmapCtrl from './worldmap_ctrl';
-import DataFormatter, { DataFormat } from './data_formatter';
+import DataFormatter, { DataFormat, DataContainer } from './data_formatter';
 import { ErrorManager } from './errors';
 
 export class WorldmapCore {
@@ -126,7 +126,7 @@ export class WorldmapCore {
      *      an out-of-band location source.
      */
 
-    const data = [];
+    const data = new DataContainer();
     let series;
 
     if (this.settings.locationData === 'geohash') {

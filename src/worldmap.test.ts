@@ -3,7 +3,7 @@ import { createBasicMap } from '../test/map_builder';
 import $ from 'jquery';
 import PluginSettings from './settings';
 import { TemplateSrv } from 'grafana/app/features/templating/template_srv';
-import DataFormatter from './data_formatter';
+import DataFormatter, { DataContainer } from './data_formatter';
 import { ColorModes } from './model';
 
 describe('Worldmap', () => {
@@ -603,6 +603,7 @@ function setupInteractionMocks() {
    * Mock window.location methods.
    * https://remarkablemark.org/blog/2018/11/17/mock-window-location/
    */
+  // @ts-ignore
   delete window.location;
   // @ts-ignore
   window.location = {};
@@ -762,7 +763,7 @@ describe('ClickthroughLinks', () => {
 
       // Apply data as table format.
       const dataFormatter = new DataFormatter(ctrl);
-      const data: any[] = [];
+      const data = new DataContainer();
       dataFormatter.setTableValues(tableData, data);
       data.thresholds = [];
 

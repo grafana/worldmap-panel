@@ -1,4 +1,4 @@
-import DataFormatter from './data_formatter';
+import DataFormatter, { DataContainer } from './data_formatter';
 import { ErrorManager } from './errors';
 import * as jQuery from 'jquery';
 
@@ -424,7 +424,7 @@ describe('DataFormatter', () => {
   });
 
   describe('when data is coming from "json result" (regular)', () => {
-    const data: any[] = [];
+    const data = new DataContainer();
     beforeEach(() => {
       const ctrl = {
         panel: {
@@ -462,7 +462,7 @@ describe('DataFormatter', () => {
   });
 
   describe('when data is coming from "json result" (dataframe)', () => {
-    const data: any[] = [];
+    const data = new DataContainer();
     beforeEach(() => {
       const ctrl = {
         panel: {

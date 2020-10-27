@@ -14,6 +14,14 @@ interface DataInfo {
   count: number;
 }
 
+// https://stackoverflow.com/a/44441178
+export class DataContainer extends Array<Record<string, any>> {
+  highestValue: number | undefined;
+  lowestValue: number | undefined;
+  valueRange: number | undefined;
+  thresholds: [] | undefined;
+}
+
 export enum DataFormat {
   Table = 'table',
   Timeseries = 'timeseries',

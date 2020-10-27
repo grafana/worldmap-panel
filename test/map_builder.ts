@@ -5,6 +5,7 @@ export function createBasicMap() {
   document.body.insertAdjacentHTML('afterbegin', fixture);
 
   let ctrl = {
+    settings: {},
     panel: {
       center: {
         mapCenterLatitude: 0,
