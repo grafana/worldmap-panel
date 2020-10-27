@@ -14,10 +14,11 @@ jobs:
         command: |
           sudo npm install -g yarn --quiet --force
           yarn install --pure-lockfile
-          mkdir ci # Avoid error if not exists
     - run:
         name: Run Toolkit Build
-        command: npx grafana-toolkit plugin:ci-build
+        command: |
+          mkdir ci # Avoid error if not exists
+          npx grafana-toolkit plugin:ci-build
     - save_cache:
         paths:
         - node_modules
@@ -40,10 +41,11 @@ jobs:
         command: |
           sudo npm install -g yarn --quiet --force
           yarn install --pure-lockfile
-          mkdir ci # Avoid error if not exists
     - run:
         name: Build Docs
-        command: npx grafana-toolkit plugin:ci-docs
+        command: |
+          mkdir ci # Avoid error if not exists
+          npx grafana-toolkit plugin:ci-docs
     - save_cache:
         paths:
         - node_modules
@@ -115,7 +117,9 @@ jobs:
         - yarn-packages-{{ checksum "yarn.lock" }}
     - run:
         name: Package Distribution
-        command: npx grafana-toolkit plugin:ci-package
+        command: |
+          mkdir -p ci/jobs # Avoid error if not exists
+          npx grafana-toolkit plugin:ci-package
     - persist_to_workspace:
         root: .
         paths:
