@@ -16,12 +16,11 @@ jobs:
           yarn install --pure-lockfile
     - run:
         name: Run Toolkit Build
-        command: |
-          mkdir ci # Avoid error if not exists
-          npx grafana-toolkit plugin:ci-build
+        command: npx grafana-toolkit plugin:ci-build
     - save_cache:
         paths:
         - node_modules
+        - dist
         key: yarn-packages-{{ checksum "yarn.lock" }}
     - persist_to_workspace:
         root: .
@@ -43,9 +42,7 @@ jobs:
           yarn install --pure-lockfile
     - run:
         name: Build Docs
-        command: |
-          mkdir ci # Avoid error if not exists
-          npx grafana-toolkit plugin:ci-docs
+        command: npx grafana-toolkit plugin:ci-docs
     - save_cache:
         paths:
         - node_modules
