@@ -602,10 +602,18 @@ describe('WorldmapFoundation', () => {
 });
 
 function setupInteractionMocks() {
+  /*
+   * Mock window.location methods.
+   * https://remarkablemark.org/blog/2018/11/17/mock-window-location/
+   */
+  delete window.location;
+  // @ts-ignore
+  window.location = {};
+
   // Setup interaction mock for "window.location.assign".
-  // https://remarkablemark.org/blog/2018/11/17/mock-window-location/
   Object.defineProperty(window.location, 'assign', {
     configurable: true,
+    writable: true,
   });
   window.location.assign = jest.fn();
 
