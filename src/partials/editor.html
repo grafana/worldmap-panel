@@ -194,92 +194,87 @@
   </div>
 
   <!-- Help -->
-  <div class="section editor-column">
-
-    <div ng-show="ctrl.panel.locationData == null">
-      <h5>Mapping data</h5>
-      <p class="grafana-info-box">
-        These options control how location information is derived from data.
-    </div>
-    <div ng-show="ctrl.panel.locationData === 'countries'">
-      <h5>Mapping time series data</h5>
-      <p class="grafana-info-box">
-        The query should be formatted as <b>time series data</b>.
-        The time series (group by) name should be a 2-letter country code.
-        For example "US" for United States or "FR" for France.</p>
-    </div>
-    <div ng-show="ctrl.panel.locationData === 'countries_3letter'">
-      <h5>Mapping time series data</h5>
-      <p class="grafana-info-box">
-        The query should be formatted as <b>time series data</b>.
-        The time series (group by) name should be a 3-letter country code.
-        For example "USA" for United States or "FRA" for France.</p>
-    </div>
-    <div ng-show="ctrl.panel.locationData === 'states'">
-      <h5>Mapping time series data</h5>
-      <p class="grafana-info-box">
-        The query should be formatted as <b>time series data</b>.
-        The time series (group by) name should be a 2-letter US state code.
-        For example "CA" for California.</p>
-    </div>
-    <div ng-show="ctrl.panel.locationData === 'probes'">
-      <h5>Mapping time series data</h5>
-      <p class="grafana-info-box">
-        The query should be formatted as <b>time series data</b>.
-        The time series (group by) name should be a valid key in "probes.json".</p>
-    </div>
-    <div ng-show="ctrl.panel.locationData === 'json result'">
-      <h5>Mapping JSON data from datasource</h5>
-      <p class="grafana-info-box">
-        This supports any datasource capable of generating a JSON response
-        with a custom list of locations (the same format that for the JSON endpoint).
-        Example: Warp 10
-    </div>
-
-    <div ng-show="ctrl.panel.locationData === 'geohash'">
-      <h5>Mapping geohashes</h5>
-      <div class="grafana-info-box">
-      <p>
-        This supports <b>Elasticsearch</b> Geo-points using the GeoHash grid Aggregation feature
-        as well as <b>Prometheus</b> and <b>InfluxDB</b> data sources that return geohashes.</p>
-      <ul>
-        <li>
-          <b>geo_point/geohash field</b>: Enter the name of the geo_point/geohash column. This is used to calculate where the
-          circle should be drawn.</li>
-        <ng-template ng-include="'help_metric_field'"></ng-template>
-        <ng-template ng-include="'help_location_fields'"></ng-template>
-      </ul>
-      </div>
-    </div>
-    <div ng-show="ctrl.showTableGeohashOptions()">
-      <h5>Mapping table data</h5>
-      <div class="grafana-info-box">
-      <p>The query should be formatted as <b>table data</b> and contain an obligatory <b>geohash</b> column
-        as well as optional data like a <b>metric</b> column.</p>
-      <ul>
-        <li>
-          <b>Geohash field</b>: Enter the name of the geohash column. This is used to calculate where the circle should be drawn.</li>
-        <ng-template ng-include="'help_metric_field'"></ng-template>
-        <ng-template ng-include="'help_location_fields'"></ng-template>
-      </ul>
-      </div>
-    </div>
-    <div ng-show="ctrl.showTableCoordinateOptions()">
-      <h5>Mapping table data</h5>
-      <div class="grafana-info-box">
-      <p>The query should be formatted as <b>table data</b> and contain obligatory <b>latitude, longitude</b> columns
-        as well as optional data like a <b>metric</b> column.</p>
-      <ul>
-        <li>
-          <b>Latitude/Longitude fields</b>: Enter the name of the latitude and longitude columns. These are used to calculate
-          where the circle should be drawn.</li>
-        <ng-template ng-include="'help_metric_field'"></ng-template>
-        <ng-template ng-include="'help_location_fields'"></ng-template>
-      </ul>
-      </div>
+  <div ng-show="ctrl.panel.locationData == null">
+    <h5>Mapping data</h5>
+    <p class="grafana-info-box">
+      These options control how location information is derived from data.
+  </div>
+  <div ng-show="ctrl.panel.locationData === 'countries'">
+    <h5>Mapping time series data</h5>
+    <p class="grafana-info-box">
+      The query should be formatted as <b>time series data</b>.
+      The time series (group by) name should be a 2-letter country code.
+      For example "US" for United States or "FR" for France.</p>
+  </div>
+  <div ng-show="ctrl.panel.locationData === 'countries_3letter'">
+    <h5>Mapping time series data</h5>
+    <p class="grafana-info-box">
+      The query should be formatted as <b>time series data</b>.
+      The time series (group by) name should be a 3-letter country code.
+      For example "USA" for United States or "FRA" for France.</p>
+  </div>
+  <div ng-show="ctrl.panel.locationData === 'states'">
+    <h5>Mapping time series data</h5>
+    <p class="grafana-info-box">
+      The query should be formatted as <b>time series data</b>.
+      The time series (group by) name should be a 2-letter US state code.
+      For example "CA" for California.</p>
+  </div>
+  <div ng-show="ctrl.panel.locationData === 'probes'">
+    <h5>Mapping time series data</h5>
+    <p class="grafana-info-box">
+      The query should be formatted as <b>time series data</b>.
+      The time series (group by) name should be a valid key in "probes.json".</p>
+  </div>
+  <div ng-show="ctrl.panel.locationData === 'json result'">
+    <h5>Mapping JSON data from datasource</h5>
+    <p class="grafana-info-box">
+      This supports any datasource capable of generating a JSON response
+      with a custom list of locations (the same format that for the JSON endpoint).
+      Example: Warp 10
+  </div>
+  <div ng-show="ctrl.panel.locationData === 'geohash'">
+    <h5>Mapping geohashes</h5>
+    <div class="grafana-info-box">
+    <p>
+      This supports <b>Elasticsearch</b> Geo-points using the GeoHash grid Aggregation feature
+      as well as <b>Prometheus</b> and <b>InfluxDB</b> data sources that return geohashes.</p>
+    <ul>
+      <li>
+        <b>geo_point/geohash field</b>: Enter the name of the geo_point/geohash column. This is used to calculate where the
+        circle should be drawn.</li>
+      <ng-template ng-include="'help_metric_field'"></ng-template>
+      <ng-template ng-include="'help_location_fields'"></ng-template>
+    </ul>
     </div>
   </div>
-
+  <div ng-show="ctrl.showTableGeohashOptions()">
+    <h5>Mapping table data</h5>
+    <div class="grafana-info-box">
+    <p>The query should be formatted as <b>table data</b> and contain an obligatory <b>geohash</b> column
+      as well as optional data like a <b>metric</b> column.</p>
+    <ul>
+      <li>
+        <b>Geohash field</b>: Enter the name of the geohash column. This is used to calculate where the circle should be drawn.</li>
+      <ng-template ng-include="'help_metric_field'"></ng-template>
+      <ng-template ng-include="'help_location_fields'"></ng-template>
+    </ul>
+    </div>
+  </div>
+  <div ng-show="ctrl.showTableCoordinateOptions()">
+    <h5>Mapping table data</h5>
+    <div class="grafana-info-box">
+    <p>The query should be formatted as <b>table data</b> and contain obligatory <b>latitude, longitude</b> columns
+      as well as optional data like a <b>metric</b> column.</p>
+    <ul>
+      <li>
+        <b>Latitude/Longitude fields</b>: Enter the name of the latitude and longitude columns. These are used to calculate
+        where the circle should be drawn.</li>
+      <ng-template ng-include="'help_metric_field'"></ng-template>
+      <ng-template ng-include="'help_location_fields'"></ng-template>
+    </ul>
+    </div>
+  </div>
 </div>
 
 <script type="text/ng-template" id="help_metric_field">
@@ -401,9 +396,6 @@
 
   </div>
 
-  <!-- 2nd column -->
-  <div class="section editor-column">
-
     <div class="gf-form-group">
       <h5>Circle parameters</h5>
       <div class="gf-form">
@@ -472,10 +464,6 @@
       </div>
     </div>
 
-  </div>
-
-  <!-- 3rd column -->
-  <div class="section editor-column">
 
     <div class="gf-form-group">
       <h5>Popup labels</h5>
@@ -517,7 +505,5 @@
                ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
-
-  </div>
 
 </div>
