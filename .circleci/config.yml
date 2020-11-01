@@ -232,7 +232,8 @@ workflows:
 #    - test_7_2_2:
 #        requires:
 #          - package
-#    - report:
-#        requires:
+    - report:
+        requires:
 #        - test_6_7_4
 #        - test_7_2_2
+         - package
