@@ -122,6 +122,8 @@ jobs:
         - ci/packages
         - ci/dist
         - ci/grafana-test-env
+    - store_artifacts:
+        path: ci/packages
   test_6_7_4:
     docker:
       - image: circleci/node:14-browsers
