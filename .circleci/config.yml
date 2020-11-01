@@ -226,13 +226,13 @@ workflows:
         requires:
         - build_plugin
         - build_docs
-    - test_6_7_4:
-        requires:
-          - package
-    - test_7_2_2:
-        requires:
-          - package
-    - report:
-        requires:
-        - test_6_7_4
-        - test_7_2_2
+#    - test_6_7_4:
+#        requires:
+#          - package
+#    - test_7_2_2:
+#        requires:
+#          - package
+#    - report:
+#        requires:
+#        - test_6_7_4
+#        - test_7_2_2
