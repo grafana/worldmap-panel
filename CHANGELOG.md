@@ -2,6 +2,9 @@
 
 ## development
 
+## v0.13.0
+- Update basemaps URL to the new CARTO CDN URL. Thanks, @skgsergio!
+- Editor UI cleanups. Thanks, @matschaffer!
 
 ## v0.12.0
 - Add `formatOmitEmptyValue` settings parameter to hide `n/a` value. Thanks, @iruizr7!
