@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import $ from 'jquery';
+import './libs/leaflet_plus';
 import * as L from './libs/leaflet';
 import WorldmapCtrl from './worldmap_ctrl';
 import { ColorModes } from './model';

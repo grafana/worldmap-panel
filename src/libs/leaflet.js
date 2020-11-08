@@ -9452,11 +9452,6 @@ var Popup = DivOverlay.extend({
 	// @aka Popup options
 	options: {
 
-		// @option autoWidth: Boolean = true
-		// Set it to `false` if you don't want to compute
-		// and set the width of a opened popup automatically.
-		autoWidth: true,
-
 		// @option maxWidth: Number = 300
 		// Max width of the popup, in pixels.
 		maxWidth: 300,
@@ -9618,17 +9613,15 @@ var Popup = DivOverlay.extend({
 		var container = this._contentNode,
 		    style = container.style;
 
-		if (this.options.autoWidth) {
-			style.width = '';
-			style.whiteSpace = 'nowrap';
+		style.width = '';
+		style.whiteSpace = 'nowrap';
 
-			var width = container.offsetWidth;
-			width = Math.min(width, this.options.maxWidth);
-			width = Math.max(width, this.options.minWidth);
+		var width = container.offsetWidth;
+		width = Math.min(width, this.options.maxWidth);
+		width = Math.max(width, this.options.minWidth);
 
-			style.width = (width + 1) + 'px';
-			style.whiteSpace = '';
-		}
+		style.width = (width + 1) + 'px';
+		style.whiteSpace = '';
 
 		style.height = '';
 

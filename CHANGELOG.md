@@ -2,6 +2,7 @@
 
 ## development
 - Add test for customization of Leaflet Popup's "autoWidth" option
+- Extract Leaflet's custom "autoWidth" option into "leaflet_plus.ts"
 
 ## v0.13.0
 - Update basemaps URL to the new CARTO CDN URL. Thanks, @skgsergio!

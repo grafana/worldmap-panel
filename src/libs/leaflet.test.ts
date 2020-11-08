@@ -1,3 +1,4 @@
+import './leaflet_plus';
 import * as L from './leaflet';
 
 describe('Leaflet', () => {
