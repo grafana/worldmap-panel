@@ -18,21 +18,22 @@ refreshing the page will be sufficient.
 - Bundle plugin in dev mode: `npx yarn dev`
 - Bundle plugin in dev mode and start a watcher: `npx yarn watch`
 - Upgrade dependencies: `npx yarn upgrade`
-
-### Before submitting a pull request
 - Run all tests: `npx yarn test`
 - Run specific tests: `npx yarn test --testNamePattern "when some fields"`
 
+## Before submitting a pull request
+- Make sure your improvement gets accompanied by a corresponding test case
+- Run linter/prettier: `npx grafana-toolkit plugin:dev`
+
 ## Release
 1. Install packages: `npx yarn install`
-2. Run prettier: `npx grafana-toolkit plugin:dev`
-3. Update `CHANGELOG.md` and bump version within `package.json`
-4. Commit changes
-5. Tag repository: `git tag 0.xx.0`
-6. Push repository: `git push && git push --tags`
-7. Build plugin:
+2. Bump version within `package.json` and update `CHANGELOG.md` 
+3. Commit changes
+4. Tag repository: `git tag 0.xx.0`
+5. Push repository: `git push && git push --tags`
+6. Build plugin:
    - `npx grafana-toolkit plugin:ci-build`
    - `npx grafana-toolkit plugin:ci-build --finish`
-8. Create zip package: `npx grafana-toolkit plugin:ci-package`
+7. Create zip package: `npx grafana-toolkit plugin:ci-package`
    When this process succeeds, packages can be found within the `ci/packages/` folder.
-   The `Error signing manifest` warning can be ignored, YMMV.
+   The `Error signing manifest` warning can optionally be ignored, YMMV.
