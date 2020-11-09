@@ -2,7 +2,7 @@ import { loadPluginCss, MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 
 import * as _ from 'lodash';
 import './styles/worldmap-panel.css';
-import './styles/leaflet.css';
+import 'leaflet/dist/leaflet.css';
 import PluginSettings from './settings';
 import WorldMap from './worldmap';
 import { ColorModes, LocationSources, MapCenters } from './model';

@@ -20,12 +20,14 @@
   "devDependencies": {
     "@grafana/e2e": "^7.3.1",
     "@grafana/toolkit": "^7.3.1",
-    "@types/grafana": "https://git@github.com/CorpGlory/types-grafana.git",
-    "@types/lodash": "^4.14.118",
-    "@types/moment": "^2.13.0"
+    "@types/grafana": "https://github.com/CorpGlory/types-grafana.git",
+    "@types/lodash": "^4.14.165",
+    "@types/moment": "^2.13.0",
+    "@types/leaflet": "^1.5.19"
   },
   "dependencies": {
     "jquery": "^3.5.1",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.20",
+    "leaflet": "^1.7.1"
   }
 }

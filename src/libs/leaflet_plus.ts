@@ -2,7 +2,7 @@
 // This option, when disabled, will mask the whole section for computing
 // the width for the popup automatically within the _updateLayout method.
 // https://github.com/panodata/grafana-map-panel/issues/79#issuecomment-723290476
-import { Popup } from './leaflet';
+import { Popup } from 'leaflet';
 
 // @option autoWidth: Boolean = true
 // Set it to `false` if you don't want to compute
@@ -18,8 +18,8 @@ Popup.prototype._updateLayout = function() {
     style.whiteSpace = 'nowrap';
 
     var width = container.offsetWidth;
-    width = Math.min(width, this.options.maxWidth);
-    width = Math.max(width, this.options.minWidth);
+    width = Math.min(width, this.options.maxWidth || Infinity);
+    width = Math.max(width, this.options.minWidth || 0);
 
     style.width = width + 1 + 'px';
     style.whiteSpace = '';
