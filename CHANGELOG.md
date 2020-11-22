@@ -1,6 +1,8 @@
 # Changelog
 
 ## development
+
+## v0.14.0
 - Add test for customization of Leaflet Popup's "autoWidth" option
 - Extract Leaflet's custom "autoWidth" option into "leaflet_plus.ts"
 - Use vanilla Leaflet 1.7.1
