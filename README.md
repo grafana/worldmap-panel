@@ -277,6 +277,28 @@ If one value is specified then two colors are used. For example, if the threshol
 
 The threshold field also accepts 2 or more comma-separated values. For example, if you have 2 values that represents 3 ranges that correspond to the three colors. For example: if the thresholds are 70, 90 then the first color represents < 70, the second color represents between 70 and 90 and the third color represents > 90.
 
+### Image overlay
+
+Optionally, you can show an image over the base map (but below the data points). This could be useful, for example, to show a more detailed/up-to-date image of the area of interest, in case the map provider only has old or low-resolution images. See below for an example of displaying interpolated sensor data (for example, temperatures in a field while only knowing the temperatures at a few sensors).
+
+![Image overlay example](https://raw.githubusercontent.com/panodata/grafana-map-panel/develop/src/images/overlay_example.png)
+
+**Enable overlay**
+
+Show/hide the overlay. 
+
+**Overlay URL**
+
+The URL where the image is available. Please notice that only URLs can be used (no local files!)
+
+**Overlay opacity**
+
+The image overlay's opacity can be controlled (0=completely transparent, 1=completely opaque)
+
+**Latitude and longitude ranges**
+
+Specify the limits of the image in the map. Enter the minimum and maximum latitude, and the minimum and maximum longitude, separated by a comma. These numbers specify the extent of the overlay.
+
 ### CHANGELOG
 
 The latest changes can be found here: [CHANGELOG.md](https://github.com/panodata/grafana-map-panel/blob/master/CHANGELOG.md)

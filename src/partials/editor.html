@@ -550,6 +550,48 @@
 </div>
 
 <div class="gf-form-group">
+    <h5>Custom image overlay</h5>
+    <gf-form-switch class="gf-form" label="Enable" label-class="width-10" checked="ctrl.panel.enableOverlay"
+                    on-change="ctrl.refreshOverlay()">
+    </gf-form-switch>
+    <div class="gf-form" ng-show="ctrl.panel.enableOverlay == true">
+        <label class="gf-form-label width-10">Overlay URL</label>
+        <input type="url" class="input-small gf-form-input width-10" ng-model="ctrl.panel.overlayUrl"
+               ng-change="ctrl.refreshOverlay()"
+               ng-model-onblur/>
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.enableOverlay == true">
+        <label class="gf-form-label width-10">Overlay opacity</label>
+        <input type="number" step="0.05" class="input-small gf-form-input width-10" 
+               ng-model="ctrl.panel.overlayOpacity" placeholder="0.8"
+               ng-change="ctrl.refreshOverlay()"
+               ng-model-onblur/>
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.enableOverlay == true">
+        <label class="gf-form-label width-10">
+            Latitude range
+            <i class="grafana-tip fa fa-question-circle"
+               bs-tooltip="'Provide the min and max latitude values, separated by a comma'"></i>
+        </label>
+        <input type="text" class="input-small gf-form-input width-10" 
+               ng-model="ctrl.panel.overlayRangeLatitude" placeholder="0,10"
+               ng-change="ctrl.refreshOverlay()"
+               ng-model-onblur/>
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.enableOverlay == true">
+        <label class="gf-form-label width-10">
+            Longitude range
+            <i class="grafana-tip fa fa-question-circle"
+               bs-tooltip="'Provide the min and max longitude values, separated by a comma'"></i>
+        </label>
+        <input type="text" class="input-small gf-form-input width-10" 
+               ng-model="ctrl.panel.overlayRangeLongitude" placeholder="0,20"
+               ng-change="ctrl.refreshOverlay()" 
+               ng-model-onblur/>
+    </div>
+</div>
+
+<div class="gf-form-group">
     <h5>Clickthrough links</h5>
     <div class="gf-form">
         <label class="gf-form-label width-10">

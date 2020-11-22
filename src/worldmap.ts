@@ -29,6 +29,7 @@ export default class WorldMap {
   circles: any[];
   map: any;
   legend: any;
+  overlay: any;
   circlesLayer: any;
 
   constructor(ctrl, mapContainer) {
@@ -162,6 +163,26 @@ export default class WorldMap {
     if (this.ctrl.settings.legendContainerSelector) {
       $(this.ctrl.settings.legendContainerSelector).append(this.legend._div);
     }
+  }
+
+  createOverlay() {
+    // See https://leafletjs.com/reference-1.3.4.html#imageoverlay for example usage
+    const latRange = this.ctrl.settings.overlayRangeLatitude
+        .split(',')
+        .slice(0, 2)
+        .map(x => Number(x)),
+      lngRange = this.ctrl.settings.overlayRangeLongitude
+        .split(',')
+        .slice(0, 2)
+        .map(x => Number(x));
+    var imageBounds = [
+      [latRange[0], lngRange[0]],
+      [latRange[1], lngRange[1]],
+    ];
+    this.overlay = (window as any).L.imageOverlay(this.ctrl.settings.overlayUrl, imageBounds, {
+      opacity: this.ctrl.settings.overlayOpacity,
+    });
+    this.overlay.addTo(this.map);
   }
 
   needToRedrawCircles(data) {

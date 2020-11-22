@@ -475,6 +475,26 @@ describe('Worldmap', () => {
     });
   });
 
+  describe('when an image overlay is requested', () => {
+    beforeEach(() => {
+      ctrl.panel.enableOverlay = true;
+      ctrl.panel.overlayUrl = 'http://foo.bar/overlay.png';
+      ctrl.panel.overlayRangeLatitude = '0,1.23';
+      ctrl.panel.overlayRangeLongitude = '-2., 3';
+      worldMap.createOverlay();
+    });
+
+    it('should create an overlay layer', () => {
+      expect(worldMap.overlay).toBeDefined();
+      const bounds = worldMap.overlay.getBounds();
+      expect(bounds.getNorth()).toBe(1.23);
+      expect(bounds.getSouth()).toBe(0);
+      expect(bounds.getEast()).toBe(3);
+      expect(bounds.getWest()).toBe(-2);
+      expect(worldMap.overlay._url).toBe('http://foo.bar/overlay.png');
+    });
+  });
+
   describe('when the data has two points at the same spot', () => {
     beforeEach(() => {
       ctrl.data = new DataBuilder()
