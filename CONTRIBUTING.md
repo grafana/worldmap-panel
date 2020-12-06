@@ -37,3 +37,5 @@ refreshing the page will be sufficient.
 7. Create zip package: `npx grafana-toolkit plugin:ci-package`
    When this process succeeds, packages can be found within the `ci/packages/` folder.
    The `Error signing manifest` warning can optionally be ignored, YMMV.
+
+Steps 6. and 7. can be shortened by invoking `make package publish`.

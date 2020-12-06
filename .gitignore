@@ -1,5 +1,6 @@
 node_modules
 npm-debug.log
+yarn-error.log
 .DS_Store
 .vscode
 .idea
@@ -9,6 +10,5 @@ coverage/
 artifacts/
 
 .venv*
-bin/
 build/
 ci/
