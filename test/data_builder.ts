@@ -7,7 +7,7 @@ export default class DataBuilder {
     this.data.categories = [];
   }
 
-  withCountryAndValue(countryCode, value) {
+  withCountryAndValue(countryCode, value, overrides?: {[key: string]: any}) {
     let dataPoint;
     if (countryCode === 'SE') {
       dataPoint = {
@@ -39,7 +39,7 @@ export default class DataBuilder {
     } else {
       throw new Error(`Unable to create fixture for country code ${countryCode}`);
     }
-    this.data.push(dataPoint);
+    this.data.push({...dataPoint, ...overrides});
 
     return this;
   }
