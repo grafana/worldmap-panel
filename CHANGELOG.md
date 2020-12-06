@@ -2,6 +2,9 @@
 
 ## development
 
+## v0.15.0
+- Support multiple metrics in popup content for Elasticsearch. Thanks, @matschaffer!
+
 ## v0.14.0
 - Add test for customization of Leaflet Popup's "autoWidth" option
 - Extract Leaflet's custom "autoWidth" option into "leaflet_plus.ts"
