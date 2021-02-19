@@ -119,7 +119,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         dataType: "jsonp",
         success: res => {
           this.locations = res;
-          this.render();
+          this.refresh();
         }
       });
     } else if (this.panel.locationData === "json endpoint") {
@@ -129,7 +129,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
       $.getJSON(this.panel.jsonUrl).then(res => {
         this.locations = res;
-        this.render();
+        this.refresh();
       });
     } else if (this.panel.locationData === "table") {
       // .. Do nothing
