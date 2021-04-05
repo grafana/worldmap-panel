@@ -6,8 +6,8 @@
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;
   background: white;
-  background: rgba(255,255,255,0.8);
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
 }
 .info h4 {
@@ -33,10 +33,58 @@
   opacity: 0.7;
 }
 
-.leaflet-top.leaflet-left, .leaflet-bottom.leaflet-left, .leaflet-bottom.leaflet-right {
+.leaflet-top.leaflet-left,
+.leaflet-bottom.leaflet-left,
+.leaflet-bottom.leaflet-right {
   z-index: 1000;
 }
 
-.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
   color: #d8d9da !important;
+}
+
+.margin-top-8 {
+  margin-top: 8px;
+}
+.tooltip-container {
+  max-height: 100px;
+  overflow: auto;
+  color: #666666;
+}
+
+.info.aggregations.leaflet-control {
+  color: #666666;
+  font-size: 11px;
+  width: 100%;
+}
+.agg-container {
+  max-height: 90px;
+  overflow: auto;
+}
+.agg-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.agg-item > div:first-child {
+  min-width: 70px;
+  display: flex;
+}
+.agg-label {
+  width: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 2px;
+}
+.agg-bar {
+  flex: 1;
+  margin-left: 5px;
+  margin-bottom: 2px;
+}
+
+.agg-bar-progress {
+  background: #0078a8;
+  font-size: 0;
 }
