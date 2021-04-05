@@ -22,7 +22,12 @@ export default class DataFormatter {
         }
 
         if (_.isString(lastValue)) {
-          data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
+          data.push({
+            key: serie.alias,
+            value: 0,
+            valueFormatted: lastValue,
+            valueRounded: 0
+          });
         } else {
           const dataValue = {
             key: serie.alias,
@@ -31,7 +36,7 @@ export default class DataFormatter {
             locationLongitude: location.longitude,
             value: serie.stats[this.ctrl.panel.valueName],
             valueFormatted: lastValue,
-            valueRounded: 0,
+            valueRounded: 0
           };
 
           if (dataValue.value > highestValue) {
@@ -42,7 +47,10 @@ export default class DataFormatter {
             lowestValue = dataValue.value;
           }
 
-          dataValue.valueRounded = kbn.roundValue(dataValue.value, parseInt(this.ctrl.panel.decimals, 10) || 0);
+          dataValue.valueRounded = kbn.roundValue(
+            dataValue.value,
+            parseInt(this.ctrl.panel.decimals, 10) || 0
+          );
           data.push(dataValue);
         }
       });
@@ -61,10 +69,13 @@ export default class DataFormatter {
       locationLongitude: decodedGeohash.longitude,
       value: value,
       valueFormatted: value,
-      valueRounded: 0,
+      valueRounded: 0
     };
 
-    dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+    dataValue.valueRounded = kbn.roundValue(
+      dataValue.value,
+      this.ctrl.panel.decimals || 0
+    );
     return dataValue;
   }
 
@@ -93,7 +104,12 @@ export default class DataFormatter {
               : encodedGeohash;
             const value = row[columnNames[this.ctrl.panel.esMetric]];
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            const dataValue = this.createDataValue(
+              encodedGeohash,
+              decodedGeohash,
+              locationName,
+              value
+            );
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }
@@ -117,7 +133,12 @@ export default class DataFormatter {
               : encodedGeohash;
             const value = datapoint[this.ctrl.panel.esMetric];
 
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            const dataValue = this.createDataValue(
+              encodedGeohash,
+              decodedGeohash,
+              locationName,
+              value
+            );
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }
@@ -169,9 +190,12 @@ export default class DataFormatter {
         let key;
         let longitude;
         let latitude;
+        let metricFieldChoosen: number;
+        let metricFieldNaN;
 
         if (this.ctrl.panel.tableQueryOptions.queryType === 'geohash') {
-          const encodedGeohash = datapoint[this.ctrl.panel.tableQueryOptions.geohashField];
+          const encodedGeohash =
+            datapoint[this.ctrl.panel.tableQueryOptions.geohashField];
           const decodedGeohash = decodeGeoHash(encodedGeohash);
 
           latitude = decodedGeohash.latitude;
@@ -179,20 +203,40 @@ export default class DataFormatter {
           key = encodedGeohash;
         } else {
           latitude = datapoint[this.ctrl.panel.tableQueryOptions.latitudeField];
-          longitude = datapoint[this.ctrl.panel.tableQueryOptions.longitudeField];
+          longitude =
+            datapoint[this.ctrl.panel.tableQueryOptions.longitudeField];
           key = `${latitude}_${longitude}`;
         }
-
+        let locationName;
+        if (this.ctrl.panel.tableQueryOptions.metricField === 'TAS') {
+          locationName =  (datapoint[this.ctrl.panel.tableQueryOptions.labelField] || datapoint["Name"]);
+          if (datapoint["State"] === "ACTIVE"){
+            metricFieldChoosen = 11;
+          }else{
+            metricFieldChoosen = -1;
+          }
+          metricFieldNaN = true;
+        } else {
+          metricFieldChoosen =
+            datapoint[this.ctrl.panel.tableQueryOptions.metricField];
+          metricFieldNaN = false;
+          locationName =  (datapoint[this.ctrl.panel.tableQueryOptions.labelField] || "n/a");
+        }
         const dataValue = {
           key: key,
-          locationName: datapoint[this.ctrl.panel.tableQueryOptions.labelField] || 'n/a',
+          locationName: locationName,
           locationLatitude: latitude,
           locationLongitude: longitude,
-          value: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
-          valueFormatted: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
+          value: metricFieldChoosen || 0,
+          valueFormatted:
+            datapoint[this.ctrl.panel.tableQueryOptions.metricField],
           valueRounded: 0,
+          isMetricFieldNaN: metricFieldNaN
         };
-
+        if (this.ctrl.panel.aggregationLegendField !== '') {
+          dataValue[`agg-${this.ctrl.panel.aggregationLegendField}`] =
+            datapoint[this.ctrl.panel.aggregationLegendField];
+        }
         if (dataValue.value > highestValue) {
           highestValue = dataValue.value;
         }
@@ -201,10 +245,38 @@ export default class DataFormatter {
           lowestValue = dataValue.value;
         }
 
-        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
-        data.push(dataValue);
+        dataValue.valueRounded = kbn.roundValue(
+          dataValue.value,
+          this.ctrl.panel.decimals || 0
+        );
+        if (latitude && longitude) {
+          data.push(dataValue);
+        }
       });
-
+      // Getting the List of columns from the table row
+      data.columns = Object.keys(tableData[0][0] || []);
+      // Aggregations
+      if (
+        (this.ctrl.panel.aggregationLegendField !== '' &&
+          data.columns.indexOf(this.ctrl.panel.aggregationLegendField) > -1) ||
+        !tableData[0][0]
+      ) {
+        data.aggregations = _.countBy(
+          data,
+          `agg-${this.ctrl.panel.aggregationLegendField}`
+        );
+        data.aggregations.unknown =
+          data.aggregations.Undefined || 0 + data.aggregations[''] || 0;
+        delete data.aggregations.undefined;
+        delete data.aggregations[''];
+        data.aggregationSortedList = Object.keys(data.aggregations).sort(
+          function(a, b) {
+            return data.aggregations[b] - data.aggregations[a];
+          }
+        );
+      } else {
+        data.aggregations = {};
+      }
       data.highestValue = highestValue;
       data.lowestValue = lowestValue;
       data.valueRange = highestValue - lowestValue;
@@ -223,7 +295,7 @@ export default class DataFormatter {
           locationLatitude: point.latitude,
           locationLongitude: point.longitude,
           value: point.value !== undefined ? point.value : 1,
-          valueRounded: 0,
+          valueRounded: 0
         };
         if (dataValue.value > highestValue) {
           highestValue = dataValue.value;
