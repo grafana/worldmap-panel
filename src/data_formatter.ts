@@ -16,18 +16,13 @@ export default class DataFormatter {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
         let aliasCap = serie.alias.toUpperCase();
-        let location = null;
-        do {
-          location = locMap[aliasCap];
-          if (location) break;
+        let location = locMap[aliasCap];
+        while (!location) {
           let ind = aliasCap.lastIndexOf('_');
-          if (ind <= 0) break;
+          if (ind <= 0) return;
           aliasCap = aliasCap.substr(0, ind);
-        } while true;
-
-        if (!location) {
-          return;
-        }
+          location = locMap[aliasCap];
+        };
 
         if (_.isString(lastValue)) {
           data.push({ key: serie.alias, value: 0, valueFormatted: lastValue, valueRounded: 0 });
