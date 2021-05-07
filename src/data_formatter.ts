@@ -3,16 +3,14 @@ import decodeGeoHash from './geohash';
 import kbn from 'grafana/app/core/utils/kbn';
 
 export default class DataFormatter {
-  locMap: any;
-  constructor(private ctrl) {
-    this.locMap = {};
-    this.ctrl.locations.forEach(loc => {this.locMap[loc.key.toUpperCase()] = loc;});
-  }
+  constructor(private ctrl) {}
 
   setValues(data) {
     if (this.ctrl.series && this.ctrl.series.length > 0) {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
+      let locMap = {};
+      this.ctrl.locations.forEach(loc => {locMap[loc.key.toUpperCase()] = loc;});
       
       this.ctrl.series.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
