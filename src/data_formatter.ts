@@ -9,13 +9,21 @@ export default class DataFormatter {
     if (this.ctrl.series && this.ctrl.series.length > 0) {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
-
+      let locMap = {};
+      this.ctrl.locations.forEach(loc => {locMap[loc.key.toUpperCase()] = loc;});
+      
       this.ctrl.series.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
-        const location = _.find(this.ctrl.locations, loc => {
-          return loc.key.toUpperCase() === serie.alias.toUpperCase();
-        });
+        let aliasCap = serie.alias.toUpperCase();
+        let location = null;
+        do {
+          location = locMap[aliasCap];
+          if (location) break;
+          let ind = aliasCap.lastIndexOf('_');
+          if (ind <= 0) break;
+          aliasCap = aliasCap.substr(0, ind);
+        } while true;
 
         if (!location) {
           return;
