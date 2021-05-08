@@ -187,10 +187,23 @@ export default class WorldMap {
 
     return Math.sqrt(circleSizeRange * dataFactor + circleMinSize * circleMinSize);
   }
+  
+  addUnit(n) {
+    const Units = 'kMGTPEZY';
+    let e=-1;
+    while (n >= 1000) {
+        n = Math.round(n)/1000;
+        e++;
+    }
+    if (n >= 100) n = Math.round(n*10)/10;
+    else if (n >= 10) n = Math.round(n*100)/100;
+    if (e >= 0) n += Units.charAt(e);
+    return n;
+  }
 
   createPopup(circle, locationName, value) {
     const unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
-    const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
+    const label = (locationName + ': ' + this.addUnit(value) + ' ' + (unit || '')).trim();
     circle.bindPopup(label, {
       offset: (<any>window).L.point(0, -2),
       className: 'worldmap-popup',
