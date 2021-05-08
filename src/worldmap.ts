@@ -183,9 +183,9 @@ export default class WorldMap {
     }
 
     const dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
-    const circleSizeRange = circleMaxSize - circleMinSize;
+    const circleSizeRange = (circleMaxSize - circleMinSize) * (circleMaxSize + circleMinSize);
 
-    return circleSizeRange * dataFactor + circleMinSize;
+    return Math.sqrt(circleSizeRange * dataFactor + circleMinSize * circleMinSize);
   }
 
   createPopup(circle, locationName, value) {
