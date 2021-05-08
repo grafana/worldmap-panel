@@ -117,7 +117,7 @@ describe('Worldmap', () => {
     });
 
     it('should create a circle with circle size 6 for mid value size', () => {
-      expect(worldMap.circles[1].options.radius).toBe(6);
+      expect(worldMap.circles[1].options.radius).toBe(Math.sqrt(52));
     });
 
     it('should create a circle with max circle size for largest value size', () => {
