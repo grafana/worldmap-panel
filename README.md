@@ -27,7 +27,8 @@ Time Series data contains a timestamp, a metric name and a numeric value. In oth
 ```json
 [
   {"target": "SE", "datapoints": [[183255.0, 1529755200]]},
-  {"target": "US", "datapoints": [[192224.0, 1529755200]]}
+  {"target": "US", "datapoints": [[192224.0, 1529755200]]},
+  {"target": "US.CA.PaloAlto", "datapoints": [[3922.0, 1529755200]]}
 ]
 ```
 
@@ -46,11 +47,37 @@ Location data should be in the JSON format and should be an array of JSON object
     "latitude": 37.09024,
     "longitude": -95.712891,
     "name": "United States"
+  },
+  {
+    "key": [
+      "US.CA",
+      "US-CA",
+      "US_California"
+    ],
+    "latitude": 36.17,
+    "longitude": -119.7462,
+    "name": "California"
+  },
+  {
+    "key": [
+      "US.IA",
+      "US-IA",
+      "US_Iowa"
+    ],
+    "latitude": 42.0046,
+    "longitude": -93.214,
+    "name": "Iowa"
+  },
+  {
+    "key": "Unknown",
+    "latitude": 66,
+    "longitude": 66,
+    "name": "Unknown"
   }
 ]
 ```
 
-The Worldmap will then match the metric name (target in the example data) with a key field from the location data. With this example data there will be two circles drawn on the map, one for Sweden and one for the United States with values 183255 and 192224.
+The Worldmap will then match the metric name (target in the example data) with a key field from the location data. With this example data there will be three circles drawn on the map, one for Sweden, one for the United States and one for California with values 183255, 192224 and 3922.
 
 ### Table Format
 
