@@ -247,7 +247,7 @@ There are four ways to provide data for the worldmap panel:
  - *states*: Similar to countries but for the states in USA e.g. CA for California
  - *world_regions*: On top of countries, added states in USA and provinces in China with hierarchical keys e.g. US.CA for California, CN.GD for Guangdong.
  - *geohash*: An ElasticSearch query that returns geohashes.
- - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/grafana/worldmap-panel/blob/master/src/data/countries.json) or [this list of cities](https://github.com/grafana/worldmap-panel/blob/master/src/data/probes.json).
+ - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/mileweb/worldmap-panel/blob/master/src/data/countries.json) or [this list of world_regions](https://github.com/mileweb/worldmap-panel/blob/master/src/data/world_regions.json).
  - *jsonp*: A jsonp endpoint that returns custom json wrapped as jsonp. Use this if you are having problems with CORS.
  - *table*: This expects the metric query to return data points with a field named geohash or two fields/columns named `latitude` and `longitude`. This field should contain a string in the [geohash form](https://www.elastic.co/guide/en/elasticsearch/guide/current/geohashes.html). For example: London -> "gcpvh3zgu992".
 
@@ -307,4 +307,4 @@ The threshold field also accepts 2 or more comma-separated values. For example, 
 
 ### CHANGELOG
 
-The latest changes can be found here: [CHANGELOG.md](https://github.com/grafana/worldmap-panel/blob/master/CHANGELOG.md)
+The latest changes can be found here: [CHANGELOG.md](https://github.com/mileweb/worldmap-panel/blob/master/CHANGELOG.md)
