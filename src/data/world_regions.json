@@ -6,181 +6,181 @@
     "name": "Unknown"
   },
   {
-    "key": ["CN_shanghai","CN-SH"],
+    "key": ["CN_shanghai","CN-SH","CN.SH"],
     "latitude": 31.1667,
     "longitude": 121.4667,
     "name": "Shanghai"
   },
   {
-    "key": ["CN_guangdong","CN-GD"],
+    "key": ["CN_guangdong","CN-GD","CN.GD"],
     "latitude": 23.1288,
     "longitude": 113.2590,
     "name": "Guangdong"
   },
   {
-    "key": ["CN_sichuan","CN-SC"],
+    "key": ["CN_sichuan","CN-SC","CN.SC"],
     "latitude": 30.6636,
     "longitude": 104.0667,
     "name": "Sichuan"
   },
   {
-    "key": ["CN_tianjin","CN-TJ"],
+    "key": ["CN_tianjin","CN-TJ","CN.TJ"],
     "latitude": 39.1467,
     "longitude": 117.2056,
     "name": "Tianjin"
   },
   {
-    "key": ["CN_hebei","CN-HE"],
+    "key": ["CN_hebei","CN-HE","CN.HE"],
     "latitude": 38.0422,
     "longitude": 114.5086,
     "name": "Hebei"
   },
   {
-    "key": ["CN_hubei","CN-HB"],
+    "key": ["CN_hubei","CN-HB","CN.HB"],
     "latitude": 30.5872,
     "longitude": 114.2881,
     "name": "Hubei"
   },
   {
-    "key": ["CN_chongqing","CN-CQ"],
+    "key": ["CN_chongqing","CN-CQ","CN.CQ"],
     "latitude": 29.5500,
     "longitude": 106.5069,
     "name": "Chongqing"
   },
   {
-    "key": ["CN_jilin","CN-JL"],
+    "key": ["CN_jilin","CN-JL","CN.JL"],
     "latitude": 43.9000,
     "longitude": 125.2000,
     "name": "Jilin"
   },
   {
-    "key": ["CN_jiangsu","CN-JS"],
+    "key": ["CN_jiangsu","CN-JS","CN.JS"],
     "latitude": 32.0500,
     "longitude": 118.7667,
     "name": "Jiangsu"
   },
   {
-    "key": ["CN_anhui","CN-AH"],
+    "key": ["CN_anhui","CN-AH","CN.AH"],
     "latitude": 31.8639,
     "longitude": 117.2808,
     "name": "Anhui"
   },
   {
-    "key": ["CN_guangxi","CN-GX"],
+    "key": ["CN_guangxi","CN-GX","CN.GX"],
     "latitude": 22.8192,
     "longitude": 108.3150,
     "name": "Guangxi"
   },
   {
-    "key": ["CN_shaanxi","CN-SN"],
+    "key": ["CN_shaanxi","CN-SN","CN.SN"],
     "latitude": 34.2667,
     "longitude": 108.9000,
     "name": "Shaanxi"
   },
   {
-    "key": ["CN_liaoning","CN-LN"],
+    "key": ["CN_liaoning","CN-LN","CN.LN"],
     "latitude": 41.8039,
     "longitude": 123.4258,
     "name": "Liaoning"
   },
   {
-    "key": ["CN_hunan","CN-HN"],
+    "key": ["CN_hunan","CN-HN","CN.HN"],
     "latitude": 28.1987,
     "longitude": 112.9709,
     "name": "Hunan"
   },
   {
-    "key": ["CN_henan","CN-HA"],
+    "key": ["CN_henan","CN-HA","CN.HA"],
     "latitude": 34.7492,
     "longitude": 113.6605,
     "name": "Henan"
   },
   {
-    "key": ["CN_zhejiang","CN-ZJ"],
+    "key": ["CN_zhejiang","CN-ZJ","CN.ZJ"],
     "latitude": 30.2500,
     "longitude": 120.1675,
     "name": "Zhejiang"
   },
   {
-    "key": ["CN_yunnan","CN-YN"],
+    "key": ["CN_yunnan","CN-YN","CN.YN"],
     "latitude": 25.0433,
     "longitude": 102.7061,
     "name": "Yunnan"
   },
   {
-    "key": ["CN_fujian","CN-FJ"],
+    "key": ["CN_fujian","CN-FJ","CN.FJ"],
     "latitude": 26.0769,
     "longitude": 119.2917,
     "name": "Fujian"
   },
   {
-    "key": ["CN_jiangxi","CN-JX"],
+    "key": ["CN_jiangxi","CN-JX","CN.JX"],
     "latitude": 28.6842,
     "longitude": 115.8872,
     "name": "Jiangxi"
   },
   {
-    "key": ["CN_heilongjiang","CN-HL"],
+    "key": ["CN_heilongjiang","CN-HL","CN.HL"],
     "latitude": 45.7500,
     "longitude": 126.6333,
     "name": "Heilongjiang"
   },
   {
-    "key": ["CN_guizhou","CN-GZ"],
+    "key": ["CN_guizhou","CN-GZ","CN.GZ"],
     "latitude": 26.5794,
     "longitude": 106.7078,
     "name": "Guizhou"
   },
   {
-    "key": ["CN_gansu","CN-GS"],
+    "key": ["CN_gansu","CN-GS","CN.GS"],
     "latitude": 36.0617,
     "longitude": 103.8318,
     "name": "Gansu"
   },
   {
-    "key": ["CN_shanxi","CN-SX"],
+    "key": ["CN_shanxi","CN-SX","CN.SX"],
     "latitude": 37.8733,
     "longitude": 112.5425,
     "name": "Shanxi"
   },
   {
-    "key": ["CN_shandong","CN-SD"],
+    "key": ["CN_shandong","CN-SD","CN.SD"],
     "latitude": 36.6667,
     "longitude": 116.9833,
     "name": "Shandong"
   },
   {
-    "key": ["CN_xinjiang","CN-XJ"],
+    "key": ["CN_xinjiang","CN-XJ","CN.XJ"],
     "latitude": 43.8250,
     "longitude": 87.6000,
     "name": "Xinjiang"
   },
   {
-    "key": ["CN_neimenggu","CN-NM"],
+    "key": ["CN_neimenggu","CN-NM","CN.NM"],
     "latitude": 40.8151,
     "longitude": 111.6629,
     "name": "Inner Mongolia"
   },
   {
-    "key": ["CN_qinghai","CN-QH"],
+    "key": ["CN_qinghai","CN-QH","CN.QH"],
     "latitude": 36.6239,
     "longitude": 101.7787,
     "name": "Qinghai"
   },
   {
-    "key": ["CN_hainan","CN-HI"],
+    "key": ["CN_hainan","CN-HI","CN.HI"],
     "latitude": 20.0200,
     "longitude": 110.3200,
     "name": "Hainan"
   },
   {
-    "key": ["CN_ningxia","CN-NX"],
+    "key": ["CN_ningxia","CN-NX","CN.NX"],
     "latitude": 38.4795,
     "longitude": 106.2254,
     "name": "Ningxia"
   },
   {
-    "key": ["CN_xizang","CN-XZ"],
+    "key": ["CN_xizang","CN-XZ","CN.XZ"],
     "latitude": 29.6500,
     "longitude": 91.1000,
     "name": "Tibet"
