@@ -217,7 +217,7 @@ It supports any datasource capable of generating a JSON response with a  a custo
 There are four ways to provide data for the worldmap panel:
 
  - *countries*: This is a list of all the countries in the world. It works by matching a country code (US, FR, AU) to a node alias in a time series query.
- - *states*: Similar to countries but for the states in USA e.g. CA for California
+ - *states*: Similar to countries but for the states in USA and Provinces in Canada e.g. CA for California, AB for Alberta
  - *geohash*: An ElasticSearch query that returns geohashes.
  - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/grafana/worldmap-panel/blob/master/src/data/countries.json) or [this list of cities](https://github.com/grafana/worldmap-panel/blob/master/src/data/probes.json).
  - *jsonp*: A jsonp endpoint that returns custom json wrapped as jsonp. Use this if you are having problems with CORS.
