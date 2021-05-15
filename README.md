@@ -98,7 +98,7 @@ The following location files are included in the plugin:
 
 - Countries (2 letter codes)
 - Countries (3 letter codes)
-- US states
+- US states and Canadian Provinces
 
 Alternatively, you can provide your own location lists by using:
 
