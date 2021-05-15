@@ -19,7 +19,7 @@ If it is in the **Time Series format** then the metric name needs to match a key
 
 The list of locations can be provided in several ways:
 
-- json files with locations and their coordinates (the plugin includes list for countries and US states)
+- json files with locations and their coordinates (the plugin includes list for countries and US states/Canadian Provinces)
 - json endpoints that return a list of locations and their coordinates
 
 Time Series data contains a timestamp, a metric name and a numeric value. In other words, a typical query for a time series database. Here is some time series data from Graphite:
