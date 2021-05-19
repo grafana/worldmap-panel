@@ -2,7 +2,7 @@
   {
         "key": "AB",
         "latitude": 53.9333,
-        "longitude": -116.5675,
+        "longitude": -114.5700,
         "name": "Alberta"
   },
   {
@@ -229,8 +229,8 @@
   },
   {
         "key": "NL",
-        "latitude": 53.1355,
-        "longitude": -57.6604,
+        "latitude": 54.1355,
+        "longitude": -61.6604,
         "name": "Newfoundland and Laborador"
   },  
   {
@@ -247,14 +247,14 @@
   },
   {
         "key": "NT",
-        "latitude": 614.8255,
+        "latitude": 64.8255,
         "longitude": -124.8457,
         "name": "Northwest Territories"
   },
   {
         "key": "NU",
-        "latitude": 61.3850,
-        "longitude": -152.2683,
+        "latitude": 70.2998,
+        "longitude": -83.1076,
         "name": "Nunavut"
   },  
   {
@@ -301,8 +301,8 @@
   },
   {
         "key": "PE",
-        "latitude": 46.5107,
-        "longitude": -63.4168,
+        "latitude": 46.3107,
+        "longitude": -63.2168,
         "name": "Prince Edward Island"
   },
   {
@@ -313,8 +313,8 @@
   },
   {
         "key": "QC",
-        "latitude": 46.8139,
-        "longitude": -71.2080,
+        "latitude": 50.8139,
+        "longitude": -73.2080,
         "name": "Quebec"
   },  
   {
