@@ -287,6 +287,12 @@ Optionally, you can show an image over the base map (but below the data points).
 
 Show/hide the overlay. 
 
+**Auto reload overlay**
+
+By default, the overlay image is fetched once, on page load, and never updated. If the overlay image is updated regularly (say, the overlay is generated on another application and then served on a fixed URL), it may be desirable to fetch the image when the dashboard is refreshed. This switch enables it. 
+
+If the overlay image is fixed (e. g., an orthomosaic of the area, taken with a drone), leave this option disabled, as it would cause an additional request on each dashboard reload.
+
 **Overlay URL**
 
 The URL where the image is available. Please notice that only URLs can be used (no local files!)

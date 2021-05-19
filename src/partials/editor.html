@@ -554,6 +554,10 @@
     <gf-form-switch class="gf-form" label="Enable" label-class="width-10" checked="ctrl.panel.enableOverlay"
                     on-change="ctrl.refreshOverlay()">
     </gf-form-switch>
+    <gf-form-switch class="gf-form" ng-show="ctrl.panel.enableOverlay == true" 
+        label="Auto reload overlay" tooltip="Enable to update the image whenever the dashboard is refreshed" 
+        label-class="width-10" checked="ctrl.panel.enableReloadOverlay">
+    </gf-form-switch>
     <div class="gf-form" ng-show="ctrl.panel.enableOverlay == true">
         <label class="gf-form-label width-10">Overlay URL</label>
         <input type="url" class="input-small gf-form-input width-10" ng-model="ctrl.panel.overlayUrl"

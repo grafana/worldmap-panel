@@ -63,6 +63,7 @@ const panelDefaults = {
   overlayOpacity: 0.5,
   overlayRangeLatitude: '0,10',
   overlayRangeLongitude: '0,20',
+  enableReloadOverlay: false,
   clickthroughUrl: '',
   clickthroughOptions: {
     windowName: null,
@@ -270,6 +271,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       _.isEmpty(this.panel.snapshotLocationData)
     ) {
       this.loadLocationData(true);
+    }
+
+    if (this.panel.enableOverlay && this.panel.enableReloadOverlay) {
+      this.refreshOverlay();
     }
   }
 
@@ -550,8 +555,11 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   refreshOverlay() {
-    this.map.overlay.remove();
-    this.map.overlay = null;
+    if (this.map) {
+      this.map.overlay?.remove();
+      this.map.overlay = null;
+    }
+
     this.render();
   }
 
