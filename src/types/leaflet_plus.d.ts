@@ -1,4 +1,3 @@
-import 'leaflet';
 import { DivOverlay, DivOverlayOptions } from 'leaflet';
 
 declare module 'leaflet' {
