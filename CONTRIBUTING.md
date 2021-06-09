@@ -15,6 +15,9 @@ The easiest way to invoke a development sandbox is by using Docker.
 ```shell
 # Run with Grafana 7
 docker run --publish=3000:3000 --volume=$PWD/dist:/var/lib/grafana/plugins/grafana-map-panel grafana/grafana:7.5.7
+
+# Run with Grafana 8
+docker run --publish=3000:3000 --volume=$PWD/dist:/var/lib/grafana/plugins/grafana-map-panel --env=GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=grafana-map-panel grafana/grafana:8.0.0
 ```
 
 Because the version of `node-sass` used as transitive dependency is apparently

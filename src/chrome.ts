@@ -62,11 +62,19 @@ export class WorldmapChrome {
      * - https://github.com/daq-tools/grafanimate/blob/0.5.5/grafanimate/grafana-studio.js
      *
      */
-    this.getKeybindingSrv().unbind('esc', 'keydown');
+    try {
+      this.getKeybindingSrv().unbind('esc', 'keydown');
+    } catch (err) {
+      console.error(`Accessing KeybindingSrv not implemented for Grafana 8 yet.\n${err}`);
+    }
   }
 
   restoreEscapeKeyBinding() {
-    this.getKeybindingSrv().setupGlobal();
+    try {
+      this.getKeybindingSrv().setupGlobal();
+    } catch (err) {
+      console.error(`Accessing KeybindingSrv not implemented for Grafana 8 yet.\n${err}`);
+    }
   }
 
   getKeybindingSrv() {

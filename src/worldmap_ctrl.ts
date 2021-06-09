@@ -298,8 +298,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         this.panel.snapshotLocationData = this.locations;
       }
 
+      console.info('Processing data');
       this.processData(dataList);
 
+      console.info('Updating color mode');
       this.updateColorMode();
 
       const autoCenterMap =
@@ -504,6 +506,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
   resetData() {
     this.data = [];
+    this.data.categories = [];
+    this.data.thresholds = [];
     //this.mapCenterMoved = true;
   }
 
