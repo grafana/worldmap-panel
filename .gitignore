@@ -10,5 +10,8 @@ coverage/
 artifacts/
 
 .venv*
+.nenv*
 build/
 ci/
+
+*.old

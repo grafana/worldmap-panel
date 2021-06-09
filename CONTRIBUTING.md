@@ -10,6 +10,21 @@ Grafana, you will have to build the plugin once. However, you do not
 need to restart your local Grafana server after every change, just 
 refreshing the page will be sufficient.
 
+## Sandbox setup
+The easiest way to invoke a development sandbox is by using Docker.
+```shell
+# Run with Grafana 7
+docker run --publish=3000:3000 --volume=$PWD/dist:/var/lib/grafana/plugins/grafana-map-panel grafana/grafana:7.5.7
+```
+
+Because the version of `node-sass` used as transitive dependency is apparently
+not compatible with Node 16 yet, let's use Node 15:
+```shell
+brew install nodeenv
+nodeenv --node=15.14.0 .nenv
+source .nenv/bin/activate
+```
+
 ## General
 - Display all tasks from `grafana-toolkit`: `npx grafana-toolkit --help`
 
