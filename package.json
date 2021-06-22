@@ -7,7 +7,8 @@
     "build": "node --max-old-space-size=8192 ./node_modules/.bin/webpack --config webpack.config.prod.js",
     "dev": "webpack --mode development",
     "watch": "webpack --mode development --watch",
-    "test": "jest --config jest.config.js"
+    "test": "jest --config jest.config.js",
+    "test:watch": "jest --config jest.config.js --watch"
   },
   "keywords": [
     "worldmap",

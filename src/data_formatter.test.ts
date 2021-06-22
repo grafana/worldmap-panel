@@ -1,5 +1,4 @@
-import DataFormatter from './data_formatter';
-import _ from 'lodash';
+import DataFormatter, { fromWideDataFrame } from './data_formatter';
 
 describe('DataFormatter', () => {
   let dataFormatter;
@@ -12,9 +11,9 @@ describe('DataFormatter', () => {
           tableQueryOptions: {
             queryType: 'coordinates',
             latitudeField: 'latitude',
-            longitudeField: 'longitude'
-          }
-        }
+            longitudeField: 'longitude',
+          },
+        },
       };
       dataFormatter = new DataFormatter(ctrl);
     });
@@ -24,13 +23,13 @@ describe('DataFormatter', () => {
         [
           {
             latitude: 1,
-            longitude: 2
+            longitude: 2,
           },
           {
             latitude: 3,
-            longitude: 4
-          }
-        ]
+            longitude: 4,
+          },
+        ],
       ];
       const data: any[] = [];
 
@@ -50,8 +49,8 @@ describe('DataFormatter', () => {
           tableQueryOptions: {
             queryType: 'geohash',
             geohashField: 'geohash',
-          }
-        }
+          },
+        },
       };
       dataFormatter = new DataFormatter(ctrl);
     });
@@ -62,14 +61,14 @@ describe('DataFormatter', () => {
           {
             latitude: 1,
             longitude: 2,
-            geohash: 'stq4s3x' // 29.9796, 31.1345
+            geohash: 'stq4s3x', // 29.9796, 31.1345
           },
           {
             latitude: 3,
             longitude: 4,
-            geohash: 'p05010r' // -89.997, 139.273
-          }
-        ]
+            geohash: 'p05010r', // -89.997, 139.273
+          },
+        ],
       ];
       const data: any[] = [];
 
@@ -86,16 +85,16 @@ describe('DataFormatter', () => {
     beforeEach(() => {
       const ctrl = {
         panel: {
-          valueName: 'total'
+          valueName: 'total',
         },
         locations: [
-          {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
-          {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
+          { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 },
+          { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 },
         ],
         series: [
-          {alias: 'IE', datapoints: [1, 2], stats: {total: 3}},
-          {alias: 'SE', datapoints: [2, 3], stats: {total: 5}},
-        ]
+          { alias: 'IE', datapoints: [1, 2], stats: { total: 3 } },
+          { alias: 'SE', datapoints: [2, 3], stats: { total: 5 } },
+        ],
       };
       dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setValues(formattedData);
@@ -120,16 +119,16 @@ describe('DataFormatter', () => {
     beforeEach(() => {
       const ctrl = {
         panel: {
-          valueName: 'total'
+          valueName: 'total',
         },
         locations: [
-          {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
-          {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
+          { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 },
+          { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 },
         ],
         series: [
-          {alias: 'ie', datapoints: [1, 2], stats: {total: 3}},
-          {alias: 'se', datapoints: [2, 3], stats: {total: 5}},
-        ]
+          { alias: 'ie', datapoints: [1, 2], stats: { total: 3 } },
+          { alias: 'se', datapoints: [2, 3], stats: { total: 5 } },
+        ],
       };
       dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setValues(formattedData);
@@ -154,13 +153,13 @@ describe('DataFormatter', () => {
     beforeEach(() => {
       const ctrl = {
         panel: {
-          valueName: 'total'
+          valueName: 'total',
         },
-        locations: [{key: 'IE', name: 'Ireland', latitude: 1, longitude: 1}],
+        locations: [{ key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 }],
         series: [
-          {alias: 'SX', datapoints: [1, 2], stats: {total: 3}},
-          {alias: 'IE', datapoints: [1, 2], stats: {total: 3}}
-        ]
+          { alias: 'SX', datapoints: [1, 2], stats: { total: 3 } },
+          { alias: 'IE', datapoints: [1, 2], stats: { total: 3 } },
+        ],
       };
       dataFormatter = new DataFormatter(ctrl);
       dataFormatter.setValues(formattedData);
@@ -177,16 +176,16 @@ describe('DataFormatter', () => {
         const ctrl = {
           panel: {
             valueName: 'total',
-            decimals: 2
+            decimals: 2,
           },
           locations: [
-            {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
-            {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
+            { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 },
+            { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 },
           ],
           series: [
-            {alias: 'IE', datapoints: [1.11, 2.22], stats: {total: 3.33}},
-            {alias: 'SE', datapoints: [2.221, 3.331], stats: {total: 5.552}},
-          ]
+            { alias: 'IE', datapoints: [1.11, 2.22], stats: { total: 3.33 } },
+            { alias: 'SE', datapoints: [2.221, 3.331], stats: { total: 5.552 } },
+          ],
         };
         dataFormatter = new DataFormatter(ctrl);
         dataFormatter.setValues(formattedData);
@@ -202,16 +201,16 @@ describe('DataFormatter', () => {
         const ctrl = {
           panel: {
             valueName: 'total',
-            decimals: '2'
+            decimals: '2',
           },
           locations: [
-            {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
-            {key: 'SE', name: 'Sweden', latitude: 2, longitude: 2},
+            { key: 'IE', name: 'Ireland', latitude: 1, longitude: 1 },
+            { key: 'SE', name: 'Sweden', latitude: 2, longitude: 2 },
           ],
           series: [
-            {alias: 'IE', datapoints: [1.11, 2.22], stats: {total: 3.33}},
-            {alias: 'SE', datapoints: [2.221, 3.331], stats: {total: 5.552}},
-          ]
+            { alias: 'IE', datapoints: [1.11, 2.22], stats: { total: 3.33 } },
+            { alias: 'SE', datapoints: [2.221, 3.331], stats: { total: 5.552 } },
+          ],
         };
         dataFormatter = new DataFormatter(ctrl);
         dataFormatter.setValues(formattedData);
@@ -225,5 +224,91 @@ describe('DataFormatter', () => {
 
   afterEach(() => {
     formattedData = [];
+  });
+});
+
+describe('fromWideDataFrame', () => {
+  describe('when called with a wide data frame', () => {
+    it('then it should convert it to time series', () => {
+      const input = [
+        {
+          columns: [
+            {
+              text: 'time_sec',
+            },
+            {
+              text: 'fr',
+            },
+            {
+              text: 'se',
+            },
+            {
+              text: 'us',
+            },
+          ],
+          type: 'table',
+          refId: 'A',
+          meta: {
+            executedQueryString:
+              'SELECT UNIX_TIMESTAMP(timestamp) as time_sec, country_iso_code AS metric, COUNT(country_iso_code) AS value FROM geo GROUP BY metric ORDER BY 1',
+          },
+          rows: [
+            [1589767200000, null, null, 2],
+            [1589774400000, 1, null, null],
+            [1589785200000, null, 1, null],
+            [1589785300000, null, 2, null],
+          ],
+        },
+      ];
+      const output = [
+        {
+          alias: 'fr',
+          target: 'fr',
+          datapoints: [
+            [null, 1589767200000],
+            [1, 1589774400000],
+            [null, 1589785200000],
+            [null, 1589785300000],
+          ],
+          refId: 'A',
+          meta: {
+            executedQueryString:
+              'SELECT UNIX_TIMESTAMP(timestamp) as time_sec, country_iso_code AS metric, COUNT(country_iso_code) AS value FROM geo GROUP BY metric ORDER BY 1',
+          },
+        },
+        {
+          alias: 'se',
+          target: 'se',
+          datapoints: [
+            [null, 1589767200000],
+            [null, 1589774400000],
+            [1, 1589785200000],
+            [2, 1589785300000],
+          ],
+          refId: 'A',
+          meta: {
+            executedQueryString:
+              'SELECT UNIX_TIMESTAMP(timestamp) as time_sec, country_iso_code AS metric, COUNT(country_iso_code) AS value FROM geo GROUP BY metric ORDER BY 1',
+          },
+        },
+        {
+          alias: 'us',
+          target: 'us',
+          datapoints: [
+            [2, 1589767200000],
+            [null, 1589774400000],
+            [null, 1589785200000],
+            [null, 1589785300000],
+          ],
+          refId: 'A',
+          meta: {
+            executedQueryString:
+              'SELECT UNIX_TIMESTAMP(timestamp) as time_sec, country_iso_code AS metric, COUNT(country_iso_code) AS value FROM geo GROUP BY metric ORDER BY 1',
+          },
+        },
+      ];
+
+      expect(fromWideDataFrame(input)).toEqual(output);
+    });
   });
 });

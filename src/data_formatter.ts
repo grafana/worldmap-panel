@@ -10,10 +10,10 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.ctrl.series.forEach(serie => {
+      this.ctrl.series.forEach((serie) => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
-        const location = _.find(this.ctrl.locations, loc => {
+        const location = _.find(this.ctrl.locations, (loc) => {
           return loc.key.toUpperCase() === serie.alias.toUpperCase();
         });
 
@@ -77,7 +77,7 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      dataList.forEach(result => {
+      dataList.forEach((result) => {
         if (result.type === 'table') {
           const columnNames = {};
 
@@ -85,7 +85,7 @@ export default class DataFormatter {
             columnNames[column.text] = columnIndex;
           });
 
-          result.rows.forEach(row => {
+          result.rows.forEach((row) => {
             const encodedGeohash = row[columnNames[this.ctrl.panel.esGeoPoint]];
             const decodedGeohash = decodeGeoHash(encodedGeohash);
             const locationName = this.ctrl.panel.esLocationName
@@ -109,7 +109,7 @@ export default class DataFormatter {
           data.lowestValue = lowestValue;
           data.valueRange = highestValue - lowestValue;
         } else {
-          result.datapoints.forEach(datapoint => {
+          result.datapoints.forEach((datapoint) => {
             const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
             const decodedGeohash = decodeGeoHash(encodedGeohash);
             const locationName = this.ctrl.panel.esLocationName
@@ -145,7 +145,7 @@ export default class DataFormatter {
         columnNames[columnIndex] = column.text;
       });
 
-      tableData.rows.forEach(row => {
+      tableData.rows.forEach((row) => {
         const datapoint = {};
 
         row.forEach((value, columnIndex) => {
@@ -165,7 +165,7 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      tableData[0].forEach(datapoint => {
+      tableData[0].forEach((datapoint) => {
         let key;
         let longitude;
         let latitude;
@@ -216,7 +216,7 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.ctrl.series.forEach(point => {
+      this.ctrl.series.forEach((point) => {
         const dataValue = {
           key: point.key,
           locationName: point.name,
@@ -239,4 +239,109 @@ export default class DataFormatter {
       data.valueRange = highestValue - lowestValue;
     }
   }
+}
+
+export function containsWideDataFrame(data: any[]) {
+  if (!data || !data.length) {
+    return false;
+  }
+
+  return data.some((d) => d && d.hasOwnProperty('type') && d.type === 'table');
+}
+
+interface LegacyTable {
+  columns: { text: string }[];
+  type: string;
+  refId: string;
+  meta: any;
+  rows: any[][];
+}
+
+interface LegacyTimeSeries {
+  alias: string;
+  target: string;
+  datapoints: any[];
+  refId: string;
+  meta: any;
+}
+
+interface FrameMapInfo {
+  timeColumn: number;
+  columnMap: Map<string, LegacyTimeSeries>;
+  refId: string;
+  meta: any;
+}
+
+export function fromWideDataFrame(data: LegacyTable[]): LegacyTimeSeries[] {
+  if (!data || !data.length) {
+    return [{ alias: '', target: '', datapoints: [], refId: 'A', meta: {} }];
+  }
+
+  const frameMap: Map<number, FrameMapInfo> = new Map<number, FrameMapInfo>();
+  for (let frameIndex = 0; frameIndex < data.length; frameIndex++) {
+    const frame = data[frameIndex];
+    const columnMap: Map<string, LegacyTimeSeries> = new Map<string, LegacyTimeSeries>();
+    const frameMapInfo: FrameMapInfo = {
+      columnMap,
+      meta: frame.meta,
+      refId: frame.refId,
+      timeColumn: 0,
+    };
+    frameMap.set(frameIndex, frameMapInfo);
+
+    for (let columnIndex = 0; columnIndex < frame.columns.length; columnIndex++) {
+      const column = frame.columns[columnIndex];
+      if (column.text === 'time' || column.text === 'time_sec') {
+        frameMapInfo.timeColumn = columnIndex;
+        continue;
+      }
+
+      if (!column.text) {
+        continue;
+      }
+
+      columnMap.set(column.text, {
+        alias: column.text,
+        target: column.text,
+        datapoints: [],
+        refId: frame.refId,
+        meta: frame.meta,
+      });
+    }
+  }
+
+  const result: LegacyTimeSeries[] = [];
+
+  for (let frameIndex = 0; frameIndex < data.length; frameIndex++) {
+    const frame = data[frameIndex];
+    const frameMapInfo = frameMap.get(frameIndex);
+
+    if (!frameMapInfo) {
+      throw new Error('Could not find the mapped index for a frame.');
+    }
+
+    for (let rowIndex = 0; rowIndex < frame.rows.length; rowIndex++) {
+      const row = frame.rows[rowIndex];
+      const timestamp = row[frameMapInfo.timeColumn];
+      for (let columnIndex = 0; columnIndex < frame.columns.length; columnIndex++) {
+        const column = frame.columns[columnIndex];
+        const mapped = frameMapInfo.columnMap.get(column.text);
+
+        if (!mapped) {
+          continue;
+        }
+
+        const value = row[columnIndex];
+        mapped.datapoints.push([value, timestamp]);
+      }
+    }
+  }
+
+  for (const frameMapInfo of frameMap.values()) {
+    for (const series of frameMapInfo.columnMap.values()) {
+      result.push(series);
+    }
+  }
+
+  return result;
 }
