@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import decodeGeoHash from './geohash';
 import kbn from 'grafana/app/core/utils/kbn';
+import { FrameMapInfo, LegacyTable, LegacyTimeSeries } from 'types';
 
 export default class DataFormatter {
   constructor(private ctrl) {}
@@ -10,10 +11,10 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.ctrl.series.forEach((serie) => {
+      this.ctrl.series.forEach(serie => {
         const lastPoint = _.last(serie.datapoints);
         const lastValue = _.isArray(lastPoint) ? lastPoint[0] : null;
-        const location = _.find(this.ctrl.locations, (loc) => {
+        const location = _.find(this.ctrl.locations, loc => {
           return loc.key.toUpperCase() === serie.alias.toUpperCase();
         });
 
@@ -77,7 +78,7 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      dataList.forEach((result) => {
+      dataList.forEach(result => {
         if (result.type === 'table') {
           const columnNames = {};
 
@@ -85,7 +86,7 @@ export default class DataFormatter {
             columnNames[column.text] = columnIndex;
           });
 
-          result.rows.forEach((row) => {
+          result.rows.forEach(row => {
             const encodedGeohash = row[columnNames[this.ctrl.panel.esGeoPoint]];
             const decodedGeohash = decodeGeoHash(encodedGeohash);
             const locationName = this.ctrl.panel.esLocationName
@@ -109,7 +110,7 @@ export default class DataFormatter {
           data.lowestValue = lowestValue;
           data.valueRange = highestValue - lowestValue;
         } else {
-          result.datapoints.forEach((datapoint) => {
+          result.datapoints.forEach(datapoint => {
             const encodedGeohash = datapoint[this.ctrl.panel.esGeoPoint];
             const decodedGeohash = decodeGeoHash(encodedGeohash);
             const locationName = this.ctrl.panel.esLocationName
@@ -145,7 +146,7 @@ export default class DataFormatter {
         columnNames[columnIndex] = column.text;
       });
 
-      tableData.rows.forEach((row) => {
+      tableData.rows.forEach(row => {
         const datapoint = {};
 
         row.forEach((value, columnIndex) => {
@@ -165,7 +166,7 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      tableData[0].forEach((datapoint) => {
+      tableData[0].forEach(datapoint => {
         let key;
         let longitude;
         let latitude;
@@ -216,7 +217,7 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      this.ctrl.series.forEach((point) => {
+      this.ctrl.series.forEach(point => {
         const dataValue = {
           key: point.key,
           locationName: point.name,
@@ -246,30 +247,7 @@ export function containsWideDataFrame(data: any[]) {
     return false;
   }
 
-  return data.some((d) => d && d.hasOwnProperty('type') && d.type === 'table');
-}
-
-interface LegacyTable {
-  columns: { text: string }[];
-  type: string;
-  refId: string;
-  meta: any;
-  rows: any[][];
-}
-
-interface LegacyTimeSeries {
-  alias: string;
-  target: string;
-  datapoints: any[];
-  refId: string;
-  meta: any;
-}
-
-interface FrameMapInfo {
-  timeColumn: number;
-  columnMap: Map<string, LegacyTimeSeries>;
-  refId: string;
-  meta: any;
+  return data.some(d => d && d.hasOwnProperty('type') && d.type === 'table');
 }
 
 export function fromWideDataFrame(data: LegacyTable[]): LegacyTimeSeries[] {
