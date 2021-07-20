@@ -1,8 +1,27 @@
-# Grafana Map Panel
+# Panodata Map Panel
 
-The Grafana Map Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or data in the Table format.
+## Background
 
-![Grafana Map](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-world.png)
+The Panodata Map Panel is an enhanced and maintained friendly fork of the original [Grafana Worldmap Panel].
+We will be happy to receive feedback and contributions from the community at the [upstream discussion topic]
+and on [GitHub].
+You are also encouraged to follow the development in more detail at [first steps], [Developing Grafana Worldmap NG]
+and by reading the [changelog].
+
+[changelog]: https://github.com/panodata/panodata-map-panel/blob/develop/CHANGELOG.md
+[Developing Grafana Worldmap NG]: https://community.hiveeyes.org/t/grafana-worldmap-panel-ng/1824
+[first steps]: https://github.com/grafana/worldmap-panel/issues/197
+[GitHub]: https://github.com/panodata/panodata-map-panel
+[Grafana Worldmap Panel]: https://github.com/grafana/worldmap-panel
+[upstream discussion topic]: https://community.grafana.com/t/giving-the-grafana-worldmap-panel-some-love/17210
+
+
+## About
+
+The map panel displays a tile map of the world that can be overlaid with circles representing data points from a query.
+It can be used with time series metrics, with geohash data from Elasticsearch or data in the Table format.
+
+![Map example](https://raw.githubusercontent.com/grafana/worldmap-panel/54f83cfdc7339fee02df00933422c35630677330/src/images/worldmap-world.png)
 
 ## How this works (theory and examples)
 
@@ -190,7 +209,7 @@ Similar to the Elasticsearch query above, 3 fields are expected (2 of them are m
 - A *geohash* field. This is used to calculate where the circle should be drawn.
 - an optional location name field (shown in the mouse over). Used to label each circle on the map. If it is empty then the geohash value is used as the label.
 
-The field mappings have to be specified on the Grafana Map settings tab.
+The field mappings have to be specified on the "settings" tab.
 
 ![Example influxdb query](https://cloud.githubusercontent.com/assets/434655/16535977/8cd520be-3fec-11e6-8dc9-2ecf7b16ad5f.png)
 
@@ -281,7 +300,7 @@ The threshold field also accepts 2 or more comma-separated values. For example, 
 
 Optionally, you can show an image over the base map (but below the data points). This could be useful, for example, to show a more detailed/up-to-date image of the area of interest, in case the map provider only has old or low-resolution images. See below for an example of displaying interpolated sensor data (for example, temperatures in a field while only knowing the temperatures at a few sensors).
 
-![Image overlay example](https://raw.githubusercontent.com/panodata/grafana-map-panel/develop/src/images/overlay_example.png)
+![Image overlay example](https://raw.githubusercontent.com/panodata/panodata-map-panel/develop/src/images/overlay_example.png)
 
 **Enable overlay**
 
@@ -307,4 +326,4 @@ Specify the limits of the image in the map. Enter the minimum and maximum latitu
 
 ### CHANGELOG
 
-The latest changes can be found here: [CHANGELOG.md](https://github.com/panodata/grafana-map-panel/blob/master/CHANGELOG.md)
+The latest changes can be found here: [CHANGELOG.md](https://github.com/panodata/panodata-map-panel/blob/develop/CHANGELOG.md)

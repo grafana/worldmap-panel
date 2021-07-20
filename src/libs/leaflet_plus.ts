@@ -1,7 +1,7 @@
 // 04bcb59 added an autoWidth setting to the Popup options.
 // This option, when disabled, will mask the whole section for computing
 // the width for the popup automatically within the _updateLayout method.
-// https://github.com/panodata/grafana-map-panel/issues/79#issuecomment-723290476
+// https://github.com/panodata/panodata-map-panel/issues/79#issuecomment-723290476
 import { Popup } from 'leaflet';
 
 // @option autoWidth: Boolean = true

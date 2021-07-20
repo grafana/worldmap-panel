@@ -1,5 +1,5 @@
 {
-  "name": "grafana-map-panel",
+  "name": "panodata-map-panel",
   "version": "0.15.0",
   "description": "Map Panel",
   "scripts": {

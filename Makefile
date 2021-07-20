@@ -16,11 +16,11 @@ publish: check-tools check-token
 	$(eval version=$(shell cat package.json | jq --raw-output .version))
 
 	@# Create release on GitHub.
-	github-release release --user panodata --repo grafana-map-panel --tag $(version) || true
+	github-release release --user panodata --repo panodata-map-panel --tag $(version) || true
 
 	@# Upload distribution package.
-	$(eval distfile=ci/packages/grafana-map-panel-$(version).zip)
-	github-release upload --user panodata --repo grafana-map-panel --tag $(version) --name $(notdir $(distfile)) --file $(distfile)
+	$(eval distfile=ci/packages/panodata-map-panel-$(version).zip)
+	github-release upload --user panodata --repo panodata-map-panel --tag $(version) --name $(notdir $(distfile)) --file $(distfile)
 
 
 check-tools:

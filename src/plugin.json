@@ -1,22 +1,22 @@
 {
   "type": "panel",
-  "name": "Map Panel",
-  "id": "grafana-map-panel",
+  "name": "Panodata Map Panel",
+  "id": "panodata-map-panel",
 
   "info": {
-    "description": "Grafana Map Panel. Displays time series data or geohash data on a world map.",
+    "description": "Panodata Map Panel, a descendant of the original Grafana Worldmap Panel. Displays time series data or geohash data on a world map.",
     "author": {
       "name": "Grafana Labs",
       "url": "https://grafana.com"
     },
-    "keywords": ["map", "panel", "worldmap"],
+    "keywords": ["map", "panel"],
     "logos": {
       "small": "images/worldmap_logo.svg",
       "large": "images/worldmap_logo.svg"
     },
     "links": [
-      {"name": "Project site", "url": "https://github.com/panodata/grafana-map-panel"},
-      {"name": "MIT License", "url": "https://github.com/panodata/grafana-map-panel/blob/master/LICENSE"}
+      {"name": "Project site", "url": "https://github.com/panodata/panodata-map-panel"},
+      {"name": "MIT License", "url": "https://github.com/panodata/panodata-map-panel/blob/develop/LICENSE"}
     ],
     "screenshots": [
       {"name": "World", "path": "images/worldmap-world.png"},

@@ -2,12 +2,11 @@
 
 ## development
 - Add compatibility with Grafana 8
-
 - Add Makefile to assist in packaging and publishing
 - Overlay image can now be refreshed with the dashboard. Thanks, @jreyesr!
 - Revert "Support multiple metrics in popup content for Elasticsearch" again.
   The feature was not ready to be used with PostgreSQL and InfluxDB datasources yet.
-  Thanks, @matschaffer!
+- Update plugin name to "panodata-map-panel"
 
 ## v0.15.0
 - Support multiple metrics in popup content for Elasticsearch. Thanks, @matschaffer!
