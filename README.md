@@ -261,6 +261,10 @@ This is minimum size for a circle in pixels.
 
 This is the maximum size for a circle in pixels. Depending on the zoom level you might want a larger or smaller max circle size to avoid overlapping.
 
+**Min Value**
+
+This is the minimum value to show a circle. If provided, data points with values lower than this minimum value won't be shown at the map.
+
 **Unit**
 
 The Unit is shown in the popover when you hover over a circle. There are two fields the singular form and the plural form. E.g. visit/visits or error/errors
@@ -269,13 +273,22 @@ The Unit is shown in the popover when you hover over a circle. There are two fie
 
 Shows/hide the legend on the bottom left that shows the threshold ranges and their associated colors.
 
-### Threshold Options
+### Coloring Options
+
+The coloring options allows the use of the circle colors with a second metric. In case of a single metric, leave the Color metric field empty and the same value will be used for circle size and color.
+
+Using the field color metric will enable the color to read from this second metric and generate thresholds based on this number.
+
+The Color label is used on the tooltip, showing a "Label: Value Unit" as a second line on the map's tooltip, together with the Color unit field.
+
+The Color value decimals limits the decimal cases from the color metric on the map's tooltip.
 
 Thresholds control the color of the circles.
 
 If one value is specified then two colors are used. For example, if the threshold is set to 10 then values under 10 get the first color and values that are 10 or more get the second color.
 
 The threshold field also accepts 2 or more comma-separated values. For example, if you have 2 values that represents 3 ranges that correspond to the three colors. For example: if the thresholds are 70, 90 then the first color represents < 70, the second color represents between 70 and 90 and the third color represents > 90.
+
 
 ### CHANGELOG
 

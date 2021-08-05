@@ -1,6 +1,9 @@
 # Changelog
 ## Entries
 
+## v1.0.2
+- Added filtering by minimum value and color as second metric 
+
 ## v1.0.1
 
 - Release for Grafana 7.0 with plugin signing
