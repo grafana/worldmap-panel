@@ -296,6 +296,23 @@ describe('Worldmap', () => {
     });
   });
 
+  describe('when there is not lat/long', () => {
+    beforeEach(() => {
+      let data = new DataBuilder().build();
+      data.push ({
+        "key": "undefined_undefined",
+        "locationName": "US",
+        "value": 2535200,
+        "valueFormatted": 2535200
+      })
+      ctrl.data = data
+    });
+
+    it('should not crash', () => {
+      expect(() => worldMap.drawCircles()).not.toThrowError();
+    });
+  });
+
   describe('when three thresholds are set', () => {
     beforeEach(() => {
       ctrl.data = new DataBuilder().withThresholdValues([2, 4, 6]).build();
