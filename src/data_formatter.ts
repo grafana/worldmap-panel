@@ -192,16 +192,17 @@ export default class DataFormatter {
           valueFormatted: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
           valueRounded: 0,
         };
+        if (this.ctrl.panel.legendMode === 'thresholds') {
+          if (dataValue.value > highestValue) {
+            highestValue = dataValue.value;
+          }
 
-        if (dataValue.value > highestValue) {
-          highestValue = dataValue.value;
+          if (dataValue.value < lowestValue) {
+            lowestValue = dataValue.value;
+          }
+
+          dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
         }
-
-        if (dataValue.value < lowestValue) {
-          lowestValue = dataValue.value;
-        }
-
-        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
         data.push(dataValue);
       });
 

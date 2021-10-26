@@ -65,22 +65,35 @@ export default class WorldMap {
     };
 
     this.legend.update = () => {
-      const thresholds = this.ctrl.data.thresholds;
       let legendHtml = '';
-      legendHtml +=
-        '<div class="legend-item"><i style="background:' +
-        this.ctrl.panel.colors[0] +
-        '"></i> ' +
-        '&lt; ' +
-        thresholds[0] +
-        '</div>';
-      for (let index = 0; index < thresholds.length; index += 1) {
+
+      if (this.ctrl.data.legends) {
+        const legends = this.ctrl.data.legends
+        for (let i = 0; i < legends.length; i++) {
+          legendHtml +=
+          '<div class="legend-item"><i style="background:' +
+          this.ctrl.panel.colors[i] +
+          '"></i> ' +
+          legends[i] +
+          '</div>';
+        }
+      } else {
+        const thresholds = this.ctrl.data.c;
         legendHtml +=
           '<div class="legend-item"><i style="background:' +
-          this.ctrl.panel.colors[index + 1] +
+          this.ctrl.panel.colors[0] +
           '"></i> ' +
-          thresholds[index] +
-          (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '</div>' : '+');
+          '&lt; ' +
+          thresholds[0] +
+          '</div>';
+        for (let index = 0; index < thresholds.length; index += 1) {
+          legendHtml +=
+            '<div class="legend-item"><i style="background:' +
+            this.ctrl.panel.colors[index + 1] +
+            '"></i> ' +
+            thresholds[index] +
+            (thresholds[index + 1] ? '&ndash;' + thresholds[index + 1] + '</div>' : '+');
+        }
       }
       this.legend._div.innerHTML = legendHtml;
     };
@@ -175,6 +188,11 @@ export default class WorldMap {
   }
 
   calcCircleSize(dataPointValue) {
+    let value = dataPointValue;
+    // force values string to 1
+    if(this.ctrl.data.legends) 
+      value = 1;
+
     const circleMinSize = parseInt(this.ctrl.panel.circleMinSize, 10) || 2;
     const circleMaxSize = parseInt(this.ctrl.panel.circleMaxSize, 10) || 30;
 
@@ -182,7 +200,7 @@ export default class WorldMap {
       return circleMaxSize;
     }
 
-    const dataFactor = (dataPointValue - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
+    const dataFactor = (value - this.ctrl.data.lowestValue) / this.ctrl.data.valueRange;
     const circleSizeRange = circleMaxSize - circleMinSize;
 
     return circleSizeRange * dataFactor + circleMinSize;
@@ -211,12 +229,19 @@ export default class WorldMap {
   }
 
   getColor(value) {
-    for (let index = this.ctrl.data.thresholds.length; index > 0; index -= 1) {
-      if (value >= this.ctrl.data.thresholds[index - 1]) {
-        return this.ctrl.panel.colors[index];
+    if(this.ctrl.data.legends) {
+      let idx = this.ctrl.data.legends.indexOf(value);
+      if(idx >= 0)
+        return this.ctrl.panel.colors[idx];
+      return 'rgb(71, 71, 71)';
+    } else {
+      for (let index = this.ctrl.data.thresholds.length; index > 0; index -= 1) {
+        if (value >= this.ctrl.data.thresholds[index - 1]) {
+          return this.ctrl.panel.colors[index];
+        }
       }
+      return _.first(this.ctrl.panel.colors);
     }
-    return _.first(this.ctrl.panel.colors);
   }
 
   resize() {
