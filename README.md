@@ -1,3 +1,5 @@
+> **Note:** Support for this repository has ended and it will be archived. Please see [Geomap Panel](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/geomap/) for ongoing development and support.
+
 # Worldmap Panel Plugin for Grafana
 
 The Worldmap Panel is a tile map of the world that can be overlaid with circles representing data points from a query. It can be used with time series metrics, with geohash data from Elasticsearch or data in the Table format.
