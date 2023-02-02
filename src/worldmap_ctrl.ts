@@ -19,6 +19,8 @@ const panelDefaults = {
   circleMinSize: 2,
   circleMaxSize: 30,
   locationData: "countries",
+  legendMode: "thresholds",
+  legends: [],
   thresholds: "0,10",
   colors: [
     "rgba(245, 54, 54, 0.9)",
@@ -277,17 +279,33 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   updateThresholdData() {
-    this.data.thresholds = this.panel.thresholds.split(",").map(strValue => {
-      return Number(strValue.trim());
-    });
-    while (_.size(this.panel.colors) > _.size(this.data.thresholds) + 1) {
-      // too many colors. remove the last one.
-      this.panel.colors.pop();
-    }
-    while (_.size(this.panel.colors) < _.size(this.data.thresholds) + 1) {
-      // not enough colors. add one.
-      const newColor = "rgba(50, 172, 45, 0.97)";
-      this.panel.colors.push(newColor);
+    if(this.panel.legendMode === 'thresholds')
+      this.data.thresholds = this.panel.thresholds.split(",").map(strValue => {
+        return Number(strValue.trim());
+      });
+    else 
+      this.data.legends = this.panel.legends.split(",");
+    
+    if(this.panel.legendMode === 'thresholds') {
+      while (_.size(this.panel.colors) > _.size(this.data.thresholds) + 1) {
+        // too many colors. remove the last one.
+        this.panel.colors.pop();
+      }
+      while (_.size(this.panel.colors) < _.size(this.data.thresholds) + 1) {
+        // not enough colors. add one.
+        const newColor = "rgba(50, 172, 45, 0.97)";
+        this.panel.colors.push(newColor);
+      }
+    } else {
+      while (_.size(this.panel.colors) > _.size(this.data.legends)) {
+        // too many colors. remove the last one.
+        this.panel.colors.pop();
+      }
+      while (_.size(this.panel.colors) < _.size(this.data.legends)) {
+        // not enough colors. add one.
+        const newColor = "rgba(50, 172, 45, 0.97)";
+        this.panel.colors.push(newColor);
+      }
     }
   }
 
