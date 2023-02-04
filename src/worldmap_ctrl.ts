@@ -113,6 +113,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       }
 
       this.panel.jsonpUrl = sanitizeUrl(this.panel.jsonpUrl);
+      this.panel.jsonpCallback = sanitizeUrl(this.panel.jsonpCallback);
 
       $.ajax({
         type: "GET",
@@ -129,6 +130,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       if (!this.panel.jsonUrl) {
         return;
       }
+
+      this.panel.jsonUrl = sanitizeUrl(this.panel.jsonUrl);
 
       $.getJSON(this.panel.jsonUrl).then((res) => {
         this.locations = res;
