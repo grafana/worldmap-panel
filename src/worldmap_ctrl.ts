@@ -1,7 +1,7 @@
 import { MetricsPanelCtrl } from "grafana/app/plugins/sdk";
 import TimeSeries from "grafana/app/core/time_series2";
 import appEvents from "grafana/app/core/app_events";
-import { sanitizeUrl } from "@braintree/sanitize-url";
+import { textUtil } from "@grafana/data";
 
 import * as _ from "lodash";
 import DataFormatter from "./data_formatter";
@@ -112,8 +112,8 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         return;
       }
 
-      this.panel.jsonpUrl = sanitizeUrl(this.panel.jsonpUrl);
-      this.panel.jsonpCallback = sanitizeUrl(this.panel.jsonpCallback);
+      this.panel.jsonpUrl = textUtil.sanitizeUrl(this.panel.jsonpUrl);
+      this.panel.jsonpCallback = textUtil.sanitizeUrl(this.panel.jsonpCallback);
 
       $.ajax({
         type: "GET",
@@ -131,7 +131,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         return;
       }
 
-      this.panel.jsonUrl = sanitizeUrl(this.panel.jsonUrl);
+      this.panel.jsonUrl = textUtil.sanitizeUrl(this.panel.jsonUrl);
 
       $.getJSON(this.panel.jsonUrl).then((res) => {
         this.locations = res;
