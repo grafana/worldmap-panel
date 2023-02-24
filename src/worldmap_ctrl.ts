@@ -1,6 +1,7 @@
 import { MetricsPanelCtrl } from "grafana/app/plugins/sdk";
 import TimeSeries from "grafana/app/core/time_series2";
-import appEvents from 'grafana/app/core/app_events';
+import appEvents from "grafana/app/core/app_events";
+import { textUtil } from "@grafana/data";
 
 import * as _ from "lodash";
 import DataFormatter from "./data_formatter";
@@ -23,7 +24,7 @@ const panelDefaults = {
   colors: [
     "rgba(245, 54, 54, 0.9)",
     "rgba(237, 129, 40, 0.89)",
-    "rgba(50, 172, 45, 0.97)"
+    "rgba(50, 172, 45, 0.97)",
   ],
   unitSingle: "",
   unitPlural: "",
@@ -39,8 +40,8 @@ const panelDefaults = {
     geohashField: "geohash",
     latitudeField: "latitude",
     longitudeField: "longitude",
-    metricField: "metric"
-  }
+    metricField: "metric",
+  },
 };
 
 const mapCenters = {
@@ -49,7 +50,7 @@ const mapCenters = {
   Europe: { mapCenterLatitude: 46, mapCenterLongitude: 14 },
   "West Asia": { mapCenterLatitude: 26, mapCenterLongitude: 53 },
   "SE Asia": { mapCenterLatitude: 10, mapCenterLongitude: 106 },
-  "Last GeoHash": { mapCenterLatitude: 0, mapCenterLongitude: 0 }
+  "Last GeoHash": { mapCenterLatitude: 0, mapCenterLongitude: 0 },
 };
 
 export default class WorldmapCtrl extends MetricsPanelCtrl {
@@ -111,23 +112,28 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         return;
       }
 
+      this.panel.jsonpUrl = textUtil.sanitizeUrl(this.panel.jsonpUrl);
+      this.panel.jsonpCallback = textUtil.sanitizeUrl(this.panel.jsonpCallback);
+
       $.ajax({
         type: "GET",
         url: this.panel.jsonpUrl + "?callback=?",
         contentType: "application/json",
         jsonpCallback: this.panel.jsonpCallback,
         dataType: "jsonp",
-        success: res => {
+        success: (res) => {
           this.locations = res;
           this.render();
-        }
+        },
       });
     } else if (this.panel.locationData === "json endpoint") {
       if (!this.panel.jsonUrl) {
         return;
       }
 
-      $.getJSON(this.panel.jsonUrl).then(res => {
+      this.panel.jsonUrl = textUtil.sanitizeUrl(this.panel.jsonUrl);
+
+      $.getJSON(this.panel.jsonUrl).then((res) => {
         this.locations = res;
         this.render();
       });
@@ -212,7 +218,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
         this.render();
       }
     } catch (err) {
-      appEvents.emit('alert-error', ['Data error', err.toString()])
+      appEvents.emit("alert-error", ["Data error", err.toString()]);
     }
   }
 
@@ -231,7 +237,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   seriesHandler(seriesData) {
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
-      alias: seriesData.target
+      alias: seriesData.target,
     });
 
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
@@ -277,7 +283,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   }
 
   updateThresholdData() {
-    this.data.thresholds = this.panel.thresholds.split(",").map(strValue => {
+    this.data.thresholds = this.panel.thresholds.split(",").map((strValue) => {
       return Number(strValue.trim());
     });
     while (_.size(this.panel.colors) > _.size(this.data.thresholds) + 1) {
@@ -307,7 +313,7 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       ctrl.renderingCompleted();
     });
 
-     function render() {
+    function render() {
       if (!ctrl.data) {
         return;
       }
