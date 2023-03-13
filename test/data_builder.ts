@@ -6,7 +6,7 @@ export default class DataBuilder {
     this.data.thresholds = [];
   }
 
-  withCountryAndValue(countryCode, value) {
+  withCountryAndValue(countryCode, value, colorValue?) {
     let dataPoint;
     if (countryCode === 'SE') {
       dataPoint = {
@@ -16,6 +16,7 @@ export default class DataBuilder {
         locationLongitude: 18,
         value: value,
         valueRounded: value,
+        colorValue
       };
     } else if (countryCode === 'IE') {
       dataPoint = {
@@ -25,6 +26,7 @@ export default class DataBuilder {
         locationLongitude: 8,
         value: value,
         valueRounded: value,
+        colorValue
       };
     } else if (countryCode === 'US') {
       dataPoint = {
@@ -34,6 +36,7 @@ export default class DataBuilder {
         locationLongitude: -95,
         value: value,
         valueRounded: value,
+        colorValue
       };
     }
     this.data.push(dataPoint);

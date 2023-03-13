@@ -53,8 +53,9 @@ export default class DataFormatter {
     }
   }
 
-  createDataValue(encodedGeohash, decodedGeohash, locationName, value) {
+  createDataValue(encodedGeohash, decodedGeohash, locationName, value, colorValue) {
     const dataValue = {
+      colorValue: colorValue,
       key: encodedGeohash,
       locationName: locationName,
       locationLatitude: decodedGeohash.latitude,
@@ -65,6 +66,7 @@ export default class DataFormatter {
     };
 
     dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+    dataValue.colorValue = kbn.roundValue(dataValue.colorValue, this.ctrl.panel.colorDecimals || 0);
     return dataValue;
   }
 
@@ -92,8 +94,8 @@ export default class DataFormatter {
               ? row[columnNames[this.ctrl.panel.esLocationName]]
               : encodedGeohash;
             const value = row[columnNames[this.ctrl.panel.esMetric]];
-
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            const colorValue = row[columnNames[this.ctrl.panel.colorMetric]];
+            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, colorValue);
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }
@@ -116,8 +118,8 @@ export default class DataFormatter {
               ? datapoint[this.ctrl.panel.esLocationName]
               : encodedGeohash;
             const value = datapoint[this.ctrl.panel.esMetric];
-
-            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value);
+            const colorValue = datapoint[this.ctrl.panel.colorMetric];
+            const dataValue = this.createDataValue(encodedGeohash, decodedGeohash, locationName, value, colorValue);
             if (dataValue.value > highestValue) {
               highestValue = dataValue.value;
             }

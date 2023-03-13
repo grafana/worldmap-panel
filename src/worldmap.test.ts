@@ -313,6 +313,59 @@ describe('Worldmap', () => {
     });
   });
 
+  describe('when a second metric is set to the color', () => {
+    const lowVal = 7;
+    const avgVal = 50;
+    const highVal = 99;
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1, highVal)
+        .withCountryAndValue('IE', 2, avgVal)
+        .withCountryAndValue('US', 1, lowVal)
+        .withDataRange(0, 100, 50)
+        .withThresholdValues([33,66])
+        .build();
+      worldMap.drawCircles();
+    });
+
+    it('should create circle popups with the second metrics there', () => {
+      expect(worldMap.circles[0]._popup._content).toBe(`Sweden: 1<br>${highVal}`);
+      expect(worldMap.circles[1]._popup._content).toBe(`Ireland: 2<br>${avgVal}`);
+      expect(worldMap.circles[2]._popup._content).toBe(`United States: 1<br>${lowVal}`);
+    });
+
+    it('should set the right colors using the second metric', () => {
+      expect(worldMap.circles[0].options.color).toBe('green');
+      expect(worldMap.circles[1].options.color).toBe('blue');
+      expect(worldMap.circles[2].options.color).toBe('red');
+    });
+  });
+
+  describe('when a second metric is set to the color with labels', () => {
+    const lowVal = 7;
+    const avgVal = 50;
+    const highVal = 99;
+    const label = 'Metric';
+    const unit = '%';
+
+    beforeEach(() => {
+      ctrl.data = new DataBuilder()
+        .withCountryAndValue('SE', 1, highVal)
+        .withCountryAndValue('IE', 2, avgVal)
+        .withCountryAndValue('US', 1, lowVal)
+        .build();
+        ctrl.panel.colorLabel = label;
+        ctrl.panel.colorUnit = unit;
+      worldMap.drawCircles();
+    });
+
+    it('should create circle popups with the second metrics there', () => {
+      expect(worldMap.circles[0]._popup._content).toBe(`Sweden: 1<br>${label}: ${highVal}${unit}`);
+      expect(worldMap.circles[1]._popup._content).toBe(`Ireland: 2<br>${label}: ${avgVal}${unit}`);
+      expect(worldMap.circles[2]._popup._content).toBe(`United States: 1<br>${label}: ${lowVal}${unit}`);
+    });
+  });
+
   afterEach(() => {
     const fixture: HTMLElement = document.getElementById('fixture')!;
     document.body.removeChild(fixture);

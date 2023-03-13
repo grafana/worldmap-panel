@@ -103,7 +103,9 @@ export default class WorldMap {
 
   filterEmptyAndZeroValues(data) {
     return _.filter(data, o => {
-      return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) && !(this.ctrl.panel.hideZero && o.value === 0);
+      return !(this.ctrl.panel.hideEmpty && _.isNil(o.value)) 
+          && !(this.ctrl.panel.hideZero && o.value === 0)
+          && !(this.ctrl.panel.minValue && o.value <= this.ctrl.panel.minValue)
     });
   }
 
@@ -148,29 +150,33 @@ export default class WorldMap {
       });
 
       if (circle) {
+        const colorValue = dataPoint.colorValue !== undefined ? dataPoint.colorValue : dataPoint.value;
+        const color = this.getColor(colorValue);
         circle.setRadius(this.calcCircleSize(dataPoint.value || 0));
         circle.setStyle({
-          color: this.getColor(dataPoint.value),
-          fillColor: this.getColor(dataPoint.value),
+          color,
+          fillColor: color,
           fillOpacity: 0.5,
           location: dataPoint.key,
         });
         circle.unbindPopup();
-        this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
+        this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded, dataPoint.colorValue);
       }
     });
   }
 
   createCircle(dataPoint) {
+    const colorValue = dataPoint.colorValue !== undefined ? dataPoint.colorValue : dataPoint.value;
+    const color = this.getColor(colorValue);
     const circle = (<any>window).L.circleMarker([dataPoint.locationLatitude, dataPoint.locationLongitude], {
       radius: this.calcCircleSize(dataPoint.value || 0),
-      color: this.getColor(dataPoint.value),
-      fillColor: this.getColor(dataPoint.value),
+      color,
+      fillColor: color,
       fillOpacity: 0.5,
       location: dataPoint.key,
     });
 
-    this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded);
+    this.createPopup(circle, dataPoint.locationName, dataPoint.valueRounded, dataPoint.colorValue);
     return circle;
   }
 
@@ -188,9 +194,11 @@ export default class WorldMap {
     return circleSizeRange * dataFactor + circleMinSize;
   }
 
-  createPopup(circle, locationName, value) {
+  createPopup(circle, locationName, value, colorValue) {
     const unit = value && value === 1 ? this.ctrl.panel.unitSingular : this.ctrl.panel.unitPlural;
-    const label = (locationName + ': ' + value + ' ' + (unit || '')).trim();
+    const firstLine = `${locationName}: ${value} ${(unit || '')}`.trim();
+    const secondLine = colorValue !== undefined ? `${(this.ctrl.panel.colorLabel !== undefined ? this.ctrl.panel.colorLabel + ': ':'') + colorValue + (this.ctrl.panel.colorUnit || '')}`.trim(): '';
+    const label = `${firstLine}${secondLine !== '' ? '<br>' + secondLine : ''}`;
     circle.bindPopup(label, {
       offset: (<any>window).L.point(0, -2),
       className: 'worldmap-popup',
