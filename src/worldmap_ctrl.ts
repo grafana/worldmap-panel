@@ -84,13 +84,13 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
   setMapProvider(contextSrv) {
     this.tileServer = contextSrv.user.lightTheme
-      ? "CartoDB Positron"
-      : "CartoDB Dark";
+      ? "CARTO Positron"
+      : "CARTO Dark";
     this.setMapSaturationClass();
   }
 
   setMapSaturationClass() {
-    if (this.tileServer === "CartoDB Dark") {
+    if (this.tileServer === "CARTO Dark") {
       this.saturationClass = "map-darken";
     } else {
       this.saturationClass = "";

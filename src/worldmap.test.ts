@@ -329,7 +329,7 @@ describe('Worldmap', () => {
         initialZoom: 1,
         colors: ['red', 'blue', 'green'],
       },
-      tileServer: 'CartoDB Positron',
+      tileServer: 'CARTO Positron',
     };
     worldMap = new WorldMap(ctrl, document.getElementsByClassName('mapcontainer')[0]);
     worldMap.createMap();
