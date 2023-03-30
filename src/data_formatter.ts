@@ -165,49 +165,51 @@ export default class DataFormatter {
       let highestValue = 0;
       let lowestValue = Number.MAX_VALUE;
 
-      tableData[0].forEach(datapoint => {
-        let key;
-        let longitude;
-        let latitude;
-
-        if (this.ctrl.panel.tableQueryOptions.queryType === 'geohash') {
-          const encodedGeohash = datapoint[this.ctrl.panel.tableQueryOptions.geohashField];
-          const decodedGeohash = decodeGeoHash(encodedGeohash);
-
-          latitude = decodedGeohash.latitude;
-          longitude = decodedGeohash.longitude;
-          key = encodedGeohash;
-        } else {
-          latitude = datapoint[this.ctrl.panel.tableQueryOptions.latitudeField];
-          longitude = datapoint[this.ctrl.panel.tableQueryOptions.longitudeField];
-          key = `${latitude}_${longitude}`;
-        }
-
-        const dataValue = {
-          key: key,
-          locationName: datapoint[this.ctrl.panel.tableQueryOptions.labelField] || 'n/a',
-          locationLatitude: latitude,
-          locationLongitude: longitude,
-          value: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
-          valueFormatted: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
-          valueRounded: 0,
-        };
-
-        if (dataValue.value > highestValue) {
-          highestValue = dataValue.value;
-        }
-
-        if (dataValue.value < lowestValue) {
-          lowestValue = dataValue.value;
-        }
-
-        dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
-        data.push(dataValue);
+      tableData.forEach(series => {
+        series.forEach(datapoint => {
+          let key;
+          let longitude;
+          let latitude;
+  
+          if (this.ctrl.panel.tableQueryOptions.queryType === 'geohash') {
+            const encodedGeohash = datapoint[this.ctrl.panel.tableQueryOptions.geohashField];
+            const decodedGeohash = decodeGeoHash(encodedGeohash);
+  
+            latitude = decodedGeohash.latitude;
+            longitude = decodedGeohash.longitude;
+            key = encodedGeohash;
+          } else {
+            latitude = datapoint[this.ctrl.panel.tableQueryOptions.latitudeField];
+            longitude = datapoint[this.ctrl.panel.tableQueryOptions.longitudeField];
+            key = `${latitude}_${longitude}`;
+          }
+  
+          const dataValue = {
+            key: key,
+            locationName: datapoint[this.ctrl.panel.tableQueryOptions.labelField] || 'n/a',
+            locationLatitude: latitude,
+            locationLongitude: longitude,
+            value: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
+            valueFormatted: datapoint[this.ctrl.panel.tableQueryOptions.metricField],
+            valueRounded: 0,
+          };
+  
+          if (dataValue.value > highestValue) {
+            highestValue = dataValue.value;
+          }
+  
+          if (dataValue.value < lowestValue) {
+            lowestValue = dataValue.value;
+          }
+  
+          dataValue.valueRounded = kbn.roundValue(dataValue.value, this.ctrl.panel.decimals || 0);
+          data.push(dataValue);
+        });
+  
+        data.highestValue = highestValue;
+        data.lowestValue = lowestValue;
+        data.valueRange = highestValue - lowestValue;
       });
-
-      data.highestValue = highestValue;
-      data.lowestValue = lowestValue;
-      data.valueRange = highestValue - lowestValue;
     }
   }
 

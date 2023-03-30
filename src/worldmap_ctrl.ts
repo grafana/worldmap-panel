@@ -201,6 +201,13 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       } else if (this.panel.locationData === "table") {
         const tableData = dataList.map(DataFormatter.tableHandler.bind(this));
         this.dataFormatter.setTableValues(tableData, data);
+      } else if (this.panel.locationData === "polyline") {
+        this.series = dataList.map(c => ({
+          // Todo: Hard code for now, but this should eventually become configurable.
+          // But, it may make sense to convert to react first?
+          polyline: c.meta.map.summary_polyline,
+          name: c.meta.name,
+        }));
       } else if (this.panel.locationData === "json result") {
         this.series = dataList;
         this.dataFormatter.setJsonValues(data);
@@ -300,8 +307,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
   changeLocationData() {
     this.loadLocationDataFromFile(true);
 
-    if (this.panel.locationData === "geohash") {
-      this.render();
+    switch (this.panel.locationData) {
+      case "geohash":
+        this.render();
+        break;
     }
   }
 
@@ -338,6 +347,10 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
       }
 
       ctrl.map.resize();
+      
+      if (ctrl.panel.locationData === "polyline") {
+        ctrl.map.addPolylines(ctrl.series, true);  
+      }
 
       if (ctrl.mapCenterMoved) {
         ctrl.map.panToMapCenter();

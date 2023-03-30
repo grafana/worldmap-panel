@@ -36,6 +36,7 @@
     "file-loader": "^3.0.1",
     "jest": "^23.6.0",
     "jquery": "^3.3.1",
+    "leaflet": "1.6.0",
     "ng-annotate-webpack-plugin": "^0.3.0",
     "style-loader": "^0.23.1",
     "ts-jest": "^23.10.5",
