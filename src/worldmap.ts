@@ -128,7 +128,7 @@ export default class WorldMap {
   createCircles(data) {
     const circles: any[] = [];
     data.forEach(dataPoint => {
-      if (!dataPoint.locationName) {
+      if (!dataPoint.locationName || !dataPoint.locationLatitude || !dataPoint.locationLongitude) {
         return;
       }
       circles.push(this.createCircle(dataPoint));
