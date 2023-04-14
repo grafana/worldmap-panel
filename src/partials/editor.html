@@ -52,7 +52,7 @@
       <div class="gf-form">
         <label class="gf-form-label width-12">Location Data</label>
         <div class="gf-form-select-wrapper max-width-10">
-          <select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'countries_3letter', 'states', 'probes', 'geohash', 'json endpoint', 'jsonp endpoint', 'json result', 'table']"
+          <select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'countries_3letter', 'world_regions', 'states', 'probes', 'geohash', 'json endpoint', 'jsonp endpoint', 'json result', 'table']"
             ng-change="ctrl.changeLocationData()"></select>
         </div>
       </div>
@@ -88,6 +88,11 @@
       <h5>Mapping Between Time Series Query and Worldmap</h5>
       <p>The query should be formatted as Time Series data. The time series (group by) name should be a 3-letter country code.
         For example: USA for United States or FRA for France.</p>
+    </div>
+    <div class="grafana-info-box max-width-28" ng-show="ctrl.panel.locationData ==='world_regions'">
+      <h5>Mapping Between Time Series Query and Worldmap</h5>
+      <p>The query should be formatted as Time Series data. The time series (group by) name should be a 2-letter country code with optional region code.
+        For example: CN_Beijing or CN-BJ for Beijing in China.</p>
     </div>
     <div class="grafana-info-box max-width-28" ng-show="ctrl.panel.locationData ==='states'">
         <h5>Mapping Between Time Series Query and Worldmap</h5>

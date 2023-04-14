@@ -171,6 +171,131 @@ describe('DataFormatter', () => {
     });
   });
 
+  describe('when the time series data only match unknown in location', () => {
+    beforeEach(() => {
+      const ctrl = {
+        panel: {
+          valueName: 'total'
+        },
+        locations: [
+          {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
+          {key: 'unknown', name: 'Unknown', latitude: 99, longitude: 99}
+        ],
+        series: [
+          {alias: 'SX', datapoints: [1, 2], stats: {total: 3}},
+          {alias: 'IE', datapoints: [5, 2], stats: {total: 7}}
+        ]
+      };
+      dataFormatter = new DataFormatter(ctrl);
+      dataFormatter.setValues(formattedData);
+    });
+
+    it('should format the data and match the serie to a location', () => {
+      expect(formattedData[1].key).toEqual('IE');
+      expect(formattedData[1].locationName).toEqual('Ireland');
+      expect(formattedData[1].locationLatitude).toEqual(1);
+      expect(formattedData[1].locationLongitude).toEqual(1);
+      expect(formattedData[1].value).toEqual(7);
+
+      expect(formattedData[0].key).toEqual('SX');
+      expect(formattedData[0].locationName).toEqual('Unknown');
+      expect(formattedData[0].locationLatitude).toEqual(99);
+      expect(formattedData[0].locationLongitude).toEqual(99);
+      expect(formattedData[0].value).toEqual(3);
+    });
+  });
+
+  describe('when the time series partially match in location', () => {
+    beforeEach(() => {
+      const ctrl = {
+        panel: {
+          valueName: 'total'
+        },
+        locations: [
+          {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
+          {key: 'IE.Loc1', name: 'Ireland Loc1', latitude: 1, longitude: 2},
+          {key: 'unknown', name: 'Unknown', latitude: 99, longitude: 99}
+        ],
+        series: [
+          {alias: 'SX', datapoints: [1, 2], stats: {total: 3}},
+          {alias: 'IE.loC1-Sub2', datapoints: [5, 2], stats: {total: 7}},
+          {alias: 'IE.loC1Sub2', datapoints: [15, 2], stats: {total: 17}}
+        ]
+      };
+      dataFormatter = new DataFormatter(ctrl);
+      dataFormatter.setValues(formattedData);
+    });
+
+    it('should format the data and match the serie to a location', () => {
+      expect(formattedData[1].key).toEqual('IE.loC1-Sub2');
+      expect(formattedData[1].locationName).toEqual('Ireland Loc1');
+      expect(formattedData[1].locationLatitude).toEqual(1);
+      expect(formattedData[1].locationLongitude).toEqual(2);
+      expect(formattedData[1].value).toEqual(7);
+
+      expect(formattedData[2].key).toEqual('IE.loC1Sub2');
+      expect(formattedData[2].locationName).toEqual('Ireland');
+      expect(formattedData[2].locationLatitude).toEqual(1);
+      expect(formattedData[2].locationLongitude).toEqual(1);
+      expect(formattedData[2].value).toEqual(17);
+
+      expect(formattedData[0].key).toEqual('SX');
+      expect(formattedData[0].locationName).toEqual('Unknown');
+      expect(formattedData[0].locationLatitude).toEqual(99);
+      expect(formattedData[0].locationLongitude).toEqual(99);
+      expect(formattedData[0].value).toEqual(3);
+    });
+  });
+
+  describe('when the location data key is array', () => {
+    beforeEach(() => {
+      const ctrl = {
+        panel: {
+          valueName: 'total'
+        },
+        locations: [
+          {key: 'IE', name: 'Ireland', latitude: 1, longitude: 1},
+          {key: ['IE.Loc1','IE-L1'], name: 'Ireland Loc1', latitude: 1, longitude: 2},
+          {key: 'unknown', name: 'Unknown', latitude: 99, longitude: 99}
+        ],
+        series: [
+          {alias: 'SX', datapoints: [1, 2], stats: {total: 3}},
+          {alias: 'IE.loC1-Sub2', datapoints: [5, 2], stats: {total: 7}},
+          {alias: 'IE-l1-Sub2', datapoints: [2, 2], stats: {total: 4}},
+          {alias: 'IE.loC1Sub2', datapoints: [15, 2], stats: {total: 17}}
+        ]
+      };
+      dataFormatter = new DataFormatter(ctrl);
+      dataFormatter.setValues(formattedData);
+    });
+
+    it('should format the data and match the serie to a location', () => {
+      expect(formattedData[1].key).toEqual('IE.loC1-Sub2');
+      expect(formattedData[1].locationName).toEqual('Ireland Loc1');
+      expect(formattedData[1].locationLatitude).toEqual(1);
+      expect(formattedData[1].locationLongitude).toEqual(2);
+      expect(formattedData[1].value).toEqual(7);
+
+      expect(formattedData[2].key).toEqual('IE-l1-Sub2');
+      expect(formattedData[2].locationName).toEqual('Ireland Loc1');
+      expect(formattedData[2].locationLatitude).toEqual(1);
+      expect(formattedData[2].locationLongitude).toEqual(2);
+      expect(formattedData[2].value).toEqual(4);
+
+      expect(formattedData[3].key).toEqual('IE.loC1Sub2');
+      expect(formattedData[3].locationName).toEqual('Ireland');
+      expect(formattedData[3].locationLatitude).toEqual(1);
+      expect(formattedData[3].locationLongitude).toEqual(1);
+      expect(formattedData[3].value).toEqual(17);
+
+      expect(formattedData[0].key).toEqual('SX');
+      expect(formattedData[0].locationName).toEqual('Unknown');
+      expect(formattedData[0].locationLatitude).toEqual(99);
+      expect(formattedData[0].locationLongitude).toEqual(99);
+      expect(formattedData[0].value).toEqual(3);
+    });
+  });
+
   describe('when the time series data has decimals', () => {
     describe('and decimals are specified as an integer', () => {
       beforeEach(() => {
