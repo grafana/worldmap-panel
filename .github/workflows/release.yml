@@ -93,7 +93,7 @@ jobs:
       - name: Package plugin
         id: package-plugin
         run: |
-          mv dist $\{{ steps.metadata.outputs.plugin-id }}
+          mv dist ${{ steps.metadata.outputs.plugin-id }}
           zip $\{{ steps.metadata.outputs.archive }} $\{{ steps.metadata.outputs.plugin-id }} -r
           md5sum $\{{ steps.metadata.outputs.archive }} > $\{{ steps.metadata.outputs.archive-checksum }}
           echo "checksum=$(cat ./$\{{ steps.metadata.outputs.archive-checksum }} | cut -d' ' -f1)" >> $GITHUB_OUTPUT
