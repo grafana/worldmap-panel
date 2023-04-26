@@ -113,7 +113,7 @@ jobs:
           generate_release_notes: true
           files: |
             ./$\{{ steps.metadata.outputs.archive }}
-            ./$\{{ steps.metadata.outputs.archive-checksum }}
+            ./${{ steps.metadata.outputs.archive-checksum }}
           body: |
             **This Github draft release has been created for your plugin.**
 
