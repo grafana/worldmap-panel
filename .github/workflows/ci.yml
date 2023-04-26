@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable --prefer-offline
+
+      - name: Check types
+        run: yarn typecheck
+      - name: Lint
+        run: yarn lint
+      - name: Unit tests
+        run: yarn test:ci
+      - name: Build frontend
+        run: yarn build
+
+      - name: E2E - Check for Frontend Tests
+        id: check-for-e2e-frontend-tests
+        run: |
+          if [ -d "cypress" ]
+          then
+            echo "has-e2e-frontend-tests=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: E2E - Start grafana docker
+        if: steps.check-for-e2e-frontend-tests.outputs.has-e2e-frontend-tests == 'true'
+        run: yarn server -d
+
+      - name: E2E - Run tests
+        if: steps.check-for-e2e-frontend-tests.outputs.has-e2e-frontend-tests == 'true'
+        run: yarn e2e
+
+      - name: E2E - Stop grafana docker
+        if: steps.check-for-e2e-frontend-tests.outputs.has-e2e-frontend-tests == 'true'
+        run: docker-compose down
+
+      - name: Check for backend
+        id: check-for-backend
+        run: |
+          if [ -f "Magefile.go" ]
+          then
+            echo "has-backend=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Go environment
+        if: steps.check-for-backend.outputs.has-backend == 'true'
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.19'
+
+      - name: Test backend
+        if: steps.check-for-backend.outputs.has-backend == 'true'
+        uses: magefile/mage-action@v1
+        with:
+          version: latest
+          args: coverage
+
+      - name: Build backend
+        if: steps.check-for-backend.outputs.has-backend == 'true'
+        uses: magefile/mage-action@v1
+        with:
+          version: latest
+          args: buildAll
+
+      - name: Code Climate - Check environment
+        id: check-for-codeclimate
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: |
+          if [ ! -z $CC_TEST_REPORTER_ID ]
+          then
+            echo "has-codeclimate=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Code Climate - Run
+        if: steps.check-for-codeclimate.outputs.has-codeclimate == 'true'
+        run: |
+          mkdir -p ccbin/
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./ccbin/cc-test-reporter
+          chmod +x ./ccbin/cc-test-reporter
+          yarn global add jest jest-junit
+          ./ccbin/cc-test-reporter format-coverage -t lcov -o out/codeclimate.frontend.json coverage/lcov.info
+          npx jest --ci --runInBand --reporters=default --reporters=jest-junit
+
+      - name: Code Climate - Upload
+        if: steps.check-for-codeclimate.outputs.has-codeclimate == 'true'
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: |
+          ./ccbin/cc-test-reporter sum-coverage out/codeclimate.*.json -d -p 1 -o out/codeclimate.total.json
+          ./ccbin/cc-test-reporter upload-coverage -i out/codeclimate.total.json

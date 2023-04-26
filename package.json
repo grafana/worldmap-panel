@@ -8,6 +8,7 @@
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
     "test": "grafana-toolkit plugin:test",
+    "test-ci": "grafana-toolkit plugin:test",
     "ci-build": "grafana-toolkit plugin:ci-build"
   },
   "keywords": [
