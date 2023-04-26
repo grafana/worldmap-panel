@@ -1,5 +1,6 @@
 module.exports = {
   verbose: true,
+  coveragePathIgnorePatterns: ['<rootDir>/src/libs/'],
   "globals": {
     "ts-jest": {
       "tsConfig": "tsconfig.jest.json"

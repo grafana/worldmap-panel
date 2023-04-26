@@ -7,6 +7,8 @@
     "build": "grafana-toolkit plugin:build",
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
+    "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
+    "lint:fix": "yarn lint --fix",
     "test": "grafana-toolkit plugin:test",
     "test:ci": "jest --passWithNoTests --maxWorkers 4",
     "ci-build": "grafana-toolkit plugin:ci-build",
@@ -22,6 +24,7 @@
   "author": "Grafana Labs",
   "license": "MIT",
   "devDependencies": {
+    "@grafana/eslint-config": "^5.1.0",
     "@grafana/toolkit": "9.4.7",
     "@types/grafana": "https://git@github.com/CorpGlory/types-grafana.git",
     "@types/jest": "^23.3.9",
