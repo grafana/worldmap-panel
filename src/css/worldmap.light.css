@@ -2,3 +2,5 @@
   background-color: #ECECEC;
   color: #000 !important;
 }
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {color: #333 !important;}
