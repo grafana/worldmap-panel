@@ -121,7 +121,7 @@ jobs:
 
             If you would like to submit this release to Grafana please consider the following steps:
 
-            - Check the Validate plugin step in the [release workflow](https://github.com/$\{{github.repository}}/commit/$\{{github.sha}}/checks/$\{{github.run_id}}) for any warnings that need attention
+            - Check the Validate plugin step in the [release workflow](https://github.com/${{github.repository}}/commit/${{github.sha}}/checks/${{github.run_id}}) for any warnings that need attention
             - Navigate to https://grafana.com/auth/sign-in/ to sign into your account
             - Once logged in click **My Plugins** in the admin navigation
             - Click the **Submit Plugin** button
