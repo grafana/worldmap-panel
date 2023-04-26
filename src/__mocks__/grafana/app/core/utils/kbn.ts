@@ -1,6 +1,6 @@
 const kbn: any = {};
 
-kbn.regexEscape = value => {
+kbn.regexEscape = (value) => {
   return value.replace(/[\\^$*+?.()|[\]{}\/]/g, '\\$&');
 };
 

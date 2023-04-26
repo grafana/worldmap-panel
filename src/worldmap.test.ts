@@ -1,5 +1,5 @@
 import WorldMap from './worldmap';
-import DataBuilder from '../test/data_builder';
+import DataBuilder from './test/data_builder';
 import * as _ from 'lodash';
 
 describe('Worldmap', () => {
@@ -18,10 +18,7 @@ describe('Worldmap', () => {
 
   describe('when the data has one point', () => {
     beforeEach(() => {
-      ctrl.data = new DataBuilder()
-        .withCountryAndValue('SE', 1)
-        .withDataRange(1, 1, 0)
-        .build();
+      ctrl.data = new DataBuilder().withCountryAndValue('SE', 1).withDataRange(1, 1, 0).build();
       ctrl.panel.circleMaxSize = '10';
       worldMap.drawCircles();
     });
@@ -261,9 +258,9 @@ describe('Worldmap', () => {
       expect(worldMap.legend).toBeDefined();
       expect(worldMap.legend._div.outerHTML).toBe(
         '<div class="info legend leaflet-control">' +
-        '<div class="legend-item">' +
-        '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2+</div>' +
-        '</div>'
+          '<div class="legend-item">' +
+          '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2+</div>' +
+          '</div>'
       );
     });
   });
@@ -290,8 +287,8 @@ describe('Worldmap', () => {
       expect(worldMap.legend).toBeDefined();
       expect(worldMap.legend._div.outerHTML).toBe(
         '<div class="info legend leaflet-control"><div class="legend-item">' +
-        '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
-        '<div class="legend-item"><i style="background:green"></i> 4+</div></div>'
+          '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
+          '<div class="legend-item"><i style="background:green"></i> 4+</div></div>'
       );
     });
   });
@@ -306,9 +303,9 @@ describe('Worldmap', () => {
       expect(worldMap.legend).toBeDefined();
       expect(worldMap.legend._div.outerHTML).toBe(
         '<div class="info legend leaflet-control"><div class="legend-item">' +
-        '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
-        '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
-        '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
+          '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
+          '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
+          '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
       );
     });
   });

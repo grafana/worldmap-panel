@@ -17,6 +17,6 @@ module.exports = {
     "json"
   ],
   "setupFiles": [
-    "<rootDir>/test/setupTests.ts"
+    "<rootDir>/src/test/setupTests.ts"
   ]
 };
