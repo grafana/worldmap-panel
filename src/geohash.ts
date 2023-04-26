@@ -27,7 +27,7 @@ export default function decodeGeoHash(geohash) {
   const latCenter = (lat[0] + lat[1]) / 2;
   const lonCenter = (lon[0] + lon[1]) / 2;
 
-  return { latitude: latCenter, longitude: lonCenter};
+  return { latitude: latCenter, longitude: lonCenter };
 }
 
 function refineInterval(interval, base32Decoded, mask) {

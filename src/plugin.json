@@ -23,12 +23,13 @@
       {"name": "USA", "path": "images/worldmap-usa.png"},
       {"name": "Light Theme", "path": "images/worldmap-light-theme.png"}
     ],
-    "version": "1.0.1",
-    "updated": "Fri May 15 14:40:24 MDT 2020"
+    "version": "1.0.3",
+    "updated": "Tue Feb 07 14:29:24 EDT 2023"
   },
 
   "dependencies": {
-    "grafanaVersion": "3.x.x",
+    "grafanaDependency": ">=6.3.7",
+    "grafanaVersion": "6.3.x",
     "plugins": [ ]
   }
 }

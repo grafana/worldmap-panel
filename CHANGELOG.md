@@ -1,6 +1,11 @@
 # Changelog
 ## Entries
 
+## v1.0.3
+
+- Release for Grafana 6+ support
+- Updated build environment and packages for future releases
+
 ## v1.0.1
 
 - Release for Grafana 7.0 with plugin signing

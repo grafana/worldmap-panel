@@ -1,10 +1,7 @@
 module.exports = {
   verbose: true,
-  "globals": {
-    "ts-jest": {
-      "tsConfig": "tsconfig.jest.json"
-    },
-  },
+  testEnvironment: 'jsdom',
+  coveragePathIgnorePatterns: ['<rootDir>/src/libs/'],
   "transform": {
     "\\.ts$": "ts-jest"
   },
@@ -17,6 +14,6 @@ module.exports = {
     "json"
   ],
   "setupFiles": [
-    "<rootDir>/test/setupTests.ts"
+    "jest-canvas-mock"
   ]
 };
