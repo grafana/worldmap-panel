@@ -60,7 +60,7 @@ jobs:
 
       - name: Sign plugin
         run: yarn sign
-        if: $\{{ env.GRAFANA_API_KEY != '' }}
+        if: ${{ env.GRAFANA_API_KEY != '' }}
 
       - name: Get plugin metadata
         id: metadata
