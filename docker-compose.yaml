@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  grafana:
+    container_name: 'grafana-worldmap-panel'
+    image: grafana/grafana:9.3.6
+    #image: grafana/grafana:9.2.7
+    #image: grafana/grafana:8.0.7
+    #image: grafana/grafana:7.5.13
+    #image: grafana/grafana:6.7.6
+    #image: grafana/grafana:6.6.2
+    #image: grafana/grafana:6.5.3
+    #image: grafana/grafana:6.4.5
+    #image: grafana/grafana:6.3.7
+    # fails for earlier builds
+    #image: grafana/grafana:6.2.5
+    #image: grafana/grafana:6.1.6
+    #image: grafana/grafana:6.0.2
+    #image: grafana/grafana:5.4.5
+    ports:
+      - 3000:3000/tcp
+    volumes:
+      - ./:/var/lib/grafana/plugins/grafana-worldmap-panel
+      - ./provisioning:/etc/grafana/provisioning
+    environment:
+      - TERM=linux
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=grafana-worldmap-panel
