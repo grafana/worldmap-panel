@@ -9496,15 +9496,6 @@ package-json@^2.3.1:
     registry-url "^3.0.3"
     semver "^5.1.0"
 
-package.json@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/package.json/-/package.json-2.0.1.tgz#f886059d2a49ed076e64883695d73b2b46d21d6d"
-  integrity sha512-pSxZ6XR5yEawRN2ekxx9IKgPN5uNAYco7MCPxtBEWMKO3UKWa1X2CtQMzMgloeGj2g2o6cue3Sb5iPkByIJqlw==
-  dependencies:
-    git-package-json "^1.4.0"
-    git-source "^1.1.0"
-    package-json "^2.3.1"
-
 pako@^2.0.4:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/pako/-/pako-2.1.0.tgz#266cc37f98c7d883545d11335c00fbd4062c9a86"
@@ -9733,6 +9724,15 @@ pkg-up@^3.1.0:
   integrity sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==
   dependencies:
     find-up "^3.0.0"
+
+pkg.json@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/pkg.json/-/pkg.json-2.0.8.tgz#c9f2eb465622a86b2d532eeb9f3cd96697064dc1"
+  integrity sha512-iIBceNPwO452wLbF73GCV5z/TY9UydLWEV+wBjegAObPF/PihDL9ZUr2g2EFI7XqPFMTLEX/QtL63Z+zzFZ7yA==
+  dependencies:
+    git-package-json "^1.4.0"
+    git-source "^1.1.0"
+    package-json "^2.3.1"
 
 pn@^1.1.0:
   version "1.1.0"
@@ -12542,6 +12542,11 @@ type-of@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/type-of/-/type-of-2.0.1.tgz#e72a1741896568e9f628378d816d6912f7f23972"
   integrity sha512-39wxbwHdQ2sTiBB8wAzKfQ9GN+om8w+sjNWzr+vZJR5AMD5J+J7Yc8AtXnU9r/r2c8XiDZ/smxutDmZehX/qpQ==
+
+typecheck@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/typecheck/-/typecheck-0.1.2.tgz#016e200b08c656159c5844698a8bd4ec22ca0435"
+  integrity sha512-noA7T++dtHFemmk++XgotLp47kcu8ezbvN3hUUljZvntPGDWi9Ci0c24x6onS92PxOUNZFYChH8KPXRaoCcjgQ==
 
 typed-array-length@^1.0.4:
   version "1.0.4"
