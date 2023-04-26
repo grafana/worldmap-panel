@@ -127,6 +127,6 @@ jobs:
             - Click the **Submit Plugin** button
             - Fill in the Plugin Submission form:
               - Paste this [.zip asset link](https://github.com/${{ github.repository }}/releases/download/v${{ steps.metadata.outputs.plugin-version }}/${{ steps.metadata.outputs.archive }}) in the Plugin URL field
-              - Paste this [.zip.md5 link](https://github.com/$\{{ github.repository }}/releases/download/v$\{{ steps.metadata.outputs.plugin-version }}/$\{{ steps.metadata.outputs.archive-checksum }}) in the MD5 field
+              - Paste this [.zip.md5 link](https://github.com/${{ github.repository }}/releases/download/v${{ steps.metadata.outputs.plugin-version }}/${{ steps.metadata.outputs.archive-checksum }}) in the MD5 field
 
             Once done please remove these instructions and publish this release.
