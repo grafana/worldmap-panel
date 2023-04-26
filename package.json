@@ -8,8 +8,10 @@
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
     "test": "grafana-toolkit plugin:test",
-    "test-ci": "grafana-toolkit plugin:test",
-    "ci-build": "grafana-toolkit plugin:ci-build"
+    "test:ci": "jest --passWithNoTests --maxWorkers 4",
+    "ci-build": "grafana-toolkit plugin:ci-build",
+    "typecheck": "tsc --noEmit",
+    "sign": "npx --yes @grafana/sign-plugin@latest"
   },
   "keywords": [
     "worldmap",
@@ -28,8 +30,7 @@
     "jest": "^23.6.0",
     "jquery": "^3.3.1",
     "ts-jest": "^23.10.5",
-    "ts-loader": "^5.3.0",
-    "typecheck": "^0.1.2"
+    "ts-loader": "^5.3.0"
   },
   "dependencies": {
     "lodash": "^4.17.21",
