@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import WorldMap from './worldmap';
 import DataBuilder from './test/data_builder';
 import * as _ from 'lodash';
