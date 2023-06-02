@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as L from './libs/leaflet';
 import WorldmapCtrl from './worldmap_ctrl';
+import tinycolor from 'tinycolor2';
 
 const tileServers = {
   'CartoDB Positron': {
@@ -69,7 +70,7 @@ export default class WorldMap {
       let legendHtml = '';
       legendHtml +=
         '<div class="legend-item"><i style="background:' +
-        this.ctrl.panel.colors[0] +
+        tinycolor(this.ctrl.panel.colors[0]).toHexString() +
         '"></i> ' +
         '&lt; ' +
         thresholds[0] +
