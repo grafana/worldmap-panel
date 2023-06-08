@@ -1,6 +1,11 @@
 # Changelog
 ## Entries
 
+## v1.0.4
+
+- Validate legend colors
+
+
 ## v1.0.3
 
 - Release for Grafana 6+ support
