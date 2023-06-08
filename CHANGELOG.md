@@ -1,10 +1,14 @@
 # Changelog
+
 ## Entries
+
+## v1.0.5
+
+- Add Geomap migration warning and button to options menu
 
 ## v1.0.4
 
 - Validate legend colors
-
 
 ## v1.0.3
 

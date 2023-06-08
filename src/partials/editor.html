@@ -1,5 +1,17 @@
 <div class="editor-row">
   <div class="section gf-form-group">
+    <div class="grafana-info-box">
+      <h5>Migration</h5>
+      <p>
+        Consider switching to the <a href="https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/geomap/" target="_blank">Geomap</a> visualization type. It is a more capable and performant version of this panel.
+      </p>
+      <p>
+        <button class="btn btn-primary" ng-click="ctrl.migrateToReact()">
+          Migrate
+        </button>
+      </p>
+    </div>
+
     <h5 class="section-heading">Map Visual Options</h5>
     <div class="gf-form">
       <label class="gf-form-label width-10">Center</label>

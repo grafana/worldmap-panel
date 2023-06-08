@@ -4,7 +4,7 @@
   "id": "grafana-worldmap-panel",
 
   "info": {
-    "description": "World Map panel for Grafana. Displays time series data or geohash data from Elasticsearch overlaid on a world map.",
+    "description": "This panel is deprecated and will no longer be supported. Please use Geomap instead. World Map panel for Grafana. Displays time series data or geohash data from Elasticsearch overlaid on a world map.",
     "author": {
       "name": "Grafana Labs",
       "url": "https://grafana.com"
@@ -23,8 +23,8 @@
       {"name": "USA", "path": "images/worldmap-usa.png"},
       {"name": "Light Theme", "path": "images/worldmap-light-theme.png"}
     ],
-    "version": "1.0.3",
-    "updated": "Tue Feb 07 14:29:24 EDT 2023"
+    "version": "1.0.5",
+    "updated": "Thu Jun 10 00:00:00 EDT 2023"
   },
 
   "dependencies": {
