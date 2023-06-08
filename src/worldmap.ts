@@ -266,9 +266,10 @@ export default class WorldMap {
   }
 }
 
+export const DEFAULT_COLOR = '#CCC';
 function getColor(c: string): string {
   if (tinycolor(c).isValid()) {
     return c;
   }
-  return '#CCC';
+  return DEFAULT_COLOR;
 }
