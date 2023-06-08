@@ -308,7 +308,7 @@ describe('Worldmap', () => {
         '<div class="info legend leaflet-control"><div class="legend-item">' +
           '<i style="background:red"></i> &lt; 2</div><div class="legend-item"><i style="background:blue"></i> 2–4</div>' +
           '<div class="legend-item"><i style="background:green"></i> 4–6</div>' +
-          '<div class="legend-item"><i style="background:undefined"></i> 6+</div></div>'
+          '<div class="legend-item"><i style="background:#CCC"></i> 6+</div></div>'
       );
     });
   });
