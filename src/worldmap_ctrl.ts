@@ -1,5 +1,6 @@
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import { PanelEvents, textUtil } from '@grafana/data';
+import config from 'grafana/app/core/config';
 
 import TimeSeries from 'grafana/app/core/time_series2';
 // import appEvents from "grafana/app/core/app_events";
@@ -341,5 +342,9 @@ export default class WorldmapCtrl extends MetricsPanelCtrl {
 
       ctrl.map.drawCircles();
     }
+  }
+
+  migrateToReact() {
+    this.onPluginTypeChange(config.panels['geomap']);
   }
 }
