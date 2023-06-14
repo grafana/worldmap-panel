@@ -7,9 +7,9 @@ import TimeSeries from 'grafana/app/core/time_series2';
 
 import * as _ from 'lodash';
 import DataFormatter from './data_formatter';
-import './css/worldmap-panel.css';
+import './styles/worldmap-panel.css';
 import $ from 'jquery';
-import './css/leaflet.css';
+import './styles/leaflet.css';
 import WorldMap from './worldmap';
 
 const panelDefaults = {
