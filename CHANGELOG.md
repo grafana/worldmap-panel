@@ -2,6 +2,10 @@
 
 ## Entries
 
+## v1.0.5
+
+- Fixes CSS path issue, thanks @jackw!
+
 ## v1.0.4
 
 - Validate legend colors
