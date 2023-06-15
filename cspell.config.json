@@ -1,0 +1,40 @@
+{
+  "language": "en",
+  "ignorePaths": [
+    "CHANGELOG.md",
+    "README.md",
+    "node_modules/**",
+    "dist/**",
+    "coverage/**",
+    "provisioning/**",
+    "src/dashboards/**"
+  ],
+  "words": [
+    "Abbrevation",
+    "Appender",
+    "Cascader",
+    "dataframe",
+    "dataframes",
+    "datapoints",
+    "DATAPROXY",
+    "deframer",
+    "diffperc",
+    "drilldown",
+    "esversion",
+    "grafana",
+    "logmin",
+    "magn",
+    "Neue",
+    "ngalert",
+    "Roboto",
+    "timeseries",
+    "typecheck",
+    "unicons",
+    "uuidv",
+    "valuemap",
+    "varname",
+    "verdana",
+    "workdir"
+  ],
+  "enabled": true
+}
