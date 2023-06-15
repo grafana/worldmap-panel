@@ -1,3 +1,5 @@
+[![Build Status](https://drone.grafana.net/api/badges/grafana/worldmap-panel/status.svg)](https://drone.grafana.net/grafana/worldmap-panel)
+
 > **Note:** Support for this repository has ended and it will be archived. Please see [Geomap Panel](https://grafana.com/docs/grafana/latest/panels-visualizations/visualizations/geomap/) for ongoing development and support.
 
 # Worldmap Panel Plugin for Grafana
