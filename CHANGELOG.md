@@ -2,9 +2,14 @@
 
 ## Entries
 
-## v1.0.5
+## v1.0.6
 
 - Fixes CSS path issue, thanks @jackw!
+- Includes changes from v1.0.5 that were not published
+
+## v1.0.5
+
+- Not published
 
 ## v1.0.4
 
