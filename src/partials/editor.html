@@ -71,11 +71,11 @@
       <div class="gf-form">
         <label class="gf-form-label width-12">Location Data</label>
         <div class="gf-form-select-wrapper max-width-10">
-          <select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'countries_3letter', 'states', 'probes', 'geohash', 'json endpoint', 'jsonp endpoint', 'json result', 'table']"
+          <select class="input-small gf-form-input" ng-model="ctrl.panel.locationData" ng-options="t for t in ['countries', 'countries_3letter', 'states', 'probes', 'geohash', 'json endpoint', 'jsonp endpoint', 'json result', 'table', 'string']"
             ng-change="ctrl.changeLocationData()"></select>
         </div>
       </div>
-      <div class="gf-form" ng-show="ctrl.panel.locationData !== 'geohash'">
+      <div class="gf-form" ng-show="ctrl.panel.locationData !== 'geohash' && ctrl.panel.locationData !== 'string'">
         <label class="gf-form-label width-12">Aggregation</label>
         <div class="gf-form-select-wrapper max-width-10">
           <select class="input-small gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ['min','max','avg', 'current', 'total']"
@@ -157,6 +157,20 @@
           how large the circle is.</li>
       </ul>
     </div>
+    <div class="grafana-info-box max-width-28" ng-show="ctrl.panel.locationData ==='string'">
+      <p>The query should be an Elasticsearch query. The "Group by" term should match the field that contains the coordinates.</p>
+      <ul>
+        <li>
+          <b>Location Name Field (optional)</b>: enter the name of the Location Name column. Used to label each circle on the
+          map. Add another "Group by" to the query, which contains the location name.</li>
+        <li>
+          <b>Geopoint</b>: enter the name of the column that contains the coordinates. This is used to calculate where the
+          circle should be drawn. Value should be formatted as "latitude,longitude", e.g. "62.3434,-33.534003".</li>
+        <li>
+          <b>Metric Field</b>: enter the name of the metric column. This is used to give the circle a value - this determines
+          how large the circle is.</li>
+      </ul>
+    </div>
     <h6 ng-show="ctrl.panel.locationData === 'table' || ctrl.panel.locationData === 'geohash'">Field Mapping</h6>
     <div class="gf-form" ng-show="ctrl.panel.locationData === 'table'">
       <label class="gf-form-label width-12">Table Query Format</label>
@@ -201,6 +215,21 @@
         ng-model-onblur />
     </div>
     <div class="gf-form" ng-show="ctrl.panel.locationData === 'geohash'">
+      <label class="gf-form-label width-12">Metric Field</label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esMetric" ng-change="ctrl.refresh()" ng-model-onblur
+      />
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.locationData === 'string'">
+      <label class="gf-form-label width-12">Location Name Field</label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esLocationName" ng-change="ctrl.refresh()"
+        ng-model-onblur />
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.locationData === 'string'">
+      <label class="gf-form-label width-12">geo_point/geohash Field</label>
+      <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esGeoPoint" ng-change="ctrl.refresh()"
+        ng-model-onblur />
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.locationData === 'string'">
       <label class="gf-form-label width-12">Metric Field</label>
       <input type="text" class="input-small gf-form-input width-10" ng-model="ctrl.panel.esMetric" ng-change="ctrl.refresh()" ng-model-onblur
       />

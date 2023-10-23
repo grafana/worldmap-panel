@@ -214,11 +214,25 @@ Supported Databases:
 
 It supports any datasource capable of generating a JSON response with a  a custom list of locations (the same format that for the JSON enpoint).
 
+## Graylog Geolocation data as the Data Source
+
+Supported Databases:
+
+- ElasticSearch
+
+Graylog's Geolocation plugin stores the geolocation data as a string in the following format: "latitude,longitude" by default.
+
+Three fields need to be provided by the ElasticSearch query:
+
+- Location Name (optional - geohash value will be shown if not chosen)
+- Geopoint field that provides the coordinates as a string in the following format: "latitude,longitude".
+- A metric. This is free text and should match the aggregation used (Count, Average, Sum, Unique Count etc.)
+
 ### Map Data Options
 
 #### Location Data
 
-There are four ways to provide data for the worldmap panel:
+There are seven ways to provide data for the worldmap panel:
 
  - *countries*: This is a list of all the countries in the world. It works by matching a country code (US, FR, AU) to a node alias in a time series query.
  - *states*: Similar to countries but for the states in USA e.g. CA for California
@@ -226,6 +240,7 @@ There are four ways to provide data for the worldmap panel:
  - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/grafana/worldmap-panel/blob/master/src/data/countries.json) or [this list of cities](https://github.com/grafana/worldmap-panel/blob/master/src/data/probes.json).
  - *jsonp*: A jsonp endpoint that returns custom json wrapped as jsonp. Use this if you are having problems with CORS.
  - *table*: This expects the metric query to return data points with a field named geohash or two fields/columns named `latitude` and `longitude`. This field should contain a string in the [geohash form](https://www.elastic.co/guide/en/elasticsearch/guide/current/geohashes.html). For example: London -> "gcpvh3zgu992".
+ - *string*: An ElasticSearch query that returns the coordinates as a single string.
 
 #### Aggregation
 
