@@ -1,5 +1,11 @@
 [
   {
+        "key": "AB",
+        "latitude": 53.9333,
+        "longitude": -114.5700,
+        "name": "Alberta"
+  },
+  {
         "key": "AK",
         "latitude": 61.3850,
         "longitude": -152.2683,
@@ -29,6 +35,12 @@
         "longitude": -111.3877,
         "name": "Arizona"
   },
+  {
+        "key": "BC",
+        "latitude": 53.7267,
+        "longitude": -127.6476,
+        "name": "British Columbia"
+  },  
   {
         "key": "CA",
         "latitude": 36.1700,
@@ -126,6 +138,12 @@
         "name": "Massachusetts"
   },
   {
+        "key": "MB",
+        "latitude": 56.4152,
+        "longitude": -98.7390,
+        "name": "Manitoba"
+  },
+  {
         "key": "MD",
         "latitude": 39.0724,
         "longitude": -76.7902,
@@ -174,6 +192,12 @@
         "name": "Montana"
   },
   {
+        "key": "NB",
+        "latitude": 46.5653,
+        "longitude": -66.4619,
+        "name": "New Brunswick"
+  },  
+  {
         "key": "NC",
         "latitude": 35.6411,
         "longitude": -79.8431,
@@ -204,11 +228,35 @@
         "name": "New Jersey"
   },
   {
+        "key": "NL",
+        "latitude": 54.1355,
+        "longitude": -61.6604,
+        "name": "Newfoundland and Laborador"
+  },  
+  {
         "key": "NM",
         "latitude": 34.8375,
         "longitude": -106.2371,
         "name": "New Mexico"
   },
+  {
+        "key": "NS",
+        "latitude": 44.6820,
+        "longitude": -63.7443,
+        "name": "Nova Scotia"
+  },
+  {
+        "key": "NT",
+        "latitude": 64.8255,
+        "longitude": -124.8457,
+        "name": "Northwest Territories"
+  },
+  {
+        "key": "NU",
+        "latitude": 70.2998,
+        "longitude": -83.1076,
+        "name": "Nunavut"
+  },  
   {
         "key": "NV",
         "latitude": 38.4199,
@@ -234,6 +282,12 @@
         "name": "Oklahoma"
   },
   {
+        "key": "ON",
+        "latitude": 51.2538,
+        "longitude": -85.3232,
+        "name": "Ontario"
+  },
+  {
         "key": "OR",
         "latitude": 44.5672,
         "longitude": -122.1269,
@@ -246,11 +300,23 @@
         "name": "Pennsylvania"
   },
   {
+        "key": "PE",
+        "latitude": 46.3107,
+        "longitude": -63.2168,
+        "name": "Prince Edward Island"
+  },
+  {
         "key": "PR",
         "latitude": 18.2766,
         "longitude": -66.3350,
         "name": "Puerto Rico"
   },
+  {
+        "key": "QC",
+        "latitude": 50.8139,
+        "longitude": -73.2080,
+        "name": "Quebec"
+  },  
   {
         "key": "RI",
         "latitude": 41.6772,
@@ -268,6 +334,12 @@
         "latitude": 44.2853,
         "longitude": -99.4632,
         "name": "South Dakota"
+  },
+  {
+        "key": "SK",
+        "latitude": 52.9399,
+        "longitude": -106.4509,
+        "name": "Saskatchewan"
   },
   {
         "key": "TN",
@@ -328,5 +400,11 @@
         "latitude": 42.7475,
         "longitude": -107.2085,
         "name": "Wyoming"
+  },
+  {
+        "key": "YT",
+        "latitude": 64.2823,
+        "longitude": -135.0000,
+        "name": "Yukon"
   }
 ]

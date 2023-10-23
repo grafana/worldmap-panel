@@ -23,7 +23,7 @@ If it is in the **Time Series format** then the metric name needs to match a key
 
 The list of locations can be provided in several ways:
 
-- json files with locations and their coordinates (the plugin includes list for countries and US states)
+- json files with locations and their coordinates (the plugin includes list for countries and US states/Canadian Provinces)
 - json endpoints that return a list of locations and their coordinates
 
 Time Series data contains a timestamp, a metric name and a numeric value. In other words, a typical query for a time series database. Here is some time series data from Graphite:
@@ -102,7 +102,7 @@ The following location files are included in the plugin:
 
 - Countries (2 letter codes)
 - Countries (3 letter codes)
-- US states
+- US states and Canadian Provinces
 
 Alternatively, you can provide your own location lists by using:
 
@@ -221,7 +221,7 @@ It supports any datasource capable of generating a JSON response with a  a custo
 There are four ways to provide data for the worldmap panel:
 
  - *countries*: This is a list of all the countries in the world. It works by matching a country code (US, FR, AU) to a node alias in a time series query.
- - *states*: Similar to countries but for the states in USA e.g. CA for California
+ - *states*: Similar to countries but for the states in USA and Provinces in Canada e.g. CA for California, AB for Alberta
  - *geohash*: An ElasticSearch query that returns geohashes.
  - *json*: A json endpoint that returns custom json. Examples of the format are the [countries data used in first option](https://github.com/grafana/worldmap-panel/blob/master/src/data/countries.json) or [this list of cities](https://github.com/grafana/worldmap-panel/blob/master/src/data/probes.json).
  - *jsonp*: A jsonp endpoint that returns custom json wrapped as jsonp. Use this if you are having problems with CORS.
